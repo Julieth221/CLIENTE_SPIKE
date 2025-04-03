@@ -2,3 +2,59 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Personalización global de mat-form-field en Angular Material */
+.mdc-text-field {
+    --mdc-outlined-text-field-outline-color: #4CAF50 !important; /* Borde verde */
+    --mdc-outlined-text-field-focus-outline-color: #2E7D32 !important; /* Verde más oscuro al enfocar */
+}
+
+/* Cambiar el color del texto dentro del input */
+
+
+/* Cambiar el color del label */
+.mdc-floating-label {
+    color: #73e686 !important;
+}
+
+/* Cambiar color del borde cuando hay error */
+.mdc-text-field--invalid {
+    --mdc-outlined-text-field-outline-color: #D32F2F !important;
+}
+
+/* Estado inicial: borde verde y fondo blanco */
+.mat-mdc-checkbox.mat-accent .mdc-checkbox__background {
+    background-color: white !important;
+    border-color: #95e7a3 !important; /* Verde */
+}
+
+/* Icono de verificación en color verde */
+.mat-mdc-checkbox.mat-accent .mdc-checkbox__checkmark-path {
+    stroke: #4CAF50 !important; /* Verde */
+}
+
+/* Cuando el checkbox está seleccionado */
+.mat-mdc-checkbox.mat-accent.mat-mdc-checkbox-checked .mdc-checkbox__background {
+    background-color: #95e7a3 !important; /* Verde */
+    border-color: #95e7a3 !important;
+}
+
+/* Cambiar el color del icono de check cuando está seleccionado */
+.mat-mdc-checkbox.mat-accent.mat-mdc-checkbox-checked .mdc-checkbox__checkmark-path {
+    stroke: white !important;
+}
+
+/* Cambia el color del checkbox en estado hover */
+.mat-mdc-checkbox:hover .mdc-checkbox__background {
+    background-color: #E8F5E9 !important; /* Un verde muy claro en hover */
+}
+
+/* Checkbox deshabilitado */
+.mat-mdc-checkbox.mat-mdc-checkbox-disabled {
+    opacity: 0.5;
+}
+
+.mat-mdc-checkbox.mat-mdc-checkbox-disabled .mdc-checkbox__background {
+    background-color: white !important;
+    border-color: #BDBDBD !important; /* Gris */
+}
