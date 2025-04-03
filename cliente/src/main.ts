@@ -7,6 +7,7 @@ import { AppComponent } from './app/app.component';
 import { DashboardComponent } from './app/components/dashboard/dashboard.component';
 import { provideHttpClient } from '@angular/common/http';
 import { HomeComponent } from './app/components/home/home.component';
+import { ForgotPassComponent } from './app/components/forgot-pass/forgot-pass.component';
 
 bootstrapApplication(AppComponent,{
     providers:[
@@ -14,6 +15,7 @@ bootstrapApplication(AppComponent,{
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
             { path: 'login', component: LoginComponent },
+            { path: 'forgotPassword', component: ForgotPassComponent },
             { path: 'register', component: RegisterComponent },
             { path: 'dashboard', component: DashboardComponent}
           ]),
