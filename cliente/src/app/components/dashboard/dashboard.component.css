@@ -1,0 +1,36 @@
+.dashboard-container {
+    height: 100vh;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(128, 122, 122, 0.322)), url('https://media.istockphoto.com/id/854566196/es/foto/puesta-del-sol-colinas-del-pedernal.jpg?s=612x612&w=0&k=20&c=1CD7MOFo-sxwtNvz3wWx1lcykzjBUWOroeXWTL0vjuU=');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.sidenav {
+    width: 250px;
+    background-color: rgba(0, 255, 4, 0.574);
+}
+
+.content {
+    padding: 16px;
+}
+
+.dashboard-card {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    text-align: center;
+    background: #1620153e;
+    border-radius: 10px;
+    box-shadow: 0px 1px 5px rgba(0, 255, 26, 0.975);
+}
+
+.menu-accordion {
+    width: 100%;
+    margin: 0;
+}
+.menu-logo {
+    height: 30px; /* Ajusta el tamaño del logo */
+    margin-right: 10px; /* Espacio entre el logo y el texto */
+}
