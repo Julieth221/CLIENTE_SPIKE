@@ -1,0 +1,53 @@
+<div class="container-registrar-finca">
+<mat-card class="finca-card">
+    <h2>Registro de Finca</h2>
+  
+    <form class="finca-form" (ngSubmit)="guardarFinca()">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="nombre" name="nombre" required />
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline">
+        <mat-label>Área Total (m²)</mat-label>
+        <input matInput type="number" [(ngModel)]="areaTotal" name="areaTotal" required />
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline">
+        <mat-label>Cantidad de Parcelas</mat-label>
+        <mat-select [(ngModel)]="cantidadParcelas" name="cantidadParcelas" required>
+          <mat-option *ngFor="let n of cantidadParcelasOptions" [value]="n">{{ n }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline">
+        <mat-label>Tamaño Total Parcelas (m²)</mat-label>
+        <input matInput type="number" [(ngModel)]="tamanoTotalParcelas" name="tamanioTotalParcelas" required />
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline">
+        <mat-label>Tipo de Suelo</mat-label>
+        <mat-select [(ngModel)]="tipoSuelo" name="tipoSuelo" required>
+          <mat-option *ngFor="let tipo of tipoSueloOptions" [value]="tipo">{{ tipo }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+      <ng-container *ngFor="let parcela of parcelas(); let i = index">
+        <h4>Parcela {{ parcela.numero }}</h4>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Tamaño (m²)</mat-label>
+          <input matInput type="text" [(ngModel)]="parcelas()[i].tamanio" name="parcelaTamanio{{ i }}" required />
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline">
+          <mat-label>Ubicación</mat-label>
+          <input matInput type="text" [(ngModel)]="parcelas()[i].ubicacion" name="parcelaUbicacion{{ i }}" required />
+        </mat-form-field>
+      </ng-container>
+  
+      <button mat-raised-button color="primary" type="submit">Guardar</button>
+    </form>
+  </mat-card>
+  
+</div>

@@ -25,7 +25,13 @@ bootstrapApplication(AppComponent,{
             { path: 'pwdRecovery', component: PwdRecoveryComponent },
             { path: 'pwdSuccess', component: PwdSuccessComponent },
             { path: 'register', component: RegisterComponent },
-            { path: 'dashboard', component: DashboardComponent}
+            {
+                path: 'dashboard',
+                component: DashboardComponent,
+                children: [
+                  { path: 'finca/registrar', loadComponent: () => import('./app/components/finca/finca-register/finca-register.component').then(m => m.FincaRegisterComponent) },
+                ],
+              },
           ]),
         provideAnimations(),
         provideHttpClient(),

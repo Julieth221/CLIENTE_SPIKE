@@ -1,0 +1,23 @@
+.finca-card {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .finca-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  h4 {
+    margin-top: 20px;
+    color: #2c3e50;
+  }
+  
