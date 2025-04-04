@@ -1,96 +1,190 @@
 .dashboard-container {
-    height: 100vh;
-    /* Fondo con degradado e imagen */
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(128, 122, 122, 0.322)), url('https://media.istockphoto.com/id/854566196/es/foto/puesta-del-sol-colinas-del-pedernal.jpg?s=612x612&w=0&k=20&c=1CD7MOFo-sxwtNvz3wWx1lcykzjBUWOroeXWTL0vjuU=');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
-  
-  .sidenav {
-    width: 250px;
-    /* Color de la barra de menú: verde lima */
-    background-color: #12c709; /* Código de color verde lima */
-  }
-  
-  .content {
-    padding: 16px;
-  }
-  
-  .dashboard-card {
-    width: 100%;
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    text-align: center;
-    /* Fondo del card con opacidad */
-    background: rgba(2, 2, 2, 0.24);
-    /* Bordes redondeados */
-    border-radius: 12px; /* Aumentado el radio para más redondeo */
-    /* Sombra del card */
-    box-shadow: 0px 4px 10px rgba(0, 255, 26, 0.4); /* Ajustada la sombra */
+  height: 100vh;
+  /* Fondo con degradado e imagen */
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(128, 122, 122, 0.322)),
+    url('https://media.istockphoto.com/id/854566196/es/foto/puesta-del-sol-colinas-del-pedernal.jpg?s=612x612&w=0&k=20&c=1CD7MOFo-sxwtNvz3wWx1lcykzjBUWOroeXWTL0vjuU=');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
-  
+
+.sidenav {
+  width: 250px;
+  /* Color de la barra de menú: verde */
+  background: linear-gradient(135deg, #0B7D2F 10%, #025828 90%);
+  /* Código de color verde */
+  transition: width 0.3s ease-in-out;
+  overflow-x: hidden;
+}
+
+.sidenav.collapsed {
+  width: 60px;
+}
+
+
+.content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-card {
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  text-align: center;
+  /* Fondo del card con opacidad */
+  background: rgba(2, 2, 2, 0.24);
+  /* Bordes redondeados */
+  border-radius: 12px;
+  /* Aumentado el radio para más redondeo */
+  /* Sombra del card */
+  box-shadow: 0px 4px 10px #025828 90%;
+  /* Ajustada la sombra */
+}
+
 .menu-accordion {
-    width: 100%;
-    margin: 0;
+  width: 100%;
+  margin: 0;
 }
-  
-  .menu-logo {
-    height: 50px;
-    margin-right: 10px;
-  }
-  
-  .menu-text {
-    color: rgb(8, 8, 8); /* Color del texto "Menu" */
-    font-weight: bold;
-    vertical-align: middle; /* Alineación vertical con el logo */
-  }
-  
-  .menu {
-    display: flex; /* Para usar flexbox y alinear logo y texto */
-    align-items: center; /* Centra verticalmente los elementos */
-    padding-left: 20px; /* Añade un poco de espacio a la izquierda */
-  }
-  
-  .menu-link {
-    color: white;
-    cursor: pointer;
-  }
-  
-  .menu-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  /* Estilos para el contenido del dashboard */
-  .dashboard-content {
-    display: flex;
-    flex-direction: column; /* Apila los elementos verticalmente en pantallas pequeñas */
-    align-items: center; /* Centra los elementos horizontalmente */
-    text-align: center; /* Centra el texto */
-    padding: 10px;
-  }
-  
-  .image-section {
-    display: flex;
-    justify-content: center; /* Centra las imágenes horizontalmente */
-    margin-bottom: 20px; /* Espacio debajo de las imágenes */
-    flex-wrap: wrap; /* Permite que las imágenes se envuelvan en pantallas pequeñas */
-    gap: 10px;
-  }
-  
-  
-  .dashboard-image {
-    max-width: 100%; /* Asegura que las imágenes no se desborden */
-    height: auto; /* Mantiene la proporción de aspecto */
-    border-radius: 8px; /* Bordes redondeados para las imágenes */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra suave para las imágenes */
-    margin-bottom: 10px;
-  }
-  
-  .text-section {
-    text-align: center;
-    color: rgb(255, 255, 255);
-    padding: 10px;
-  }
-  
+
+.menu-logo {
+  height: 50px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.menu-text {
+  color: rgb(8, 8, 8);
+  /* Color del texto "Menu" */
+  font-weight: bold;
+  vertical-align: middle;
+  /* Alineación vertical con el logo */
+  white-space: nowrap;
+}
+
+.menu {
+  display: flex;
+  /* Para usar flexbox y alinear logo y texto */
+  align-items: center;
+  /* Centra verticalmente los elementos */
+  padding-left: 20px;
+  /* Añade un poco de espacio a la izquierda */
+  background-color: rgba(255, 255, 255, 0.1);
+  /* Opacidad del color del background */
+  transition: padding-left 0.3s ease-in-out;
+}
+
+.menu.collapsed {
+  padding-left: 10px;
+}
+
+.menu-link {
+  color: white;
+  cursor: pointer;
+}
+
+.menu-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Estilos para el contenido del dashboard */
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  /* Apila los elementos verticalmente en pantallas pequeñas */
+  align-items: center;
+  /* Centra los elementos horizontalmente */
+  text-align: center;
+  /* Centra el texto */
+  padding: 10px;
+}
+
+.image-section {
+  display: flex;
+  justify-content: center;
+  /* Centra las imágenes horizontalmente */
+  margin-bottom: 20px;
+  /* Espacio debajo de las imágenes */
+  flex-wrap: wrap;
+  /* Permite que las imágenes se envuelvan en pantallas pequeñas */
+  gap: 10px;
+}
+
+.dashboard-image {
+  max-width: 200px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+}
+
+.text-section {
+  text-align: center;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+}
+
+/* Estilos para la barra de búsqueda */
+.search-bar {
+  width: 300px;
+  margin-left: auto;
+  padding: 0px;
+  border-radius: 50px;
+  margin-top: 17px;
+}
+
+.title-spacer {
+  flex: 1;
+  text-align: left;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Estilos para el botón de cerrar sesión */
+.logout-button-container {
+  display: flex;
+  justify-content: flex;
+  margin-top: auto;
+}
+
+/* Estilos para el header */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color:#025828;
+  color: white;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+}
+
+.menu-button {
+  margin-right: 10px;
+}
+
+/* Estilos para el control de usuario */
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.user-avatar {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.mat-menu-content{
+  background-color: #12c709;
+  color: #fff;
+}
