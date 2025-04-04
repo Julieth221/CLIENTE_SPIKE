@@ -27,11 +27,7 @@
               }
             ],
             "styles": [
-<<<<<<< HEAD
-              "@angular/material/prebuilt-themes/cyan-orange.css",
-=======
               "@angular/material/prebuilt-themes/azure-blue.css",
->>>>>>> 38773d1830bbb8ed07061dff4102dc38900bdf7e
               "src/styles.css"
             ],
             "scripts": []
@@ -90,11 +86,7 @@
               }
             ],
             "styles": [
-<<<<<<< HEAD
-              "@angular/material/prebuilt-themes/cyan-orange.css",
-=======
               "@angular/material/prebuilt-themes/azure-blue.css",
->>>>>>> 38773d1830bbb8ed07061dff4102dc38900bdf7e
               "src/styles.css"
             ],
             "scripts": []

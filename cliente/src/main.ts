@@ -18,7 +18,7 @@ bootstrapApplication(AppComponent,{
             { path: 'forgotPassword', component: ForgotPassComponent },
             { path: 'register', component: RegisterComponent },
             { path: 'dashboard', component: DashboardComponent}
-          ]),
+        ]),
         provideAnimations(),
         provideHttpClient()
     ]

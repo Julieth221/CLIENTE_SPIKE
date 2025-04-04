@@ -1,36 +1,96 @@
 .dashboard-container {
     height: 100vh;
+    /* Fondo con degradado e imagen */
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(128, 122, 122, 0.322)), url('https://media.istockphoto.com/id/854566196/es/foto/puesta-del-sol-colinas-del-pedernal.jpg?s=612x612&w=0&k=20&c=1CD7MOFo-sxwtNvz3wWx1lcykzjBUWOroeXWTL0vjuU=');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-}
-
-.sidenav {
+  }
+  
+  .sidenav {
     width: 250px;
-    background-color: rgba(0, 255, 4, 0.574);
-}
-
-.content {
+    /* Color de la barra de menú: verde lima */
+    background-color: #12c709; /* Código de color verde lima */
+  }
+  
+  .content {
     padding: 16px;
-}
-
-.dashboard-card {
+  }
+  
+  .dashboard-card {
     width: 100%;
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
     text-align: center;
-    background: #1620153e;
-    border-radius: 10px;
-    box-shadow: 0px 1px 5px rgba(0, 255, 26, 0.975);
+    /* Fondo del card con opacidad */
+    background: rgba(2, 2, 2, 0.24);
+    /* Bordes redondeados */
+    border-radius: 12px; /* Aumentado el radio para más redondeo */
+    /* Sombra del card */
+    box-shadow: 0px 4px 10px rgba(0, 255, 26, 0.4); /* Ajustada la sombra */
 }
-
+  
 .menu-accordion {
     width: 100%;
     margin: 0;
 }
-.menu-logo {
-    height: 30px; /* Ajusta el tamaño del logo */
-    margin-right: 10px; /* Espacio entre el logo y el texto */
-}
+  
+  .menu-logo {
+    height: 50px;
+    margin-right: 10px;
+  }
+  
+  .menu-text {
+    color: rgb(8, 8, 8); /* Color del texto "Menu" */
+    font-weight: bold;
+    vertical-align: middle; /* Alineación vertical con el logo */
+  }
+  
+  .menu {
+    display: flex; /* Para usar flexbox y alinear logo y texto */
+    align-items: center; /* Centra verticalmente los elementos */
+    padding-left: 20px; /* Añade un poco de espacio a la izquierda */
+  }
+  
+  .menu-link {
+    color: white;
+    cursor: pointer;
+  }
+  
+  .menu-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Estilos para el contenido del dashboard */
+  .dashboard-content {
+    display: flex;
+    flex-direction: column; /* Apila los elementos verticalmente en pantallas pequeñas */
+    align-items: center; /* Centra los elementos horizontalmente */
+    text-align: center; /* Centra el texto */
+    padding: 10px;
+  }
+  
+  .image-section {
+    display: flex;
+    justify-content: center; /* Centra las imágenes horizontalmente */
+    margin-bottom: 20px; /* Espacio debajo de las imágenes */
+    flex-wrap: wrap; /* Permite que las imágenes se envuelvan en pantallas pequeñas */
+    gap: 10px;
+  }
+  
+  
+  .dashboard-image {
+    max-width: 100%; /* Asegura que las imágenes no se desborden */
+    height: auto; /* Mantiene la proporción de aspecto */
+    border-radius: 8px; /* Bordes redondeados para las imágenes */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra suave para las imágenes */
+    margin-bottom: 10px;
+  }
+  
+  .text-section {
+    text-align: center;
+    color: rgb(255, 255, 255);
+    padding: 10px;
+  }
+  

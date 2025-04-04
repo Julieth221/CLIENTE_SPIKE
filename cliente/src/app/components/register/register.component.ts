@@ -25,7 +25,8 @@ import { API_URLS } from '../../../config/api_config';
     MatIconModule,
     MatProgressSpinnerModule,
     MatSelectModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    CommonModule
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'

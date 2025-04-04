@@ -10,11 +10,7 @@
   },
   "private": true,
   "dependencies": {
-<<<<<<< HEAD
     "@angular/animations": "^19.2.5",
-=======
-    "@angular/animations": "^19.0.0",
->>>>>>> 38773d1830bbb8ed07061dff4102dc38900bdf7e
     "@angular/cdk": "^19.2.8",
     "@angular/common": "^19.0.0",
     "@angular/compiler": "^19.0.0",

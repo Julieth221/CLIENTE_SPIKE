@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule} from '@angular/material/input';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-forgot-pass',
@@ -15,7 +16,8 @@ import { MatInputModule} from '@angular/material/input';
     MatFormFieldModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
-    MatInputModule
+    MatInputModule,
+    CommonModule
   ],
   templateUrl: './forgot-pass.component.html',
   styleUrl: './forgot-pass.component.css'
