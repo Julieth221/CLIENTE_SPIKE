@@ -1,0 +1,135 @@
+.register-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #0B7D2F 10%, #025828 90%);
+    padding: 1rem;
+}
+
+.register-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    position: relative;
+}
+
+mat-card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4f4f4f;
+}
+
+.form-row {
+    margin-top: 2rem;
+}
+
+.register-content {
+    max-height: 450px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* Estilos de los campos de entrada */
+.input-field {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.input-field input {
+    font-size: 16px;
+}
+
+mat-form-field {
+    display: flex;
+}
+
+/* Estilo de botón */
+.register-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+    background: #89ec8c;
+}
+.register-btn:hover{
+    background: #64df68;
+    color: white;
+}
+
+.terms-link {
+    text-decoration: none;
+    font-weight: bold;
+    color: #025828;
+}
+
+.terms-link:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Estilos para la fila de inputs */
+.form-row {
+    display: flex;
+    gap: 10px;
+}
+
+/* Enlace de inicio de sesión */
+.login-link {
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+.login-link-action {
+    font-weight: bold;
+    color: #025828;
+    text-decoration: none;
+}
+
+.login-link-action:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Estilo Mejorado del Scroll */
+.register-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.register-content::-webkit-scrollbar-thumb {
+    background-color: #c5f5cd;
+    border-radius: 6px;
+}
+
+.register-content::-webkit-scrollbar-track {
+    background: #ECFEEF;
+}
+
+
+@media (max-width: 768px) {
+    .register-card {
+        padding: 1.5rem;
+    }
+
+    mat-card-title {
+        font-size: 1.3rem;
+    }
+
+    .register-btn {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+
