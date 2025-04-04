@@ -2,8 +2,6 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-<<<<<<< HEAD
-=======
 
 /* Personalización global de mat-form-field en Angular Material */
 .mdc-text-field {
@@ -60,4 +58,3 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     background-color: white !important;
     border-color: #BDBDBD !important; /* Gris */
 }
->>>>>>> 38773d1830bbb8ed07061dff4102dc38900bdf7e
