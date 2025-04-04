@@ -39,7 +39,6 @@
             <mat-select formControlName="rol">
               <mat-option value="Propietario">Propietario</mat-option>
               <mat-option value="Arrendatario">Arrendatario</mat-option>
-              <mat-option value="Admin">Admin</mat-option>
             </mat-select>
             <mat-error *ngIf="registerForm.get('rol')?.invalid">Seleccione un rol</mat-error>
           </mat-form-field>
