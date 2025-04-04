@@ -1,0 +1,32 @@
+<div class="verify-code-container">
+    <mat-card class="verify-card">
+      <mat-card-title>Ingresa el código</mat-card-title>
+      <mat-card-content>
+        <p>
+          Acabamos de enviar un código de 5 dígitos a <strong>{{ email }}</strong>, introdúcelo a continuación:
+        </p>
+  
+        <div class="code-inputs">
+          <mat-form-field *ngFor="let item of code; let i = index" appearance="outline">
+            <input matInput id="code-{{ i }}" type="text" maxlength="1"
+                   [(ngModel)]="code[i]" (input)="focusNextInput(i, $event)">
+          </mat-form-field>
+        </div>
+  
+        <p>
+          ¿No recibiste el código?
+          <a (click)="resendEmail()">Reenviar email</a>
+        </p>
+  
+        <button mat-raised-button color="primary" class="btn-green" (click)="verifyCode()">
+          Restablecer contraseña
+        </button>
+  
+        <p>
+          ¿Correo incorrecto?
+          <a href="#">Enviar a otro correo</a>
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  
