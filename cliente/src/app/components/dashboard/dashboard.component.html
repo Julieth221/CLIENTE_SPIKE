@@ -1,74 +1,80 @@
 <mat-sidenav-container class="dashboard-container">
     <mat-sidenav #sidenav mode="side" opened="true" class="sidenav">
-        <mat-toolbar color="primary" class="menu">
-            <img src="" alt="Logo" class="menu-Logo">MENU
-        </mat-toolbar>
-        <mat-accordion class="menu-accordion">
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>Usuario</mat-panel-title>
-                </mat-expansion-panel-header>
-                <mat-form-field>
-                    <mat-label>Nombre</mat-label>
-                    <input matInput />
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label>Edad</mat-label>
-                    <input matInput type="number" min="1" />
-                </mat-form-field>
-            </mat-expansion-panel>
-
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>Finca</mat-panel-title>
-                </mat-expansion-panel-header>
-                <mat-form-field>
-                    <mat-label>País</mat-label>
-                    <input matInput />
-                </mat-form-field>
-            </mat-expansion-panel>
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>Sensores</mat-panel-title>
-                </mat-expansion-panel-header>
-                <mat-form-field>
-                    <mat-label>País</mat-label>
-                    <input matInput />
-                </mat-form-field>
-            </mat-expansion-panel>
-
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>Cultivo</mat-panel-title>
-                </mat-expansion-panel-header>
-                <mat-form-field>
-                    <mat-label>Fecha</mat-label>
-                    <input matInput [matDatepicker]="picker" (focus)="picker.open()" readonly />
-                </mat-form-field>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-expansion-panel>
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>Ajustes</mat-panel-title>
-                </mat-expansion-panel-header>
-                <mat-form-field>
-                    <mat-label>País</mat-label>
-                    <input matInput />
-                </mat-form-field>
-            </mat-expansion-panel>
-        </mat-accordion>
+      <mat-toolbar color="primary" class="menu">
+        <img src="./logo3.png" alt="Logo" class="menu-logo">
+        <span class="menu-text">Menu</span>
+      </mat-toolbar>
+      <mat-accordion class="menu-accordion">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Usuario</mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-nav-list>
+            <a mat-list-item (click)="goToComponent('usuario-nombre')" class="menu-link">Nombre</a>
+            <a mat-list-item (click)="goToComponent('usuario-edad')" class="menu-link">Edad</a>
+          </mat-nav-list>
+        </mat-expansion-panel>
+  
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Finca</mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-nav-list>
+            <a mat-list-item (click)="goToComponent('finca-pais')" class="menu-link">País</a>
+          </mat-nav-list>
+        </mat-expansion-panel>
+  
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Sensores</mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-nav-list>
+            <a mat-list-item (click)="goToComponent('sensores-pais')" class="menu-link">País</a>
+          </mat-nav-list>
+        </mat-expansion-panel>
+  
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Cultivo</mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-nav-list>
+            <a mat-list-item (click)="goToComponent('cultivo-fecha')" class="menu-link">Fecha</a>
+          </mat-nav-list>
+        </mat-expansion-panel>
+  
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Ajustes</mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-nav-list>
+            <a mat-list-item (click)="goToComponent('ajustes-pais')" class="menu-link">País</a>
+          </mat-nav-list>
+        </mat-expansion-panel>
+      </mat-accordion>
     </mat-sidenav>
-
+  
     <mat-sidenav-content class="content">
-        <mat-toolbar color="primary">
-            <button mat-icon-button (click)="sidenav.toggle()">
-                <mat-icon>menu</mat-icon>
-            </button>
-            <span>Dashboard</span>
-        </mat-toolbar>
-
-        <mat-card class="dashboard-card">
-            <p>Contenido del Dashboard</p>
-        </mat-card>
+      <mat-toolbar color="primary">
+        <button mat-icon-button (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span>Dashboard</span>
+      </mat-toolbar>
+  
+      <mat-card class="dashboard-card">
+        <div class="dashboard-content">
+          <div class="image-section">
+            <img src="imagen1.jpg" alt="Imagen 1" class="dashboard-image">
+            <img src="imagen2.jpg" alt="Imagen 2" class="dashboard-image">
+          </div>
+          <div class="text-section">
+            <p>
+              Este es un ejemplo de contenido del dashboard. Puedes agregar imágenes y texto para mostrar información importante.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+          </div>
+        </div>
+      </mat-card>
     </mat-sidenav-content>
-</mat-sidenav-container>
+  </mat-sidenav-container>
+  

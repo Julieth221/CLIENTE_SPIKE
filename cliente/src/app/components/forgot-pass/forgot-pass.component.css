@@ -1,0 +1,60 @@
+.forgot-password-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #0B7D2F 10%, #025828 90%);
+    padding: 1rem;
+}
+
+.forgot-password-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+
+mat-card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+mat-card-content p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 1rem;
+}
+.correo{
+    margin-top: 0.5rem;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.btn {
+    width: 100%;
+    margin-top: 0.5rem;
+    width: 100%;
+    padding: 1rem;
+    background: #64df68;
+    color: white;
+    border: none;
+    border-radius: 8px;
+}
+
+.success-snackbar {
+    background-color: #4CAF50;
+    color: white;
+}
+
+
+.btn:disabled {
+    background: #bcf6bd;
+    cursor: not-allowed;
+}

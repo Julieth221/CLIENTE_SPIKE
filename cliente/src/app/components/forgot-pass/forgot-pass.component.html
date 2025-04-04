@@ -1,0 +1,23 @@
+<div class="forgot-password-container">
+    <mat-card class="forgot-password-card">
+        <mat-card-title>¿Ha olvidado su contraseña?</mat-card-title>
+        <mat-card-content>
+            <p>Ingrese su correo y le enviaremos un enlace para restablecer su contraseña.</p>
+            
+            <form [formGroup]="forgotPasswordForm" (ngSubmit)="sendResetCode()" >
+                <mat-form-field appearance="outline" class="full-width correo">
+                    <mat-label>Correo Electrónico</mat-label>
+                    <input matInput type="email" formControlName="email" placeholder="ejemplo@correo.com">
+                    <mat-error *ngIf="isFieldInvalid('email')">
+                        {{ getErrorMessage('email') }}
+                    </mat-error>
+                </mat-form-field>
+
+                <button class="btn" mat-raised-button type="submit" [disabled]="forgotPasswordForm.invalid || isLoading">
+                    <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+                    {{ isLoading ? 'Enviando...' : 'Enviar enlace' }}
+                </button>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>
