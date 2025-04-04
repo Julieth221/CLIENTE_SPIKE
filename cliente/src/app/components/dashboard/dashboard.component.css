@@ -1,18 +1,18 @@
 .dashboard-container {
-  height: 100vh;
-  /* Fondo con degradado e imagen */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(128, 122, 122, 0.322)),
-    url('https://media.istockphoto.com/id/854566196/es/foto/puesta-del-sol-colinas-del-pedernal.jpg?s=612x612&w=0&k=20&c=1CD7MOFo-sxwtNvz3wWx1lcykzjBUWOroeXWTL0vjuU=');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  url('/paisaje.jpg');
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
 }
 
 .sidenav {
   width: 250px;
-  /* Color de la barra de menú: verde */
   background: linear-gradient(135deg, #0B7D2F 10%, #025828 90%);
-  /* Código de color verde */
   transition: width 0.3s ease-in-out;
   overflow-x: hidden;
 }
@@ -21,11 +21,11 @@
   width: 60px;
 }
 
-
 .content {
   padding: 16px;
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 
 .dashboard-card {
@@ -34,14 +34,9 @@
   margin: 20px auto;
   padding: 20px;
   text-align: center;
-  /* Fondo del card con opacidad */
   background: rgba(2, 2, 2, 0.24);
-  /* Bordes redondeados */
   border-radius: 12px;
-  /* Aumentado el radio para más redondeo */
-  /* Sombra del card */
   box-shadow: 0px 4px 10px #025828 90%;
-  /* Ajustada la sombra */
 }
 
 .menu-accordion {
@@ -57,22 +52,16 @@
 
 .menu-text {
   color: rgb(8, 8, 8);
-  /* Color del texto "Menu" */
   font-weight: bold;
   vertical-align: middle;
-  /* Alineación vertical con el logo */
   white-space: nowrap;
 }
 
 .menu {
   display: flex;
-  /* Para usar flexbox y alinear logo y texto */
   align-items: center;
-  /* Centra verticalmente los elementos */
   padding-left: 20px;
-  /* Añade un poco de espacio a la izquierda */
   background-color: rgba(255, 255, 255, 0.1);
-  /* Opacidad del color del background */
   transition: padding-left 0.3s ease-in-out;
 }
 
@@ -89,26 +78,19 @@
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Estilos para el contenido del dashboard */
 .dashboard-content {
   display: flex;
   flex-direction: column;
-  /* Apila los elementos verticalmente en pantallas pequeñas */
   align-items: center;
-  /* Centra los elementos horizontalmente */
   text-align: center;
-  /* Centra el texto */
   padding: 10px;
 }
 
 .image-section {
   display: flex;
   justify-content: center;
-  /* Centra las imágenes horizontalmente */
   margin-bottom: 20px;
-  /* Espacio debajo de las imágenes */
   flex-wrap: wrap;
-  /* Permite que las imágenes se envuelvan en pantallas pequeñas */
   gap: 10px;
 }
 
@@ -126,36 +108,50 @@
   padding: 10px;
 }
 
-/* Estilos para la barra de búsqueda */
 .search-bar {
-  width: 300px;
+  width: 200px;
   margin-left: auto;
   padding: 0px;
   border-radius: 50px;
   margin-top: 17px;
+  color: #0B7D2F;
 }
 
 .title-spacer {
   flex: 1;
-  text-align: left;
+  text-align: flex-end;
   color: white;
   font-size: 20px;
   font-weight: bold;
 }
 
-/* Estilos para el botón de cerrar sesión */
 .logout-button-container {
   display: flex;
-  justify-content: flex;
+  justify-content: center;
   margin-top: auto;
+  padding-bottom: 20px;
 }
 
-/* Estilos para el header */
+.logout-button-container button {
+  background-color: #0B7D2F;
+  color: white;
+  border-radius: 15px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button-container button:hover {
+  background-color: #129e3f;
+}
+
 .header {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color:#025828;
+  background-color: #025828;
   color: white;
   padding: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -171,7 +167,11 @@
   margin-right: 10px;
 }
 
-/* Estilos para el control de usuario */
+.menu-button mat-icon {
+    height: 48px;
+    width: 48px;
+}
+
 .user-info {
   display: flex;
   align-items: center;
@@ -184,7 +184,86 @@
   border-radius: 50%;
   margin-right: 10px;
 }
-.mat-menu-content{
+
+.mat-menu-content {
   background-color: #12c709;
   color: #fff;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  min-height: auto;
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+  transition: margin-left 0.3s ease-in-out;
+  margin-left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.footer-content nav {
+  margin-top: 5px;
+}
+
+.footer-content a {
+  color: #0078d7;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+.footer-content a:hover {
+  text-decoration: underline;
+}
+
+.sidenav + .mat-sidenav-content + .footer {
+  margin-left: 250px;
+}
+
+.sidenav.collapsed + .mat-sidenav-content + .footer {
+  margin-left: 60px;
+}
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px auto;
+  width: 100%;
+  max-width: 1600px;
+}
+
+.cards-container .dashboard-card {
+  width: calc(50% - 10px);
+  margin-bottom: 20px;
+}
+
+.full-width-card {
+  width: 100%;
+  max-width: 1600px;
+  margin: 20px auto;
+}
+
+@media (max-width: 768px) {
+  .cards-container .dashboard-card {
+    width: 100%;
+  }
 }
