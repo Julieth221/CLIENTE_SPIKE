@@ -6,6 +6,7 @@ export const API_URLS ={
         API_CRUD_USUARIO: 'localhost:8088/v1',
         API_CRUD_FINCA: 'localhost:8086/v1',
         API_CRUD_CULTIVO: 'localhost:8085/v1',
-        API_CRUD_SENSORES: 'localhost:8087/v1'
+        API_CRUD_SENSORES: 'localhost:8087/v1',
+        API_CRUD_TEMPORAL: 'https://jsonplaceholder.typicode.com/users'
     }
 }

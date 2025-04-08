@@ -13,6 +13,7 @@ import { PwdRecoveryComponent } from './app/components/pwd-recovery/pwd-recovery
 import { PwdSuccessComponent } from './app/components/pwd-success/pwd-success.component';
 import { importProvidersFrom } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
+import { FincaRegisterComponent } from './app/components/finca/finca-register/finca-register.component';
 
 bootstrapApplication(AppComponent,{
     providers:[
@@ -25,11 +26,12 @@ bootstrapApplication(AppComponent,{
             { path: 'pwdRecovery', component: PwdRecoveryComponent },
             { path: 'pwdSuccess', component: PwdSuccessComponent },
             { path: 'register', component: RegisterComponent },
+            // { path: 'register/finca', component: FincaRegisterComponent },
             {
                 path: 'dashboard',
                 component: DashboardComponent,
                 children: [
-                  { path: 'finca/registrar', loadComponent: () => import('./app/components/finca/finca-register/finca-register.component').then(m => m.FincaRegisterComponent) },
+                  { path: 'registrarFinca', loadComponent: () => import('./app/components/finca/finca-register/finca-register.component').then(m => m.FincaRegisterComponent) },
                 ],
               },
           ]),
