@@ -1,0 +1,111 @@
+.container-registrar-finca {
+  padding: 2rem;
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 64px);
+}
+
+.finca-card {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+mat-card-title {
+  color: #0B7D2F;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.finca-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-form-field ::ng-deep .mat-form-field-outline {
+  color: rgba(0, 0, 0, 0.1);
+}
+
+mat-form-field ::ng-deep .mat-form-field-outline-thick {
+  color: #0B7D2F;
+}
+
+mat-form-field ::ng-deep .mat-form-field-label {
+  color: #2c3e50;
+}
+
+mat-form-field ::ng-deep .mat-input-element {
+  color: #2c3e50;
+}
+
+h4 {
+  margin-top: 1.5rem;
+  color: #0B7D2F;
+  font-size: 1.2rem;
+  font-weight: 500;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.btn {
+  background: linear-gradient(135deg, #0B7D2F 0%, #025828 100%);
+  color: white;
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  margin-top: 2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+  background: linear-gradient(135deg, #025828 0%, #0B7D2F 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  color: white;
+}
+
+.btn:disabled {
+  background: #bcf6bd;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Estilos para los selectores */
+mat-select ::ng-deep .mat-select-value {
+  color: #2c3e50;
+}
+
+mat-select ::ng-deep .mat-select-arrow {
+  color: #0B7D2F;
+}
+
+/* Estilos para los campos de parcela */
+.parcela-container {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Estilos para los mensajes de error */
+mat-error {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+  
+  

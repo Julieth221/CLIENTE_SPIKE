@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule} from '@angular/material/input';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -25,7 +26,7 @@ import { CommonModule } from '@angular/common';
 export class ForgotPassComponent { forgotPasswordForm: FormGroup;
   isLoading = false;
 
-  constructor(private fb: FormBuilder, private snackBar: MatSnackBar) {
+  constructor(private fb: FormBuilder, private snackBar: MatSnackBar, private router: Router) {
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
     });
@@ -56,6 +57,11 @@ export class ForgotPassComponent { forgotPasswordForm: FormGroup;
         duration: 5000,
         panelClass: ['success-snackbar']
       });
-    }, 2000);
+
+    // Esperar a que el mensaje termine para navegar
+    setTimeout(() => {
+      this.router.navigate(['/verifyCode']); 
+    }, 3000); 
+  }, 2000);
   }
 }
