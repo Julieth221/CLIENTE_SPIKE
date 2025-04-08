@@ -1,4 +1,5 @@
 .dashboard-container {
+
   min-height: 100vh;
 }
 
@@ -17,6 +18,24 @@ mat-sidenav-content {
 h3 {
   margin: 0;
   font-size: 1.2rem;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(128, 122, 122, 0.322)),
+  url('/paisaje.jpg');
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+}
+
+.sidenav {
+  width: 250px;
+  background: linear-gradient(135deg, #0B7D2F 10%, #025828 90%);
+  transition: width 0.3s ease-in-out;
+  overflow-x: hidden;
+
 }
 
 .logo p {
@@ -24,6 +43,7 @@ h3 {
   opacity: 0.8;
   font-size: 0.9rem;
 }
+
 
 
 button {
@@ -60,6 +80,24 @@ button {
 .sidebar::-webkit-scrollbar {
   width: 0px;
   background: transparent; /* Opcional: hace que la barra sea invisible */
+
+.content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.dashboard-card {
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  text-align: center;
+  background: rgba(2, 2, 2, 0.24);
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px #025828 90%;
+
 }
 
 .sidebar:hover {
@@ -70,6 +108,7 @@ button {
 .sidebar:hover::-webkit-scrollbar {
   width: 6px;
 }
+
 
 .sidebar:hover::-webkit-scrollbar-thumb {
   background-color: #7ec795;
@@ -94,6 +133,21 @@ button {
   display: flex;
   border-radius: 6px;
   transition: background-color 0.3s;
+
+.menu-text {
+  color: rgb(8, 8, 8);
+  font-weight: bold;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: padding-left 0.3s ease-in-out;
+
 }
 
 .menu-button:hover{
@@ -124,6 +178,7 @@ button {
   color: white;
 }
 
+
 .sidebar header {
   display: flex;
   flex-direction: column;
@@ -135,15 +190,28 @@ button {
   font-weight: bold;
   text-align: center;
   color: white;
-  
+
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+
 }
 
 .sidebar header .logo h3 p {
   width: 100%;
   display: flex;
   justify-content: center;
+
   align-items: center;
   color: white;
+
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+
 }
 
 .sidebar header img {
@@ -170,6 +238,7 @@ button {
   color: white;
 }
 
+
 button.active {
   background-color: rgba(91, 153, 103, 0.2); 
 }
@@ -181,10 +250,25 @@ button.active {
 .sidebar button:is(.active, :hover) {
   background-color: rgba(91, 153, 103, 0.2); 
   backdrop-filter: blur(8px);
+
+.search-bar {
+  width: 200px;
+  margin-left: auto;
+  padding: 0px;
+  border-radius: 50px;
+  margin-top: 17px;
+  color: #0B7D2F;
+}
+
+.title-spacer {
+  flex: 1;
+  text-align: flex-end;
+
   color: white;
   font-weight: bold;
 }
 
+  
 .sidebar button mat-icon {
   transition: 0.3s;
 }
@@ -196,6 +280,35 @@ button.active {
 .sidebar button:not(.active):hover {
   background-color: rgba(91, 153, 103, 0.2); /* Verde translúcido */
   backdrop-filter: blur(8px);
+
+.logout-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  padding-bottom: 20px;
+}
+
+.logout-button-container button {
+  background-color: #0B7D2F;
+  color: white;
+  border-radius: 15px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button-container button:hover {
+  background-color: #129e3f;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #025828;
+
   color: white;
   width: 100%;
 }
@@ -261,7 +374,16 @@ button.active {
 }
 
 
+
 .content-header {
+
+.menu-button mat-icon {
+    height: 48px;
+    width: 48px;
+}
+
+.user-info {
+
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -276,6 +398,7 @@ button.active {
   margin: 0 auto;
   font-weight: 600;
 }
+
 .menu-button{
   color: #ffffff;
 }
@@ -294,4 +417,87 @@ button.active {
   background: linear-gradient(135deg, #0B7D2F 10%, #025828 90%);
   backdrop-filter: blur(20px);
 
+
+.mat-menu-content {
+  background-color: #12c709;
+  color: #fff;
+
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  min-height: auto;
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+  transition: margin-left 0.3s ease-in-out;
+  margin-left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.footer-content nav {
+  margin-top: 5px;
+}
+
+.footer-content a {
+  color: #0078d7;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+.footer-content a:hover {
+  text-decoration: underline;
+}
+
+.sidenav + .mat-sidenav-content + .footer {
+  margin-left: 250px;
+}
+
+.sidenav.collapsed + .mat-sidenav-content + .footer {
+  margin-left: 60px;
+}
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px auto;
+  width: 100%;
+  max-width: 1600px;
+}
+
+.cards-container .dashboard-card {
+  width: calc(50% - 10px);
+  margin-bottom: 20px;
+}
+
+.full-width-card {
+  width: 100%;
+  max-width: 1600px;
+  margin: 20px auto;
+}
+
+@media (max-width: 768px) {
+  .cards-container .dashboard-card {
+    width: 100%;
+  }
 }
