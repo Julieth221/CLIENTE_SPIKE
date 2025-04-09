@@ -22,8 +22,10 @@
         </button>
         <div class="sub-menu" *ngIf="activeSubMenu === 'finca'">
           <ul>
-            <li><button type="button" (click)="goToComponent('finca/listar')">Ver Fincas</button></li>
-            <li><button type="button" (click)="goToComponent('registrarFinca')">Crear Finca</button></li>
+            <li><button type="button" (click)="goToComponent('finca/listar')">
+              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Ver Fincas</button></li>
+            <li><button type="button" (click)="goToComponent('registrarFinca')">
+              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Crear Finca</button></li>
           </ul>
         </div>
       </li>
@@ -35,9 +37,12 @@
         </button>
         <div class="sub-menu" *ngIf="activeSubMenu === 'cultivo'">
           <ul>
-            <li><button type="button" (click)="goToComponent('cultivo/gestion')">Gestión de Cultivos</button></li>
-            <li><button type="button" (click)="goToComponent('cultivo/insumos')">Historial de Insumos</button></li>
-            <li><button type="button" (click)="goToComponent('cultivo/registrar')">Registrar Cultivo</button></li>
+            <li><button type="button" (click)="goToComponent('cultivo/gestion')">
+              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Gestión de Cultivos</button></li>
+            <li><button type="button" (click)="goToComponent('cultivo/insumos')">
+              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Historial de Insumos</button></li>
+            <li><button type="button" (click)="goToComponent('cultivo/registrar')">
+              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Registrar Cultivo</button></li>
           </ul>
         </div>
       </li>
