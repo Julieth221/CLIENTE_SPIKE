@@ -1,100 +1,142 @@
+<mat-sidenav-container class="dashboard-container">
+  <mat-sidenav #sidenav mode="side" opened="true" class="sidenav">
+      <mat-toolbar color="primary" class="menu">
+          <img src="./logo2.png" alt="Logo" class="menu-logo" (click)="toggleSidenav()" style="cursor: pointer;" />
+          <span class="menu-text">Menu</span>
+      </mat-toolbar>
+      <mat-accordion class="menu-accordion">
+          <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                  <mat-panel-title>Usuario</mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-nav-list>
+                  <a mat-list-item (click)="goToComponent('usuario-nombre')" class="menu-link">Nombre</a>
+                  <a mat-list-item (click)="goToComponent('usuario-edad')" class="menu-link">Edad</a>
+              </mat-nav-list>
+          </mat-expansion-panel>
 
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav mode="side" [(opened)]="isSidenavOpened" class="sidebar">
-    <header>
-      <div class="logo sidenav-header">
-        <img src="logo2.png" alt="Logo" class="logo-img" />
-        <h3>{{ currentUser?.nombre }} {{ currentUser?.apellido }}</h3>
-        <p>{{ currentUser?.rol }}</p>
+          <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                  <mat-panel-title>Finca</mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-nav-list>
+                  <a mat-list-item (click)="goToComponent('finca-pais')" class="menu-link">País</a>
+              </mat-nav-list>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                  <mat-panel-title>Sensores</mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-nav-list>
+                  <a mat-list-item (click)="goToComponent('sensores-pais')" class="menu-link">País</a>
+              </mat-nav-list>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                  <mat-panel-title>Cultivo</mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-nav-list>
+                  <a mat-list-item (click)="goToComponent('cultivo-fecha')" class="menu-link">Fecha</a>
+              </mat-nav-list>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                  <mat-panel-title>Ajustes</mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-nav-list>
+                  <a mat-list-item (click)="goToComponent('ajustes-idioma')" class="menu-link">Idioma</a>
+                  <a mat-list-item (click)="goToComponent('ajustes-tema')" class="menu-link">Tema</a>
+                  <a mat-list-item (click)="goToComponent('ajustes-notificaciones')" class="menu-link">Notificaciones</a>
+                  <a mat-list-item (click)="goToComponent('ajustes-privacidad')" class="menu-link">Privacidad</a>
+                  <a mat-list-item (click)="goToComponent('ajustes-accesibilidad')" class="menu-link">Accesibilidad</a>
+                  <a mat-list-item (click)="goToComponent('ajustes-unidades')" class="menu-link">Unidades</a>
+                  <a mat-list-item (click)="goToComponent('ajustes-region')" class="menu-link">Región</a>
+              </mat-nav-list>
+          </mat-expansion-panel>
+      </mat-accordion>
+      <div class="logout-button-container">
+          <button mat-raised-button (click)="logout()">Cerrar Sesión</button>
       </div>
-    </header>
-    <ul>
-      <li>
-        <button type="button" (click)="goToComponent('inicio'); activeSubMenu = 'inicio'" [class.active]="activeSubMenu === 'inicio'">
-          <i class="fas fa-home"></i>
-          <p>Inicio</p>
-        </button>
-      </li>
-      <li>
-        <button type="button" (click)="toggleSubMenu('finca')" [class.active]="activeSubMenu === 'finca'">
-          <i class="fas fa-tractor"></i>
-          <p>Fincas</p>
-          <mat-icon>expand_more</mat-icon>
-        </button>
-        <div class="sub-menu" *ngIf="activeSubMenu === 'finca'">
-          <ul>
-            <li><button type="button" (click)="goToComponent('finca/listar')">Ver Fincas</button></li>
-            <li><button type="button" (click)="goToComponent('registrarFinca')">Crear Finca</button></li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <button type="button" (click)="toggleSubMenu('cultivo')" [class.active]="activeSubMenu === 'cultivo'">
-          <i class="fas fa-seedling"></i>
-          <p>Cultivo</p>
-          <mat-icon>expand_more</mat-icon>
-        </button>
-        <div class="sub-menu" *ngIf="activeSubMenu === 'cultivo'">
-          <ul>
-            <li><button type="button" (click)="goToComponent('cultivo/gestion')">Gestión de Cultivos</button></li>
-            <li><button type="button" (click)="goToComponent('cultivo/insumos')">Historial de Insumos</button></li>
-            <li><button type="button" (click)="goToComponent('cultivo/registrar')">Registrar Cultivo</button></li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <button type="button" (click)="toggleSubMenu('sensores')" [class.active]="activeSubMenu === 'sensores'">
-          <i class="fas fa-microchip"></i>
-          <p>Sensores</p>
-          <mat-icon>expand_more</mat-icon>
-        </button>
-        <div class="sub-menu" *ngIf="activeSubMenu === 'sensores'">
-          <ul>
-            <li><button type="button">Gestión de Sensores</button></li>
-            <li><button type="button">Probar Sensor</button></li>
-            <li><button type="button">Configuración de Alertas</button></li>
-            <li><button type="button">Localización Sensor</button></li>
-            <li><button type="button">Registrar Sensor</button></li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <button type="button" (click)="goToComponent('usuarios')">
-          <i class="bi bi-people-fill"></i>
-          <p>Usuarios</p>
-        </button>
-      </li>
-      <li>
-        <button type="button" (click)="goToComponent('perfil'); activeSubMenu = 'miperfil'" [class.active]="activeSubMenu === 'miperfil'">
-          <i class="fas fa-user-circle"></i>
-          <p>Mi perfil</p>
-        </button>
-      </li>
-      <li>
-        <button type="button" (click)="goToComponent('configuracion')">
-          <i class="fas fa-cog"></i>
-          <p>Configuración</p>
-        </button>
-      </li>
-    </ul>
-    <div class="Btn-logout">
-      <button class="logout-btn" (click)="logout()">
-        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-      </button>
-    </div>
   </mat-sidenav>
 
   <mat-sidenav-content class="content">
-    <header class="content-header">
-      <button mat-icon-button (click)="toggleSidenav()" class="menu-button">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <h1 class="title">Sistema de Monitoreo de Cultivo de Arroz</h1>
-    </header>
+      <header class="header">
+          <div class="header-content">
+              <button mat-icon-button (click)="toggleSidenav()" class="menu-button">
+                  <mat-icon>
+                      <img src="./logo2.png" alt="Logo" style="height: 48px; width: 48px;">
+                  </mat-icon>
+              </button>
+              <mat-form-field class="search-bar">
+                  <mat-icon matPrefix>search</mat-icon>
+                  <input matInput placeholder="Buscar..." />
+              </mat-form-field>
+              <span class="title-spacer">Bienvenido a SPIKE</span>
+              <div class="user-info">
+                  <button mat-button [matMenuTriggerFor]="userMenu">
+                      <img src="logo2.png" alt="User" class="user-avatar">
+                      <span>Nombre de Usuario</span>
+                  </button>
+                  <mat-menu #userMenu="matMenu">
+                      <button mat-menu-item>Ver Perfil</button>
+                      <button mat-menu-item>Configuración</button>
+                  </mat-menu>
+              </div>
+          </div>
+      </header>
 
-    <div class="content-body">
-      <router-outlet></router-outlet>
-    </div>
+      <div class="cards-container">
+          <mat-card class="dashboard-card">
+              <div class="dashboard-content">
+                  <div class="image-section">
+                      <img src="logo2.png" alt="Imagen 1" class="dashboard-image">
+                      <img src="logo3.png" alt="Imagen 2" class="dashboard-image">
+                  </div>
+                  <div class="text-section">
+                      <mat-divider>
+                          <mat-label>Tus últimos datos</mat-label>
+                      </mat-divider>
+                      <p>
+                          SPIKE le da la bienvenida. Monitoree sus cultivos de manera eficiente y tome decisiones informadas,
+                          todo desde su computadora.
+                      </p>
+                  </div>
+              </div>
+          </mat-card>
+
+          <mat-card class="dashboard-card">
+              <div class="dashboard-content">
+                  <div class="image-section">
+                      <img src="logo2.png" alt="Imagen 3" class="dashboard-image">
+                      <img src="logo3.png" alt="Imagen 4" class="dashboard-image">
+                  </div>
+                  <div class="text-section">
+                      <mat-divider>
+                          <mat-label>Datos de Sensores</mat-label>
+                      </mat-divider>
+                      <p>
+                          Información de los sensores de la finca.
+                      </p>
+                  </div>
+              </div>
+          </mat-card>
+      </div>
+
+      <mat-card class="full-width-card">
+          <div class="dashboard-content">
+              <div class="text-section">
+                  <mat-divider>
+                      <mat-label>Resumen del Cultivo</mat-label>
+                  </mat-divider>
+                  <p>
+                      Resumen del estado actual del cultivo.
+                  </p>
+              </div>
+          </div>
+      </mat-card>
   </mat-sidenav-content>
   <footer class="footer">
       <div class="footer-content">
