@@ -8,12 +8,6 @@ import { DashboardComponent } from './app/components/dashboard/dashboard.compone
 import { provideHttpClient } from '@angular/common/http';
 import { HomeComponent } from './app/components/home/home.component';
 import { ForgotPassComponent } from './app/components/forgot-pass/forgot-pass.component';
-import { VerifyCodeComponent } from './app/components/verify-code/verify-code.component';
-import { PwdRecoveryComponent } from './app/components/pwd-recovery/pwd-recovery.component';
-import { PwdSuccessComponent } from './app/components/pwd-success/pwd-success.component';
-import { importProvidersFrom } from '@angular/core';
-import { MatDialogModule } from '@angular/material/dialog';
-import { FincaRegisterComponent } from './app/components/finca/finca-register/finca-register.component';
 
 bootstrapApplication(AppComponent,{
     providers:[
@@ -22,21 +16,10 @@ bootstrapApplication(AppComponent,{
             { path: 'home', component: HomeComponent },
             { path: 'login', component: LoginComponent },
             { path: 'forgotPassword', component: ForgotPassComponent },
-            { path: 'verifyCode', component: VerifyCodeComponent },
-            { path: 'pwdRecovery', component: PwdRecoveryComponent },
-            { path: 'pwdSuccess', component: PwdSuccessComponent },
             { path: 'register', component: RegisterComponent },
-            // { path: 'register/finca', component: FincaRegisterComponent },
-            {
-                path: 'dashboard',
-                component: DashboardComponent,
-                children: [
-                  { path: 'registrarFinca', loadComponent: () => import('./app/components/finca/finca-register/finca-register.component').then(m => m.FincaRegisterComponent) },
-                ],
-              },
-          ]),
+            { path: 'dashboard', component: DashboardComponent}
+        ]),
         provideAnimations(),
-        provideHttpClient(),
-        importProvidersFrom(MatDialogModule)
+        provideHttpClient()
     ]
 }).catch(err => console.error(err));
