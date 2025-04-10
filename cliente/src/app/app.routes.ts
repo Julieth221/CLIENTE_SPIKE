@@ -4,6 +4,7 @@ import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { ForgotPassComponent } from './components/forgot-pass/forgot-pass.component';
 import { RegisterComponent } from './components/register/register.component';
+import { RegisterSensorComponent } from './components/register-sensor/register-sensor.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -11,5 +12,6 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'forgotPassword', component: ForgotPassComponent },
     { path: 'register', component: RegisterComponent },
-    { path: 'dashboard', component: DashboardComponent} 
+    { path: 'dashboard', component: DashboardComponent},
+    { path: 'registerSensor', component: RegisterSensorComponent}
 ];

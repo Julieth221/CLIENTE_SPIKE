@@ -12,6 +12,7 @@ import { VerifyCodeComponent } from './app/components/verify-code/verify-code.co
 import { PwdRecoveryComponent } from './app/components/pwd-recovery/pwd-recovery.component';
 import { PwdSuccessComponent } from './app/components/pwd-success/pwd-success.component';
 import { importProvidersFrom } from '@angular/core';
+import { RegisterSensorComponent } from './app/components/register-sensor/register-sensor.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FincaRegisterComponent } from './app/components/finca/finca-register/finca-register.component';
 
@@ -25,6 +26,7 @@ bootstrapApplication(AppComponent,{
             { path: 'verifyCode', component: VerifyCodeComponent },
             { path: 'pwdRecovery', component: PwdRecoveryComponent },
             { path: 'pwdSuccess', component: PwdSuccessComponent },
+            { path: 'registerSensor', component: RegisterSensorComponent},
             { path: 'register', component: RegisterComponent },
             // { path: 'register/finca', component: FincaRegisterComponent },
             {
