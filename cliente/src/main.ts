@@ -31,7 +31,7 @@ bootstrapApplication(AppComponent,{
                 path: 'dashboard',
                 component: DashboardComponent,
                 children: [
-                  { path: 'registrarFinca', loadComponent: () => import('./app/components/finca/finca-register/finca-register.component').then(m => m.FincaRegisterComponent) },
+                  { path: 'finca/registrar', loadComponent: () => import('./app/components/finca/finca-register/finca-register.component').then(m => m.FincaRegisterComponent) },
                 ],
               },
           ]),

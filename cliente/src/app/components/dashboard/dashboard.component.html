@@ -1,4 +1,3 @@
-
 <mat-sidenav-container class="sidenav-container">
     <mat-sidenav mode="side" [(opened)]="isSidenavOpened" class="sidebar">
       <header>
@@ -19,7 +18,7 @@
           <button type="button" (click)="toggleSubMenu('finca')" [class.active]="activeSubMenu === 'finca'">
             <i class="fas fa-tractor"></i>
             <p>Fincas</p>
-            <mat-icon>expand_more</mat-icon>
+            <mat-icon>menu</mat-icon>
           </button>
           <div class="sub-menu" *ngIf="activeSubMenu === 'finca'">
             <ul>
@@ -82,28 +81,18 @@
           <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
         </button>
       </div>
-    </mat-sidenav>
-  
-    <mat-sidenav-content class="content">
-      <header class="content-header">
-        <button mat-icon-button (click)="toggleSidenav()" class="menu-button">
-          <mat-icon>menu</mat-icon>
-        </button>
-        <h1 class="title">Sistema de Monitoreo de Cultivo de Arroz</h1>
-      </header>
-  
-      <div class="content-body">
-        <router-outlet></router-outlet>
-      </div>
-    </mat-sidenav-content>
-    <footer class="footer">
-        <div class="footer-content">
-            <p>&copy; 2025 Mi Aplicación. Todos los derechos reservados.</p>
-            <nav>
-                <a href="#">Términos de Servicio</a> |
-                <a href="#">Política de Privacidad</a> |
-                <a href="#">Contacto</a>
-            </nav>
-        </div>
-    </footer>
-  </mat-sidenav-container>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="content">
+    <header class="content-header">
+      <button mat-icon-button (click)="toggleSidenav()" class="menu-button">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <h1 class="title">Sistema de Monitoreo de Cultivo de Arroz</h1>
+    </header>
+
+    <div class="content-body">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

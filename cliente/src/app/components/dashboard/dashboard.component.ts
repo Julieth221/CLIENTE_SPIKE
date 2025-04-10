@@ -13,8 +13,6 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { Router, RouterModule  } from '@angular/router';
-import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-
 
 
 
@@ -88,81 +86,8 @@ export class DashboardComponent  {
     this.router.navigate(['/login']);
   }
 
-
   // Método para alternar el sidebar
   toggleSidenav() {
     this.isSidenavOpened = !this.isSidenavOpened;
   }
-
 }
-  // showFiller = false;
-  // isSidenavCollapsed = false;
-  // @ViewChild('sidenav') sidenav!: MatSidenav; // Usamos la aserción definitiva
-
-  // constructor(
-  //   private router: Router,
-  //   private dialog: MatDialog, // Inyecta MatDialog
-  // ) { }
-
-  // ngAfterViewInit() {
-  //    // Inicializa el sidenav aquí, dentro del ciclo de vida apropiado.
-  //    // Ejemplo:
-  //    if (this.sidenav) {
-  //      //  this.sidenav.mode = 'side'; // Puedes configurar propiedades del sidenav aquí
-  //    }
-  // }
-
-  // /**
-  //  * Función para navegar a un componente específico.
-  //  * @param componentName Nombre del componente al que se quiere navegar.
-  //  */
-  // goToComponent(componentName: string): void {
-  //   console.log(`Navigating to ${componentName}`);
-  //   // Aquí iría la lógica de navegación real, por ejemplo, usando el Router de Angular.
-  //   // this.router.navigate([componentName]);
-  // }
-
-  // /**
-  //  * Función para cerrar sesión.
-  //  */
-  // logout(): void {
-  //   const dialogRef = this.dialog.open(ConfirmationDialog, {
-  //     width: '300px',
-  //     data: { title: 'Cerrar Sesión', message: '¿Está seguro de que desea cerrar sesión?' } // Pasa título y mensaje al diálogo
-  //   });
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result) {
-  //       console.log('Cerrando sesión...');
-  //       this.router.navigate(['/login']);
-  //     }
-  //   });
-  // }
-
-  // toggleSidenav(): void {
-  //   this.isSidenavCollapsed = !this.isSidenavCollapsed;
-  //   this.sidenav.toggle();
-  // }
-
-
-// @Component({
-//   selector: 'confirmation-dialog',
-//   template: `
-//     <h2 mat-dialog-title>{{data.title}}</h2>
-//     <mat-dialog-content>
-//       <p>{{data.message}}</p>
-//     </mat-dialog-content>
-//     <mat-dialog-actions align="end">
-//       <button mat-button mat-dialog-cancel>Cancelar</button>
-//       <button mat-button [mat-dialog-close]="true">Cerrar Sesión</button>
-//     </mat-dialog-actions>
-//   `,
-//   standalone: true,
-//   imports: [MatButtonModule, MatDialogModule]
-// })
-// export class ConfirmationDialog {
-//   constructor(
-//     public dialogRef: MatDialogRef<ConfirmationDialog>,
-//     @Inject(MAT_DIALOG_DATA) public data: { title: string, message: string }
-//   ) { }
-
