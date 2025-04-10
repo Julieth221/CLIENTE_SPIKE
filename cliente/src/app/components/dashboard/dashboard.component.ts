@@ -13,7 +13,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { Router, RouterModule  } from '@angular/router';
-import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';  
+import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 
 
@@ -67,22 +67,7 @@ export class DashboardComponent  {
     console.log('Navegando a:', segments);
     this.router.navigate(['/dashboard',  ...segments]);
     
-export class DashboardComponent implements AfterViewInit {
-  showFiller = false;
-  isSidenavCollapsed = false;
-  @ViewChild('sidenav') sidenav!: MatSidenav; // Usamos la aserción definitiva
 
-  constructor(
-    private router: Router,
-    private dialog: MatDialog, // Inyecta MatDialog
-  ) { }
-
-  ngAfterViewInit() {
-    // Inicializa el sidenav aquí, dentro del ciclo de vida apropiado.
-    // Ejemplo:
-    if (this.sidenav) {
-      //  this.sidenav.mode = 'side'; // Puedes configurar propiedades del sidenav aquí
-    }
 
   }
 
@@ -109,7 +94,7 @@ export class DashboardComponent implements AfterViewInit {
     this.isSidenavOpened = !this.isSidenavOpened;
   }
 
- 
+}
   // showFiller = false;
   // isSidenavCollapsed = false;
   // @ViewChild('sidenav') sidenav!: MatSidenav; // Usamos la aserción definitiva
@@ -158,7 +143,7 @@ export class DashboardComponent implements AfterViewInit {
   //   this.isSidenavCollapsed = !this.isSidenavCollapsed;
   //   this.sidenav.toggle();
   // }
-}
+
 
 // @Component({
 //   selector: 'confirmation-dialog',
@@ -180,32 +165,4 @@ export class DashboardComponent implements AfterViewInit {
 //     public dialogRef: MatDialogRef<ConfirmationDialog>,
 //     @Inject(MAT_DIALOG_DATA) public data: { title: string, message: string }
 //   ) { }
-// }
-
-
-@Component({
-  selector: 'confirmation-dialog',
-  template: `
-    <h2 mat-dialog-title>{{data.title}}</h2>
-    <mat-dialog-content>
-      <p>{{data.message}}</p>
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-cancel (click)="onCancel()">Cancelar</button>
-      <button mat-button [mat-dialog-close]="true">Cerrar Sesión</button>
-    </mat-dialog-actions>
-  `,
-  standalone: true,
-  imports: [MatButtonModule, MatDialogModule]
-})
-export class ConfirmationDialog {
-  constructor(
-    public dialogRef: MatDialogRef<ConfirmationDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string, message: string }
-  ) { }
-
-  onCancel(): void {
-    this.dialogRef.close(false); // Cierra el diálogo y pasa el valor false
-  }
-}
 

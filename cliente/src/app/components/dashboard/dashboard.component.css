@@ -1,5 +1,4 @@
 .dashboard-container {
-
   min-height: 100vh;
 }
 
@@ -15,19 +14,10 @@ mat-sidenav {
 mat-sidenav-content {
   flex: 1;
 }
+
 h3 {
   margin: 0;
   font-size: 1.2rem;
-
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  position: relative;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(128, 122, 122, 0.322)),
-  url('/paisaje.jpg');
-background-size: cover;
-background-position: center;
-background-repeat: no-repeat;
 }
 
 .sidenav {
@@ -80,6 +70,7 @@ button {
 .sidebar::-webkit-scrollbar {
   width: 0px;
   background: transparent; /* Opcional: hace que la barra sea invisible */
+}
 
 .content {
   padding: 16px;
@@ -133,6 +124,7 @@ button {
   display: flex;
   border-radius: 6px;
   transition: background-color 0.3s;
+}
 
 .menu-text {
   color: rgb(8, 8, 8);
@@ -190,6 +182,7 @@ button {
   font-weight: bold;
   text-align: center;
   color: white;
+}
 
 .dashboard-content {
   display: flex;
@@ -238,6 +231,12 @@ button {
   color: white;
 }
 
+  .text-section {
+  text-align: center;
+  color: rgb(0, 0, 0);
+  padding: 10px;
+}
+
 
 button.active {
   background-color: rgba(91, 153, 103, 0.2); 
@@ -250,6 +249,7 @@ button.active {
 .sidebar button:is(.active, :hover) {
   background-color: rgba(91, 153, 103, 0.2); 
   backdrop-filter: blur(8px);
+}
 
 .search-bar {
   width: 200px;
@@ -280,6 +280,7 @@ button.active {
 .sidebar button:not(.active):hover {
   background-color: rgba(91, 153, 103, 0.2); /* Verde translúcido */
   backdrop-filter: blur(8px);
+}
 
 .logout-button-container {
   display: flex;
@@ -381,7 +382,7 @@ button.active {
     height: 48px;
     width: 48px;
 }
-
+}
 .user-info {
 
   display: flex;
@@ -416,7 +417,7 @@ button.active {
   transition: transform 0.3s ease;
   background: linear-gradient(135deg, #0B7D2F 10%, #025828 90%);
   backdrop-filter: blur(20px);
-
+}
 
 .mat-menu-content {
   background-color: #12c709;

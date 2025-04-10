@@ -1,109 +1,109 @@
 
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav mode="side" [(opened)]="isSidenavOpened" class="sidebar">
-    <header>
-      <div class="logo sidenav-header">
-        <img src="logo2.png" alt="Logo" class="logo-img" />
-        <h3>{{ currentUser?.nombre }} {{ currentUser?.apellido }}</h3>
-        <p>{{ currentUser?.rol }}</p>
+    <mat-sidenav mode="side" [(opened)]="isSidenavOpened" class="sidebar">
+      <header>
+        <div class="logo sidenav-header">
+          <img src="logo2.png" alt="Logo" class="logo-img" />
+          <h3>{{ currentUser?.nombre }} {{ currentUser?.apellido }}</h3>
+          <p>{{ currentUser?.rol }}</p>
+        </div>
+      </header>
+      <ul>
+        <li>
+          <button type="button" (click)="goToComponent('inicio'); activeSubMenu = 'inicio'" [class.active]="activeSubMenu === 'inicio'">
+            <i class="fas fa-home"></i>
+            <p>Inicio</p>
+          </button>
+        </li>
+        <li>
+          <button type="button" (click)="toggleSubMenu('finca')" [class.active]="activeSubMenu === 'finca'">
+            <i class="fas fa-tractor"></i>
+            <p>Fincas</p>
+            <mat-icon>expand_more</mat-icon>
+          </button>
+          <div class="sub-menu" *ngIf="activeSubMenu === 'finca'">
+            <ul>
+              <li><button type="button" (click)="goToComponent('finca/listar')">Ver Fincas</button></li>
+              <li><button type="button" (click)="goToComponent('registrarFinca')">Crear Finca</button></li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <button type="button" (click)="toggleSubMenu('cultivo')" [class.active]="activeSubMenu === 'cultivo'">
+            <i class="fas fa-seedling"></i>
+            <p>Cultivo</p>
+            <mat-icon>expand_more</mat-icon>
+          </button>
+          <div class="sub-menu" *ngIf="activeSubMenu === 'cultivo'">
+            <ul>
+              <li><button type="button" (click)="goToComponent('cultivo/gestion')">Gestión de Cultivos</button></li>
+              <li><button type="button" (click)="goToComponent('cultivo/insumos')">Historial de Insumos</button></li>
+              <li><button type="button" (click)="goToComponent('cultivo/registrar')">Registrar Cultivo</button></li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <button type="button" (click)="toggleSubMenu('sensores')" [class.active]="activeSubMenu === 'sensores'">
+            <i class="fas fa-microchip"></i>
+            <p>Sensores</p>
+            <mat-icon>expand_more</mat-icon>
+          </button>
+          <div class="sub-menu" *ngIf="activeSubMenu === 'sensores'">
+            <ul>
+              <li><button type="button">Gestión de Sensores</button></li>
+              <li><button type="button">Probar Sensor</button></li>
+              <li><button type="button">Configuración de Alertas</button></li>
+              <li><button type="button">Localización Sensor</button></li>
+              <li><button type="button">Registrar Sensor</button></li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <button type="button" (click)="goToComponent('usuarios')">
+            <i class="bi bi-people-fill"></i>
+            <p>Usuarios</p>
+          </button>
+        </li>
+        <li>
+          <button type="button" (click)="goToComponent('perfil'); activeSubMenu = 'miperfil'" [class.active]="activeSubMenu === 'miperfil'">
+            <i class="fas fa-user-circle"></i>
+            <p>Mi perfil</p>
+          </button>
+        </li>
+        <li>
+          <button type="button" (click)="goToComponent('configuracion')">
+            <i class="fas fa-cog"></i>
+            <p>Configuración</p>
+          </button>
+        </li>
+      </ul>
+      <div class="Btn-logout">
+        <button class="logout-btn" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+        </button>
       </div>
-    </header>
-    <ul>
-      <li>
-        <button type="button" (click)="goToComponent('inicio'); activeSubMenu = 'inicio'" [class.active]="activeSubMenu === 'inicio'">
-          <i class="fas fa-home"></i>
-          <p>Inicio</p>
+    </mat-sidenav>
+  
+    <mat-sidenav-content class="content">
+      <header class="content-header">
+        <button mat-icon-button (click)="toggleSidenav()" class="menu-button">
+          <mat-icon>menu</mat-icon>
         </button>
-      </li>
-      <li>
-        <button type="button" (click)="toggleSubMenu('finca')" [class.active]="activeSubMenu === 'finca'">
-          <i class="fas fa-tractor"></i>
-          <p>Fincas</p>
-          <mat-icon>expand_more</mat-icon>
-        </button>
-        <div class="sub-menu" *ngIf="activeSubMenu === 'finca'">
-          <ul>
-            <li><button type="button" (click)="goToComponent('finca/listar')">Ver Fincas</button></li>
-            <li><button type="button" (click)="goToComponent('registrarFinca')">Crear Finca</button></li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <button type="button" (click)="toggleSubMenu('cultivo')" [class.active]="activeSubMenu === 'cultivo'">
-          <i class="fas fa-seedling"></i>
-          <p>Cultivo</p>
-          <mat-icon>expand_more</mat-icon>
-        </button>
-        <div class="sub-menu" *ngIf="activeSubMenu === 'cultivo'">
-          <ul>
-            <li><button type="button" (click)="goToComponent('cultivo/gestion')">Gestión de Cultivos</button></li>
-            <li><button type="button" (click)="goToComponent('cultivo/insumos')">Historial de Insumos</button></li>
-            <li><button type="button" (click)="goToComponent('cultivo/registrar')">Registrar Cultivo</button></li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <button type="button" (click)="toggleSubMenu('sensores')" [class.active]="activeSubMenu === 'sensores'">
-          <i class="fas fa-microchip"></i>
-          <p>Sensores</p>
-          <mat-icon>expand_more</mat-icon>
-        </button>
-        <div class="sub-menu" *ngIf="activeSubMenu === 'sensores'">
-          <ul>
-            <li><button type="button">Gestión de Sensores</button></li>
-            <li><button type="button">Probar Sensor</button></li>
-            <li><button type="button">Configuración de Alertas</button></li>
-            <li><button type="button">Localización Sensor</button></li>
-            <li><button type="button">Registrar Sensor</button></li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <button type="button" (click)="goToComponent('usuarios')">
-          <i class="bi bi-people-fill"></i>
-          <p>Usuarios</p>
-        </button>
-      </li>
-      <li>
-        <button type="button" (click)="goToComponent('perfil'); activeSubMenu = 'miperfil'" [class.active]="activeSubMenu === 'miperfil'">
-          <i class="fas fa-user-circle"></i>
-          <p>Mi perfil</p>
-        </button>
-      </li>
-      <li>
-        <button type="button" (click)="goToComponent('configuracion')">
-          <i class="fas fa-cog"></i>
-          <p>Configuración</p>
-        </button>
-      </li>
-    </ul>
-    <div class="Btn-logout">
-      <button class="logout-btn" (click)="logout()">
-        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-      </button>
-    </div>
-  </mat-sidenav>
-
-  <mat-sidenav-content class="content">
-    <header class="content-header">
-      <button mat-icon-button (click)="toggleSidenav()" class="menu-button">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <h1 class="title">Sistema de Monitoreo de Cultivo de Arroz</h1>
-    </header>
-
-    <div class="content-body">
-      <router-outlet></router-outlet>
-    </div>
-  </mat-sidenav-content>
-  <footer class="footer">
-      <div class="footer-content">
-          <p>&copy; 2025 Mi Aplicación. Todos los derechos reservados.</p>
-          <nav>
-              <a href="#">Términos de Servicio</a> |
-              <a href="#">Política de Privacidad</a> |
-              <a href="#">Contacto</a>
-          </nav>
+        <h1 class="title">Sistema de Monitoreo de Cultivo de Arroz</h1>
+      </header>
+  
+      <div class="content-body">
+        <router-outlet></router-outlet>
       </div>
-  </footer>
-</mat-sidenav-container>
+    </mat-sidenav-content>
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Mi Aplicación. Todos los derechos reservados.</p>
+            <nav>
+                <a href="#">Términos de Servicio</a> |
+                <a href="#">Política de Privacidad</a> |
+                <a href="#">Contacto</a>
+            </nav>
+        </div>
+    </footer>
+  </mat-sidenav-container>
