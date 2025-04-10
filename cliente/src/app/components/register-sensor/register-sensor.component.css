@@ -1,0 +1,31 @@
+.registers-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.registers-card {
+    width: 300px;
+    padding: 20px;
+    background: #044c0fdd;
+    max-width: 400px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.button-column-container {
+    display: flex;
+    flex-direction: column; /* Alinea los botones en columna */
+    align-items: center; /* Centra los botones horizontalmente */
+    width: 100%; /* El contenedor ocupa el ancho de la tarjeta */
+    margin-top: 20px; /* Añade espacio sobre los botones */
+    
+}
+
+.button-column-container button {
+    margin-bottom: 16px; /* Añade espacio entre botones */
+    width: 100%; /* Hace que los botones se estiren al ancho del contenedor */
+    max-width: 250px; /* Opcional: Limita el ancho máximo de los botones */
+    color: black;
+}
