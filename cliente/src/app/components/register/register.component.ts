@@ -57,11 +57,33 @@ export class RegisterComponent {
   }
 
   onRegister() {
-    if (this.registerForm.valid) {
-      console.log("Usuario registrado:", this.registerForm.value);
-      this.router.navigate(['/dashboard'])
-    }
+    if (this.registerForm.invalid) return;
+
+    const formValue = this.registerForm.value;
+
+    const body = {
+      Nombre: formValue.nombre,
+      Apellido: formValue.apellido,
+      Contacto: formValue.telefono,
+      CorreoElectronico: formValue.email,
+      contraseña: formValue.password,
+      Rol: formValue.rol
+    };
+    console.log('Enviando código:', body);
+
+    this.apiService.post(`${API_URLS.MID.API_MID_SPIKE}/usuarios/`, body).subscribe({
+      next: (response) => {
+        // console.log("Usuario registrado correctamente:", response);
+        alert('usuario registrado exitosamente')
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        console.error("Error al registrar:", error);
+        alert('Error al registrarse')
+      }
+    });
   }
+  
 
   goToLogin(){
     this.router.navigate(['/login'])

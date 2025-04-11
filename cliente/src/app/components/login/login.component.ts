@@ -71,10 +71,47 @@ export class LoginComponent {
     this.showPassword = !this.showPassword;
   }
 
-  login() { 
-    console.log('Inicio sesión')
-    this.router.navigate(['/dashboard'])
+
+  login() {
+    if (this.loginForm.invalid) return;
+  
+    this.isLoading = true;
+    this.loginError = '';
+  
+    const loginData = {
+      CorreoElectronico: this.loginForm.value.email,
+      contraseña: this.loginForm.value.password
+    };
+  
+    this.apiService.post(`${API_URLS.MID.API_MID_SPIKE}/usuarios/sistem/login`, loginData)
+      .subscribe({
+        next: (response: any) => {
+          // console.log('Respuesta del login:', response);
+          this.isLoading = false;
+  
+          if (response && response.token) {
+            // Guardar token en localStorage o donde lo necesites
+            localStorage.setItem('authToken', response.token);
+  
+            // Redirigir al dashboard
+            this.router.navigate(['/dashboard']);
+          } else {
+            this.loginError = 'Correo y/o contraseña incorrectos.';
+          }
+        },
+        error: (error) => {
+          console.error('Error en login:', error);
+          this.isLoading = false;
+  
+          if (error.error && error.error.mensaje) {
+            this.loginError = error.error.mensaje;
+          } else {
+            this.loginError = 'Error al intentar iniciar sesión.';
+          }
+        }
+      });
   }
+  
 
   goToForgotPass(){
     console.log('Olvidé mi contraseña')
@@ -86,6 +123,8 @@ export class LoginComponent {
     this.router.navigate(['/register'])
 
   }
+
+
 
 
 
