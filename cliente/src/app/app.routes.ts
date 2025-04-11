@@ -5,6 +5,7 @@ import { LoginComponent } from './components/login/login.component';
 import { ForgotPassComponent } from './components/forgot-pass/forgot-pass.component';
 import { RegisterComponent } from './components/register/register.component';
 import { RegisterSensorComponent } from './components/register-sensor/register-sensor.component';
+import { RegistroTSensorComponent } from './components/registro-t-sensor/registro-t-sensor.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -13,5 +14,6 @@ export const routes: Routes = [
     { path: 'forgotPassword', component: ForgotPassComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'dashboard', component: DashboardComponent},
-    { path: 'registerSensor', component: RegisterSensorComponent}
+    { path: 'registerSensor', component: RegisterSensorComponent},
+    { path: 'registroTSensor', component: RegistroTSensorComponent},
 ];

@@ -15,6 +15,7 @@ import { importProvidersFrom } from '@angular/core';
 import { RegisterSensorComponent } from './app/components/register-sensor/register-sensor.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FincaRegisterComponent } from './app/components/finca/finca-register/finca-register.component';
+import { RegistroTSensorComponent } from './app/components/registro-t-sensor/registro-t-sensor.component';
 
 bootstrapApplication(AppComponent,{
     providers:[
@@ -35,7 +36,12 @@ bootstrapApplication(AppComponent,{
                 children: [
                   { path: 'finca/registrar', loadComponent: () => import('./app/components/finca/finca-register/finca-register.component').then(m => m.FincaRegisterComponent) },
                   {
-                    path: 'register-sensor', loadComponent: ()  => import('./app/components/register-sensor/register-sensor.component').then(m => m.RegisterSensorComponent)
+                    path: 'register-sensor', loadComponent: ()  => import('./app/components/register-sensor/register-sensor.component').then(m => m.RegisterSensorComponent),
+                    children:[
+                      { path: 'registro-de-sensor', loadComponent:()=> import('./app/components/registro-t-sensor/registro-t-sensor.component').then(m => m.RegistroTSensorComponent),
+                        
+                      }
+                    ]
                   },
                 ],
               },

@@ -6,17 +6,17 @@ import {MatButtonModule} from '@angular/material/button';
 import { MatTooltipModule} from '@angular/material/tooltip';
 
 @Component({
-  selector: 'app-register-sensor',
+  selector: 'app-registro-t-sensor',
   imports: [
+    MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatButtonModule,
     MatDividerModule,
     MatTooltipModule,
   ],
-  templateUrl: './register-sensor.component.html',
-  styleUrl: './register-sensor.component.css'
+  templateUrl: './registro-t-sensor.component.html',
+  styleUrl: './registro-t-sensor.component.css'
 })
-export class RegisterSensorComponent {
+export class RegistroTSensorComponent {
 
 }
