@@ -1,6 +1,56 @@
 <div class="registroTsensor-container">
     <mat-card class="register-card">
         <h1 class="title">REGISTRAR SENSOR</h1>
-        <p class="subtitle">porfavor llenar los espacios para el registro</p>
+        <p class="subtitle">Por favor, complete los espacios para el registro</p>
+
+        <form [formGroup]="sensorForm" (ngSubmit)="onSubmit()">
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nombre del Sensor</mat-label>
+                <input matInput placeholder="Ingrese el nombre del sensor" formControlName="nombre">
+                <mat-error *ngIf="sensorForm.get('nombre')?.invalid">
+                    Nombre es requerido.
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Ubicación</mat-label>
+                <input matInput placeholder="Ingrese la ubicación o use el botón" formControlName="ubicacion" readonly>
+                <button mat-icon-button matSuffix (click)="getLocation()" type="button"  aria-label="Obtener ubicación actual">
+                    <mat-icon>location_on</mat-icon>
+                </button>
+                <mat-error *ngIf="sensorForm.get('ubicacion')?.invalid">
+                    Ubicación es requerida.
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Cultivo</mat-label>
+                <mat-select formControlName="cultivo" (selectionChange)="onCultivoChange($event)">
+                    <mat-option *ngFor="let cultivo of cultivos" [value]="cultivo">
+                        {{ cultivo }}
+                    </mat-option>
+                    <mat-option value="otro">Otro</mat-option>
+                </mat-select>
+                <mat-error *ngIf="sensorForm.get('cultivo')?.invalid">
+                    Cultivo es requerido.
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Fecha de Registro</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="fecha" placeholder="Seleccione la fecha">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                 <mat-error *ngIf="sensorForm.get('fecha')?.invalid">
+                    Fecha de registro es requerida.
+                </mat-error>
+            </mat-form-field>
+
+            <div class="button-container">
+                <button mat-raised-button color="primary" type="submit" [disabled]="sensorForm.invalid">
+                    Registrar Sensor
+                </button>
+            </div>
+        </form>
     </mat-card>
 </div>

@@ -14,6 +14,6 @@ export const routes: Routes = [
     { path: 'forgotPassword', component: ForgotPassComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'dashboard', component: DashboardComponent},
-    { path: 'registerSensor', component: RegisterSensorComponent},
-    { path: 'registroTSensor', component: RegistroTSensorComponent},
+    { path: 'register-sensor', component: RegisterSensorComponent},
+    { path: 'registro-t-sensor', component: RegistroTSensorComponent},
 ];

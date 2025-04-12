@@ -18,12 +18,12 @@
           <button type="button" (click)="toggleSubMenu('finca')" [class.active]="activeSubMenu === 'finca'">
             <i class="fas fa-tractor"></i>
             <p>Fincas</p>
-            <mat-icon>menu</mat-icon>
+            <mat-icon>expand_more</mat-icon>
           </button>
           <div class="sub-menu" *ngIf="activeSubMenu === 'finca'">
             <ul>
               <li><button type="button" (click)="goToComponent('finca/listar')">Ver Fincas</button></li>
-              <li><button type="button" (click)="goToComponent('registrarFinca')">Crear Finca</button></li>
+              <li><button type="button" (click)="goToComponent('finca/registrar')">Crear Finca</button></li>
             </ul>
           </div>
         </li>
