@@ -67,7 +67,7 @@ export class RegistroTSensorComponent implements OnInit {
 
     ngOnInit(): void {
         // Inicializa la lista de cultivos (simulación de la base de datos)
-        this.cultivos = ['Maíz', 'Frijol', 'Trigo', 'Café', 'Otro'];
+        this.cultivos = ['Blanco', 'Azul', 'Cualquiera', 'Amarillo'];
     }
 
     // Función para obtener la geolocalización
