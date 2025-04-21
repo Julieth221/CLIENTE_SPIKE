@@ -1,0 +1,89 @@
+<div class="container">
+    <h2 class="title">REGISTRO DATOS FINCA</h2>
+
+  <!-- BOTONES DE VISTA -->
+  <mat-button-toggle-group 
+    name="vistaToggle" 
+    [(ngModel)]="vistaActual" 
+    class="toggle-vista"
+    appearance="standard"
+  >
+    <mat-button-toggle value="tipoSuelo">
+      <mat-icon>table_chart</mat-icon>
+      Tipo de suelo
+    </mat-button-toggle>
+    <mat-button-toggle value="arrendatario">
+      <mat-icon>view_module</mat-icon>
+      Arrendatario
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+  <div *ngIf="!loading  && vistaActual === 'tipoSuelo'" class="form-section">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ editing ? 'Editar Tipo de Suelo' : 'Registrar Tipo de Suelo' }}</mat-card-title>
+        <mat-card-subtitle>Administra los tipos de suelo que usarás al registrar una finca.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="tipoSueloForm" (ngSubmit)="guardarTipoSuelo()">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nombre del tipo de suelo</mat-label>
+              <input matInput formControlName="nombre" placeholder="Ej: Arcilloso">
+              <mat-error *ngIf="tipoSueloForm.get('nombre')?.hasError('required')">
+                El nombre es obligatorio
+              </mat-error>
+              <mat-error *ngIf="tipoSueloForm.get('nombre')?.hasError('minlength')">
+                El nombre debe tener al menos 3 caracteres
+              </mat-error>
+            </mat-form-field>
+          </div>
+          
+          <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" [disabled]="loading">
+              <mat-icon>{{ editing ? 'save' : 'add' }}</mat-icon>
+              {{ editing ? 'Actualizar' : 'Registrar' }}
+            </button>
+            
+            <button mat-button type="button" *ngIf="editing" (click)="cancelarEdicion()">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="list-section" *ngIf="vistaActual === 'tipoSuelo'">
+    <h2>Tipos de Suelo Registrados</h2>
+    
+    <div *ngIf="loading" class="loader-container">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+    
+    <div *ngIf="!loading && tiposSuelo.length === 0" class="empty-state">
+      <mat-icon>terrain</mat-icon>
+      <p>No hay tipos de suelo registrados</p>
+    </div>
+    
+    <div class="cards-grid" *ngIf="!loading && tiposSuelo.length > 0">
+      <mat-card class="tipo-card" *ngFor="let tipo of tiposSuelo">
+        <div class="tipo-content">
+          <div class="tipo-chip" [style.background-color]="getTipoSueloColor(tipo.Nombre)">
+            <span>{{ tipo.Nombre | titlecase }}</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <button mat-icon-button color="primary" matTooltip="Editar" (click)="editarTipoSuelo(tipo)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matTooltip="Eliminar" (click)="eliminarTipoSuelo(tipo)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div *ngIf="vistaActual === 'arrendatario'" class="cards-view animate__animated animate__fadeIn">
+    <app-arrendatario-register></app-arrendatario-register>
+  </div>
+</div>
