@@ -13,8 +13,10 @@
     max-width: 400px;
     border-radius: 10px;
     text-align: center;
+    display: flex; /* Para alinear los elementos internos */
+    flex-direction: column; /* Apilar los elementos verticalmente */
+    gap: 10px; /* Espacio entre los elementos */
 }
-
 
 .button-column-container {
     display: flex;
@@ -37,4 +39,55 @@
 
 .subtitle {
     color: rgb(255, 255, 255);
+}
+
+/* Estilos para los inputs de Mat-form-field */
+.mat-form-field {
+    width: 100%; /* Asegura que todos los form-fields ocupen el mismo ancho dentro de su contenedor */
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline {
+    color: white; /* Color del borde */
+}
+
+.mat-form-field-appearance-outline .mat-form-field-label {
+    color: lightgray; /* Color del label inactivo */
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-label {
+    color: rgb(126, 255, 255); /* Color del label activo */
+}
+
+.mat-form-field-appearance-outline .mat-form-field-infix {
+    color: lightgray; /* Color del texto del input */
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color: rgb(126, 255, 255); /* Color del borde activo */
+}
+
+.mat-form-field-appearance-outline .mat-icon {
+    color: lightgray; /* Color del icono */
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-icon {
+    color: black; /* Color del icono activo (si lo deseas diferente) */
+}
+
+.mat-select-value {
+    color: lightgray !important; /* Color del texto del select */
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-select-value {
+    color: lightgray !important; /* Color del texto del select activo */
+}
+
+.mat-input-element::placeholder {
+    color: lightgray; /* Color del placeholder */
+}
+
+.full-width{
+    width: 100%;
+    line-height: 2.5em;
+    
 }

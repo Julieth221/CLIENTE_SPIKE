@@ -22,7 +22,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http'; // Importa 
 })
 export class RegisterSensorComponent {
 
-    private apiUrl = 'URL_DEL_API_MID'; // Reemplaza con la URL real de tu API
+    private API_CRUD_SENSORES = ''; // Reemplaza con la URL real de tu API
 
     constructor(private router: Router, private http: HttpClient) { } // Inyecta HttpClient
 
@@ -55,7 +55,7 @@ export class RegisterSensorComponent {
         };
 
         // Envia los datos al API MID
-        this.http.post(this.apiUrl, data)
+        this.http.post(this.API_CRUD_SENSORES, data)
             .subscribe({
                 next: (response: any) => {
                     console.log('Respuesta del API:', response);
