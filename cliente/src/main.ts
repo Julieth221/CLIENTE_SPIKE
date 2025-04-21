@@ -14,6 +14,15 @@ import { PwdSuccessComponent } from './app/components/pwd-success/pwd-success.co
 import { importProvidersFrom } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FincaRegisterComponent } from './app/components/finca/finca-register/finca-register.component';
+import { ArrendatarioRegisterComponent } from './app/components/finca/arrendatario-register/arrendatario-register.component';
+import { ArrendamientoRegisterComponent } from './app/components/finca/arrendamiento-register/arrendamiento-register.component';
+import { TablaFincasComponent } from './app/components/finca/tablaFincas/tablaFincas.component';
+import { CardFincasComponent } from './app/components/finca/card-fincas/card-fincas.component';
+import { RegisterTipoSueloComponent } from './app/components/finca/register-tipo-suelo/register-tipo-suelo.component';
+import { TablaArrendamientosComponent } from './app/components/finca/tabla-arrendamientos/tabla-arrendamientos.component';
+
+
+
 
 bootstrapApplication(AppComponent,{
     providers:[
@@ -26,12 +35,19 @@ bootstrapApplication(AppComponent,{
             { path: 'pwdRecovery', component: PwdRecoveryComponent },
             { path: 'pwdSuccess', component: PwdSuccessComponent },
             { path: 'register', component: RegisterComponent },
-            // { path: 'register/finca', component: FincaRegisterComponent },
+            { path: 'register', component: RegisterComponent },
             {
                 path: 'dashboard',
                 component: DashboardComponent,
                 children: [
-                  { path: 'finca/registrar', loadComponent: () => import('./app/components/finca/finca-register/finca-register.component').then(m => m.FincaRegisterComponent) },
+                  { path: 'finca/registrar', component: FincaRegisterComponent },
+                  { path: 'finca/arrendatario', component: ArrendatarioRegisterComponent },
+                  { path: 'finca/arrendamiento', component: ArrendamientoRegisterComponent },
+                  { path: 'finca/verFincas', component: TablaFincasComponent },
+                  { path: 'finca/verCardFincas', component: CardFincasComponent },
+                  { path: 'finca/datosFinca', component: RegisterTipoSueloComponent },
+                  { path: 'finca/datosArrendamiento', component: TablaArrendamientosComponent}
+
                 ],
               },
           ]),
