@@ -1,11 +1,34 @@
 .container-registrar-finca {
-  padding: 2rem;
   background-color: #f8f9fa;
   min-height: calc(100vh - 64px);
 }
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #747a80;
+  letter-spacing: 0.5px;
+  text-align: center;
+  padding-bottom: 1rem;
+  /* border-bottom: 3px solid #89ec8c; */
+}
+
+mat-card-subtitle{
+  margin-bottom:  0.8rem;
+}
+
+.form-header{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
 
 .finca-card {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 2rem;
   border-radius: 16px;
@@ -14,13 +37,6 @@
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-mat-card-title {
-  color: #0B7D2F;
-  font-size: 1.8rem;
-  font-weight: 600;
-  margin-bottom: 2rem;
-  text-align: center;
-}
 
 .finca-form {
   display: flex;
@@ -33,24 +49,24 @@ mat-form-field {
 }
 
 mat-form-field ::ng-deep .mat-form-field-outline {
-  color: rgba(0, 0, 0, 0.1);
+  color: #afabab;
 }
 
 mat-form-field ::ng-deep .mat-form-field-outline-thick {
-  color: #0B7D2F;
+  color: #afabab;
 }
 
 mat-form-field ::ng-deep .mat-form-field-label {
-  color: #2c3e50;
+  color: #73e686;
 }
 
 mat-form-field ::ng-deep .mat-input-element {
-  color: #2c3e50;
+  color: #73e686;
 }
 
 h4 {
   margin-top: 1.5rem;
-  color: #0B7D2F;
+  color: #73e686;
   font-size: 1.2rem;
   font-weight: 500;
   padding-bottom: 0.5rem;
@@ -58,7 +74,7 @@ h4 {
 }
 
 .btn {
-  background: linear-gradient(135deg, #0B7D2F 0%, #025828 100%);
+  background: linear-gradient(135deg, rgb(68, 168, 100) );
   color: white;
   padding: 0.8rem 2rem;
   font-size: 1.1rem;
@@ -70,7 +86,7 @@ h4 {
 }
 
 .btn:hover {
-  background: linear-gradient(135deg, #025828 0%, #0B7D2F 100%);
+  background:  #0B7D2F ;
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   color: white;
@@ -93,12 +109,17 @@ mat-select ::ng-deep .mat-select-arrow {
 }
 
 /* Estilos para los campos de parcela */
-.parcela-container {
-  background-color: #f8f9fa;
-  padding: 1.5rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+.parcelas-container {
+  background-color: #ffffff;
+  border: 2px solid #e4fde3;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+  /* border: 1px solid rgba(0, 0, 0, 0.05); */
+}
+.parcelas-container:hover{
+  box-shadow: 0 4px 15px rgba(25, 210, 108, 0.3);
 }
 
 /* Estilos para los mensajes de error */
@@ -107,5 +128,31 @@ mat-error {
   font-size: 0.85rem;
   margin-top: 0.25rem;
 }
-  
+
+
+
+mat-form-field.appearance-outline {
+  background-color: #e9ecf3; /* fondo gris claro */
+  border-radius: 4px;
+}
+
+mat-form-field.appearance-outline .mat-form-field-outline {
+  display: none; /* Oculta el borde completo */
+}
+
+mat-form-field.appearance-outline .mat-form-field-wrapper {
+  padding: 0 0 4px 0; /* reduce el padding */
+}
+
+mat-form-field.appearance-outline .mat-form-field-flex {
+  border-bottom: 1px solid black; /* solo borde inferior negro */
+  padding: 0.5rem;
+}
+
+mat-form-field.appearance-outline .mat-form-field-label {
+  font-weight: 500;
+}
+
+
+
   
