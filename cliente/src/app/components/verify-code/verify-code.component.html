@@ -7,10 +7,16 @@
         </p>
   
         <div class="code-inputs">
-          <mat-form-field *ngFor="let item of code; let i = index" appearance="outline">
-            <input matInput id="code-{{ i }}" type="text" maxlength="1"
-                   [(ngModel)]="code[i]" (input)="focusNextInput(i, $event)">
-          </mat-form-field>
+          <input matInput
+          *ngFor="let digit of code; let i = index"
+          id="code-{{ i }}"
+          type="text"
+          maxlength="1"
+          [(ngModel)]="code[i]"
+          (input)="onInputChange($event, i)"
+          (keydown)="onKeyDown($event, i)"
+          autocomplete="off"
+        />
         </div>
   
         <p>
@@ -18,7 +24,7 @@
           <a (click)="resendEmail()">Reenviar email</a>
         </p>
   
-        <button mat-raised-button color="primary" class="btn-green" (click)="verifyCode()">
+        <button mat-raised-button color="primary" class="btn-green" type="button"  (click)="verifyCode()">
           Restablecer contraseña
         </button>
   

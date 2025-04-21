@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorModalComponent } from '../error-modal/error-modal.component';
+import { ApiService } from '../../../services/api.service';
+import { API_URLS } from '../../../config/api_config';
 
 @Component({
   selector: 'app-pwd-recovery',
@@ -30,7 +32,7 @@ export class PwdRecoveryComponent implements OnInit {
   hideConfirmPassword = true;
   isLoading = false; 
 
-  constructor(private fb: FormBuilder, private router: Router, private dialog: MatDialog) {
+  constructor(private fb: FormBuilder, private router: Router, private dialog: MatDialog, private apiService: ApiService) {
     this.pwdRecoveryForm = this.fb.group(
       {
         password: ['', [Validators.required, Validators.minLength(6)]],
@@ -57,25 +59,31 @@ export class PwdRecoveryComponent implements OnInit {
 
   resetPassword(): void {
     if (this.pwdRecoveryForm.valid) {
-      this.isLoading = true; 
-      // setTimeout(() => {  // Simulación de una petición HTTP exitosa
-      //   console.log('Contraseña restablecida exitosamente');
-      //   this.isLoading = false; 
-      //   this.router.navigate(['/pwdSuccess']); 
-      // }, 2000); 
+      this.isLoading = true;
+      const password = this.pwdRecoveryForm.get('password')?.value as string;
+      const correo = localStorage.getItem('recoveryEmail');
 
-      setTimeout(() => {
-        this.isLoading = false;
+      const body = {
+        correo,
+        contraseña: password
+      };
   
-        // Simular un error
-        const hasError = true;
-        if (hasError) {
+      this.apiService.put(`${API_URLS.MID.API_MID_SPIKE}/usuarios/recuperar/token`, body).subscribe({
+        next: (response) => {
+          console.log('Contraseña restablecida exitosamente', response);
+          localStorage.removeItem('recoveryEmail');
+          this.isLoading = false;
+          this.router.navigate(['/pwdSuccess']);
+        },
+        error: (error) => {
+          console.error('Error al restablecer contraseña:', error);
+          this.isLoading = false;
           this.dialog.open(ErrorModalComponent, {
             width: '300px',
             disableClose: true,
           });
         }
-      }, 2000);
+      });
     }
   }
 }

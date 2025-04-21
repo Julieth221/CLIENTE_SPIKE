@@ -24,6 +24,15 @@
     gap: 10px;
     margin-bottom: 15px;
   }
+
+
+  
+  .code-inputs input {
+    text-align: center;
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+  }
   
   /* Hacer que los inputs tengan mejor apariencia */
   mat-form-field {

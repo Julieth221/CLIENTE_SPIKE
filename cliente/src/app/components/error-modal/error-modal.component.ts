@@ -18,7 +18,7 @@ export class ErrorModalComponent {
     setTimeout(() => {
       this.dialog.close();
       this.router.navigate(['/home']); 
-    }, 3000);
+    }, 5000);
   }
 }
 
