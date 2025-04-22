@@ -1,0 +1,99 @@
+<!-- SPINNER DE CARGA -->
+<div *ngIf="loading" class="loader">
+  <mat-spinner></mat-spinner>
+</div>
+
+<!-- MENSAJE DE ERROR -->
+<div *ngIf="errorMessage" class="error-message animate__animated animate__fadeIn">
+  <mat-icon class="error-icon">error</mat-icon>
+  <p>{{ errorMessage }}</p>
+  <button mat-raised-button color="primary" (click)="reintentar()">
+    <mat-icon>refresh</mat-icon> Reintentar
+  </button>
+</div>
+
+<!-- TARJETAS DE ARRENDAMIENTOS -->
+<div class="cards-grid animate__animated animate__fadeIn" *ngIf="!loading && !errorMessage">
+  <div class="arrendamiento-card" *ngFor="let arrendamiento of arrendamientos.length > 0 ? arrendamientos : arrendamientosData" [attr.data-id]="arrendamiento.id">
+    <div class="card-header">
+      <div class="card-title-area">
+        <h3 class="card-title">{{ arrendamiento.finca?.Nombre || 'Finca no disponible' }}</h3>
+        <div class="arrendatario">
+          <mat-icon class="person-icon">person</mat-icon>
+          <span>{{ arrendamiento.arrendatario?.Nombre || 'Arrendatario no disponible' }}</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button mat-icon-button color="primary" matTooltip="Ver detalles" (click)="verArrendamiento(arrendamiento)" class="btn-view">
+          <mat-icon>visibility</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" matTooltip="Editar arrendamiento" (click)="editarArrendamiento(arrendamiento)" class="btn-edit">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" matTooltip="Eliminar arrendamiento" (click)="eliminarArrendamiento(arrendamiento)" class="btn-delete">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+    
+    <mat-divider></mat-divider>
+    
+    <div class="card-content">
+      <div class="info-section">
+        <div class="info-group">
+          <div class="info-item">
+            <div class="info-icon-bg parcelas-bg">
+              <mat-icon>grid_view</mat-icon>
+            </div>
+            <div class="info-details">
+              <span class="info-label">Parcelas</span>
+              <span class="info-value">{{ arrendamiento.parcelas?.length || 0 }}</span>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-icon-bg valor-bg">
+              <mat-icon>attach_money</mat-icon>
+            </div>
+            <div class="info-details">
+              <span class="info-label">Valor</span>
+              <span class="info-value">{{ arrendamiento.valor || 'No especificado' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="dates-section">
+        <div class="date-item">
+          <mat-icon class="date-icon">event</mat-icon>
+          <div class="date-details">
+            <span class="date-label">Fecha inicio</span>
+            <span class="date-value">{{ formatDate(arrendamiento.fechaInicio) }}</span>
+          </div>
+        </div>
+        
+        <div class="date-item">
+          <mat-icon class="date-icon">event_busy</mat-icon>
+          <div class="date-details">
+            <span class="date-label">Fecha fin</span>
+            <span class="date-value">{{ formatDate(arrendamiento.fechaFin) }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="estado-section">
+        <div class="estado-chip" [style.background]="getEstadoColor(arrendamiento)">
+          <mat-icon>{{ estaActivo(arrendamiento) ? 'check_circle' : 'cancel' }}</mat-icon>
+          <span class="estado-label">{{ getEstadoTexto(arrendamiento) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Estado vacío -->
+<div *ngIf="!loading && !errorMessage && (arrendamientos.length === 0 && arrendamientosData.length === 0)" class="empty-state">
+  <mat-icon class="empty-icon">assignment</mat-icon>
+  <h3>No hay arrendamientos disponibles</h3>
+  <p>Aún no se han registrado arrendamientos para tus fincas</p>
+</div>
