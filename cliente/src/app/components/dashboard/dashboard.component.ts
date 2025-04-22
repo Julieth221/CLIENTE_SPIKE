@@ -65,8 +65,6 @@ export class DashboardComponent  {
     console.log('Navegando a:', segments);
     this.router.navigate(['/dashboard',  ...segments]);
     
-
-
   }
 
   toggleSection(section: 'finca' | 'cultivo' | 'sensores') {
