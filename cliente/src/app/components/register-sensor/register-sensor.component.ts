@@ -37,19 +37,19 @@ export class RegisterSensorComponent implements OnInit {
     let sensorDescription = '';
 
     switch (sensorType) {
-      case 'temperatura':
+    case 'temperatura':
         sensorName = 'Temperatura';
         sensorDescription = 'Sensor para medir la temperatura del ambiente.';
         break;
-      case 'humedad':
+    case 'humedad':
         sensorName = 'Humedad';
         sensorDescription = 'Sensor para medir la humedad del ambiente.';
         break;
-      case 'ph':
+    case 'ph':
         sensorName = 'pH';
         sensorDescription = 'Sensor para medir el pH del suelo/agua.';
         break;
-      default:
+    default:
         console.error('Tipo de sensor desconocido:', sensorType);
         return;
     }
@@ -65,7 +65,10 @@ export class RegisterSensorComponent implements OnInit {
         next: (response: any) => {
           console.log('Respuesta del API MID:', response);
           // Redirige al componente registro-t-sensor
-          this.router.navigate(['registro-t-sensor']); // Asegura que la ruta esté anidada dentro de dashboard
+          const segments = ('registro-t-sensor').split('/');
+          console.log('Navegando a:', segments);
+          this.router.navigate(['/dashboard', ...segments ]);
+        //   this.router.navigate(['registro-t-sensor']); // Asegura que la ruta esté anidada dentro de dashboard
         },
         error: (error: any) => {
           console.error('Error al enviar datos al API MID:', error);
