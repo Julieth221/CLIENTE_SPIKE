@@ -1,0 +1,182 @@
+<div class="container">
+  <h2 class="title">REGISTRO DE ARRENDAMIENTO</h2>
+  
+  <div *ngIf="loading" class="loader">
+    <mat-spinner diameter="50"></mat-spinner>
+    <span>Cargando datos...</span>
+  </div>
+  
+  <div *ngIf="!loading">
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>Nuevo Arrendamiento</mat-card-title>
+        <mat-card-subtitle>Complete el formulario para registrar el arrendamiento de parcelas</mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <form [formGroup]="arrendamientoForm" (ngSubmit)="onSubmit()">
+          <!-- Sección de selección de finca y arrendatario -->
+          <div class="form-section">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Seleccionar Finca</mat-label>
+                <mat-select formControlName="finca">
+                  <mat-option *ngFor="let finca of fincas" [value]="finca.Id">
+                    {{ finca.Nombre }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="arrendamientoForm.get('finca')?.hasError('required')">
+                  Debe seleccionar una finca
+                </mat-error>
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Seleccionar Arrendatario</mat-label>
+                <mat-select formControlName="arrendatario">
+                  <mat-option *ngFor="let arrendatario of arrendatarios" [value]="arrendatario.Id">
+                    {{ arrendatario.Nombre }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="arrendamientoForm.get('arrendatario')?.hasError('required')">
+                  Debe seleccionar un arrendatario
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          
+          <mat-divider></mat-divider>
+          
+          <!-- Sección de parcelas a arrendar -->
+          <div class="form-section" *ngIf="arrendamientoForm.get('finca')?.value">
+            <h3 class="section-title">Parcelas a Arrendar</h3>
+            
+            <div class="form-row finca-info">
+              <div class="info-chip">
+                <mat-icon>dashboard</mat-icon>
+                <span>Total parcelas en finca: {{ maxParcelas }}</span>
+              </div>
+              <div class="info-chip">
+                <mat-icon>check_circle</mat-icon>
+                <span>Parcelas disponibles: {{ parcelasDisponibles }}</span>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Cantidad de parcelas a arrendar</mat-label>
+                <input matInput type="number" formControlName="numParcelas" min="1" [max]="parcelasDisponibles">
+                <mat-error *ngIf="arrendamientoForm.get('numParcelas')?.hasError('required')">
+                  Debe ingresar la cantidad de parcelas
+                </mat-error>
+                <mat-error *ngIf="arrendamientoForm.get('numParcelas')?.hasError('min')">
+                  Debe arrendar al menos 1 parcela
+                </mat-error>
+                <mat-error *ngIf="arrendamientoForm.get('numParcelas')?.hasError('max')">
+                  No puede superar la cantidad de parcelas disponibles
+                </mat-error>
+              </mat-form-field>
+            </div>
+            
+            <div formArrayName="parcelas" class="parcelas-container">
+              <div *ngFor="let parcelaControl of parcelasArray.controls; let i = index" class="parcela-item" [formGroupName]="i">
+                <div class="parcela-header">
+                  <h4>Parcela #{{ i + 1 }}</h4>
+                </div>
+                
+                <div class="parcela-content">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Seleccionar Parcela</mat-label>
+                    <mat-select formControlName="parcela" (selectionChange)="onParcelaChange(i, $event.value)">
+                      <mat-option *ngFor="let parcela of getParcelasDisponiblesParaSelect(i)" [value]="parcela.Id">
+                        {{ parcela.NombreParcela }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="parcelasArray.controls[i].get('parcela')?.hasError('required')">
+                      Debe seleccionar una parcela
+                    </mat-error>
+                  </mat-form-field>
+                  
+                  <mat-form-field appearance="outline">
+                    <mat-label>Tamaño de parcela (m²)</mat-label>
+                    <input matInput formControlName="tamano" readonly>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <mat-divider></mat-divider>
+          
+          <!-- Sección de términos del arrendamiento -->
+          <div class="form-section">
+            <h3 class="section-title">Términos del Arrendamiento</h3>
+            
+            <div class="form-row dates-container">
+              <mat-form-field appearance="outline">
+                <mat-label>Fecha de inicio</mat-label>
+                <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio">
+                <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+                <mat-datepicker #pickerInicio></mat-datepicker>
+                <mat-error *ngIf="arrendamientoForm.get('fechaInicio')?.hasError('required')">
+                  La fecha de inicio es requerida
+                </mat-error>
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline">
+                <mat-label>Fecha de finalización</mat-label>
+                <input matInput [matDatepicker]="pickerFin" formControlName="fechaFin">
+                <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
+                <mat-datepicker #pickerFin></mat-datepicker>
+                <mat-error *ngIf="arrendamientoForm.get('fechaFin')?.hasError('required')">
+                  La fecha de finalización es requerida
+                </mat-error>
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Valor del arrendamiento</mat-label>
+                <input matInput type="number" formControlName="valor" min="1" placeholder="Ej: 1000000">
+                <span matTextPrefix>$&nbsp;</span>
+                <mat-error *ngIf="arrendamientoForm.get('valor')?.hasError('required')">
+                  El valor del arrendamiento es requerido
+                </mat-error>
+                <mat-error *ngIf="arrendamientoForm.get('valor')?.hasError('min')">
+                  El valor debe ser mayor a cero
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          
+          <!-- Botones de acción -->
+          <div class="form-actions">
+            <button type="button" mat-button (click)="resetForm()">
+              <mat-icon>restart_alt</mat-icon>
+              Limpiar
+            </button>
+            <button type="submit" mat-raised-button color="primary" [disabled]="arrendamientoForm.invalid || submitting">
+              <mat-icon>save</mat-icon>
+              Registrar Arrendamiento
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+    
+    <!-- Mensaje de éxito -->
+    <mat-card *ngIf="exito" class="success-card">
+      <mat-card-content>
+        <div class="success-message">
+          <mat-icon>check_circle</mat-icon>
+          <h3>¡Arrendamiento registrado con éxito!</h3>
+          <p>El arrendamiento ha sido registrado correctamente en el sistema.</p>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button (click)="exito = false">Cerrar</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
