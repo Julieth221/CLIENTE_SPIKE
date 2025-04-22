@@ -15,7 +15,7 @@
     text-align: center;
     display: flex; /* Para alinear los elementos internos */
     flex-direction: column; /* Apilar los elementos verticalmente */
-    gap: 10px; /* Espacio entre los elementos */
+    gap: 2px; /* Espacio entre los elementos */
 }
 
 .button-column-container {
@@ -24,6 +24,7 @@
     align-items: center;
     width: 100%;
     margin-top: 20px;
+    color:white;
 }
 
 .button-column-container button {
@@ -89,5 +90,4 @@
 .full-width{
     width: 100%;
     line-height: 2.5em;
-    
 }

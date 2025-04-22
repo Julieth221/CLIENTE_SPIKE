@@ -27,8 +27,8 @@ bootstrapApplication(AppComponent,{
             { path: 'verifyCode', component: VerifyCodeComponent },
             { path: 'pwdRecovery', component: PwdRecoveryComponent },
             { path: 'pwdSuccess', component: PwdSuccessComponent },
-            { path: 'registerSensor', component: RegisterSensorComponent},
-            { path: 'registro-t-sensor', component: RegistroTSensorComponent},
+          
+            // { path: 'registro-t-sensor', component: RegistroTSensorComponent},
             // { path: 'register/finca', component: FincaRegisterComponent },
             {
               path: 'dashboard',
@@ -37,9 +37,13 @@ bootstrapApplication(AppComponent,{
                   { path: 'finca/registrar', loadComponent: () => import('./app/components/finca/finca-register/finca-register.component').then(m => m.FincaRegisterComponent) },
                   {
                     path: 'register-sensor', loadComponent: ()  => import('./app/components/register-sensor/register-sensor.component').then(m => m.RegisterSensorComponent)},
-                  { 
-                    path: 'registro-t-sensor', loadComponent: ()  => import('./app/components/registro-t-sensor/registro-t-sensor.component').then(m => m.RegistroTSensorComponent)
-                  }
+                    {
+                      path: 'registro-t-sensor',
+                      loadComponent: () =>
+                          import('./app/components/registro-t-sensor/registro-t-sensor.component').then(
+                              (m) => m.RegistroTSensorComponent
+                          ),
+                  },
               ]
             },
           ]),

@@ -89,16 +89,16 @@ export class RegistroTSensorComponent implements OnInit {
     }
 
     onSubmit() {
-        if (this.sensorForm.valid) {
-            console.log('Formulario del sensor:', this.sensorForm.value);
-            // Aquí puedes enviar los datos del formulario a tu backend
+        // if (this.sensorForm.valid) {
+        //     console.log('Formulario del sensor:', this.sensorForm.value);
+        //     // Aquí puedes enviar los datos del formulario a tu backend
 
-            // Redirige a otro componente después de un registro exitoso
-            this.router.navigate(['/dashboard']); // Ajusta la ruta según tu necesidad
+        //     // Redirige a otro componente después de un registro exitoso
+        //     this.router.navigate(['/dashboard']); // Ajusta la ruta según tu necesidad
 
-        } else {
-            alert('Por favor, completa todos los campos del formulario.');
-        }
+        // } else {
+        //     alert('Por favor, completa todos los campos del formulario.');
+        // }
     }
 
     onCultivoChange(event: any) {

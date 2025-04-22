@@ -5,7 +5,7 @@
 
         <form [formGroup]="sensorForm" (ngSubmit)="onSubmit()">
             <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Nombre del Sensor</mat-label>
+                <mat-label style="color: silver;">Nombre del Sensor</mat-label>
                 <input matInput
                        placeholder="Ingrese el nombre del sensor"
                        formControlName="nombre">
@@ -15,7 +15,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Ubicación</mat-label>
+                <mat-label style="color: silver;">Ubicación</mat-label>
                 <input matInput
                        placeholder="Ingrese la ubicación o use el botón"
                        formControlName="ubicacion"
@@ -33,7 +33,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Cultivo</mat-label>
+                <mat-label style="color: silver;">Cultivo</mat-label>
                 <mat-select formControlName="cultivo"
                             (selectionChange)="onCultivoChange($event)">
                     <mat-option *ngFor="let cultivo of cultivos" [value]="cultivo">
@@ -53,7 +53,7 @@
                     formControlName="fecha"
                     placeholder="Seleccione la fecha">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
+                <mat-datepicker #picker ></mat-datepicker>
                 <mat-error *ngIf="sensorForm.get('fecha')?.invalid">
                     Fecha de registro es requerida.
                 </mat-error>
