@@ -1,0 +1,14 @@
+<div class="mapa-container">
+  <google-map #mapa
+    [center]="center"
+    [zoom]="zoom"
+    height="200px"
+    width="100%">
+  </google-map>
+  
+  <!-- Información de coordenadas (opcional) -->
+  <div class="coord-info" *ngIf="mostrarDetalles">
+    <p><strong>📍 {{ nombreParcela }}</strong></p>
+    <p>Tamaño: {{ tamanoParcela | number:'1.2-2' }} ha</p>
+  </div>
+</div>
