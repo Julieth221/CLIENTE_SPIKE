@@ -5,6 +5,7 @@ import { jwtDecode }from 'jwt-decode';
 interface TokenPayload {
   sub: string;
   user_id?: number;
+  id?: number;
   iat: number;
   exp: number;
   // Otros campos que pueda tener tu token
@@ -32,6 +33,20 @@ export class AuthService {
     } catch (error) {
       console.error('Error decodificando token:', error);
       return null;
+    }
+  }
+  
+  getIdFromToken(): number {
+    const token = this.getToken();
+    if (!token) return 0;
+    
+    try {
+      const decoded = jwtDecode<TokenPayload>(token);
+      // Intenta obtener el ID del usuario desde varios posibles campos
+      return decoded.id || decoded.user_id || 0;
+    } catch (error) {
+      console.error('Error decodificando token:', error);
+      return 0;
     }
   }
 

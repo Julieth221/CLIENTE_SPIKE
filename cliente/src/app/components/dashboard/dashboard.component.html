@@ -22,10 +22,16 @@
         </button>
         <div class="sub-menu" *ngIf="activeSubMenu === 'finca'">
           <ul>
-            <li><button type="button" >
-              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Ver Fincas</button></li>
+            <li><button type="button" routerLink="/dashboard/finca/datosFinca" >
+              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Datos Finca</button></li>
             <li><button type="button"  routerLink="/dashboard/finca/registrar">
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Crear Finca</button></li>
+            <li><button type="button"  routerLink="/dashboard/finca/arrendamiento">
+              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Crear Arrendamiento</button></li>
+            <li><button type="button" routerLink="/dashboard/finca/verFincas" >
+              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Ver Fincas</button></li>
+            <li><button type="button"  routerLink="/dashboard/finca/datosArrendamiento">
+              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Ver Arrendamientos</button></li>
           </ul>
         </div>
       </li>
