@@ -1,0 +1,220 @@
+/* Estilos para el diálogo */
+:host ::ng-deep .parcelas-dialog .p-dialog-header {
+  padding: 1.5rem 2rem 0.5rem;
+  border-bottom: none;
+}
+
+:host ::ng-deep .parcelas-dialog .p-dialog-content {
+  padding: 1rem 2rem;
+}
+
+:host ::ng-deep .parcelas-dialog .p-dialog-footer {
+  padding: 1rem 2rem 1.5rem;
+  border-top: none;
+}
+
+:host ::ng-deep .parcelas-dialog {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Encabezado del diálogo */
+.dialog-header {
+  text-align: center;
+}
+
+.dialog-title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #344054;
+}
+
+.dialog-subtitle {
+  margin: 0.5rem 0 0;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #667085;
+}
+
+/* Estado de carga */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+  gap: 1rem;
+}
+
+.loading-text {
+  color: #667085;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Mensaje de error */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+  gap: 1rem;
+  text-align: center;
+}
+
+.error-icon {
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+  color: #f44336;
+}
+
+.error-text {
+  color: #d32f2f;
+  font-size: 1.125rem;
+  max-width: 500px;
+  margin: 0;
+}
+
+/* Mensaje sin parcelas */
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+  gap: 1rem;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+  color: #bdbdbd;
+}
+
+.empty-text {
+  color: #667085;
+  font-size: 1.125rem;
+  max-width: 500px;
+  margin: 0;
+}
+
+/* Grid de parcelas */
+.parcelas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  width: 100%;
+}
+
+/* Estilos para las tarjetas */
+:host ::ng-deep .p-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+:host ::ng-deep .p-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+:host ::ng-deep .p-card .p-card-body {
+  padding: 1rem;
+}
+
+:host ::ng-deep .p-card .p-card-content {
+  padding: 0;
+}
+
+/* Encabezado de la tarjeta */
+.parcela-header {
+  padding: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.parcela-nombre {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #344054;
+}
+
+/* Contenido de la tarjeta */
+.parcela-content {
+  padding: 1rem 0;
+}
+
+.parcela-info {
+  margin-bottom: 1rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.info-icon {
+  color: #4285F4;
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+}
+
+.info-label {
+  color: #667085;
+  font-weight: 500;
+}
+
+.info-value {
+  color: #344054;
+  font-weight: 600;
+}
+
+/* Contenedor del mapa */
+.parcela-map-container {
+  height: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.parcela-map {
+  width: 100%;
+  height: 100%;
+}
+
+/* Pie del diálogo */
+.dialog-footer {
+  display: flex;
+  justify-content: center;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .parcelas-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  :host ::ng-deep .parcelas-dialog .p-dialog-content {
+    padding: 1rem;
+  }
+  
+  .dialog-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .parcelas-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
