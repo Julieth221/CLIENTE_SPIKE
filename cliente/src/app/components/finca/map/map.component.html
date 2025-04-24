@@ -1,0 +1,23 @@
+<div style="position: relative;">
+  <google-map #map 
+    height="400px" 
+    width="100%" 
+    [center]="center" 
+    [zoom]="zoom">
+  </google-map>
+
+  <!-- Botón de reinicio de coordenadas -->
+  <button 
+    (click)="resetMap()"
+    class="map-reset-button">
+    Borrar puntos
+  </button>
+
+  <!-- Sección de coordenadas -->
+  <div class="coord-box" *ngIf="geo">
+    <p><strong>📍 Latitud Inicial:</strong> {{ geo.LatitudInicial }}</p>
+    <p><strong>📍 Longitud Inicial:</strong> {{ geo.LongitudInicial }}</p>
+    <p><strong>📍 Latitud Final:</strong> {{ geo.LatitudFinal }}</p>
+    <p><strong>📍 Longitud Final:</strong> {{ geo.LongitudFinal }}</p>
+  </div>
+</div>

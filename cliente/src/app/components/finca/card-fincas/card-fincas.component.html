@@ -1,0 +1,70 @@
+<div class="cards-grid animate__animated animate__fadeIn">
+  <div class="finca-card" *ngFor="let finca of fincas" [attr.data-id]="finca.ID">
+    <div class="card-header">
+      <div class="card-title-area">
+        <h3 class="card-title">{{ finca.Nombre }}</h3>
+        <div class="ubicacion">
+          <mat-icon class="location-icon">place</mat-icon>
+          <span>{{ finca.Ubicacion }}</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button mat-icon-button color="primary" matTooltip="Editar finca" (click)="editarFinca(finca)" class="btn-edit">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" matTooltip="Eliminar finca" (click)="eliminarFinca(finca)" class="btn-delete">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+    
+    <mat-divider></mat-divider>
+    
+    <div class="card-content">
+      <div class="info-section">
+        <div class="info-group">
+          <div class="info-item">
+            <div class="info-icon-bg area-bg">
+              <mat-icon>straighten</mat-icon>
+            </div>
+            <div class="info-details">
+              <span class="info-label">Área Total</span>
+              <span class="info-value">{{ finca.AreaTotal | number }} m²</span>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-icon-bg parcelas-bg">
+              <mat-icon>grid_view</mat-icon>
+            </div>
+            <div class="info-details">
+              <span class="info-label">Parcelas</span>
+              <span class="info-value">{{ finca.TotalParcelas }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="soil-section">
+        <div class="soil-type" [style.background]="getTipoSueloColor(finca.TipoSuelo)">
+          <mat-icon>{{ getTypeIcon(finca.TipoSuelo) }}</mat-icon>
+          <span class="soil-label">{{ finca.TipoSuelo }}</span>
+        </div>
+        
+        <div class="additional-info">
+          <div class="avg-parcela-size">
+            <mat-icon class="small-icon">aspect_ratio</mat-icon>
+            <span>{{ (finca.AreaTotal / finca.TotalParcelas) | number:'1.0-2' }} m² / parcela</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Estado vacío -->
+<div *ngIf="fincas.length === 0" class="empty-state">
+  <mat-icon class="empty-icon">nature</mat-icon>
+  <h3>No hay fincas disponibles</h3>
+  <p>Prueba a ajustar los filtros o registra una nueva finca</p>
+</div>

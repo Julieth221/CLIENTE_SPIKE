@@ -7,6 +7,11 @@ import { Router, RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../../services/api.service'; // Asegúrate de que la ruta al servicio sea correcta
 
+interface SensorData {
+  NombreTipoSensor: string;
+  Descripcion: string;
+}
+
 @Component({
   selector: 'app-register-sensor',
   standalone: true,
@@ -37,44 +42,31 @@ export class RegisterSensorComponent implements OnInit {
     let sensorDescription = '';
 
     switch (sensorType) {
-    case 'temperatura':
+      case 'temperatura':
         sensorName = 'Temperatura';
         sensorDescription = 'Sensor para medir la temperatura del ambiente.';
         break;
-    case 'humedad':
+      case 'humedad':
         sensorName = 'Humedad';
         sensorDescription = 'Sensor para medir la humedad del ambiente.';
         break;
-    case 'ph':
+      case 'ph':
         sensorName = 'pH';
         sensorDescription = 'Sensor para medir el pH del suelo/agua.';
         break;
-    default:
+      default:
         console.error('Tipo de sensor desconocido:', sensorType);
         return;
     }
 
-    const data = {
+    const data: SensorData = {
       NombreTipoSensor: sensorName, // Ajusta los nombres de los campos según tu API MID
       Descripcion: sensorDescription, // Ajusta los nombres de los campos según tu API MID
     };
 
-    // Envia los datos al API MID usando el servicio ApiService
-    this.apiService.post<any>(this.API_MID_SENSORES, data)
-      .subscribe({
-        next: (response: any) => {
-          console.log('Respuesta del API MID:', response);
-          // Redirige al componente registro-t-sensor
-          const segments = ('registro-t-sensor').split('/');
-          console.log('Navegando a:', segments);
-          this.router.navigate(['/dashboard', ...segments ]);
-        //   this.router.navigate(['registro-t-sensor']); // Asegura que la ruta esté anidada dentro de dashboard
-        },
-        error: (error: any) => {
-          console.error('Error al enviar datos al API MID:', error);
-          alert('Error al registrar el sensor. Por favor, inténtalo de nuevo.');
-        }
-      });
+    // Redirige al componente registro-t-sensor, pasando los datos a través del estado de la ruta
+    this.router.navigate(['/dashboard/registro-t-sensor'], {
+      state: { sensorData: data },
+    });
   }
 }
-

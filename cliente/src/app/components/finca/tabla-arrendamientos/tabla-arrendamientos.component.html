@@ -1,0 +1,180 @@
+<div class="fincas-container">
+
+    <h2 class="title">ARRENDAMIENTOS REGISTRADOS</h2>
+  
+    <!-- BOTONES DE VISTA -->
+    <mat-button-toggle-group 
+      name="vistaToggle" 
+      [(ngModel)]="vistaActual" 
+      class="toggle-vista"
+      appearance="standard"
+    >
+      <mat-button-toggle value="tabla">
+        <mat-icon>table_chart</mat-icon>
+        Tabla
+      </mat-button-toggle>
+      <mat-button-toggle value="tarjeta">
+        <mat-icon>view_module</mat-icon>
+        Tarjeta
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  
+    <div class="actions">
+      <!-- BUSCADOR -->
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Buscar arrendamientos...</mat-label>
+        <input matInput [(ngModel)]="searchText" (input)="applyFilter()">
+        <mat-icon matSuffix class="search-icon">search</mat-icon>
+      </mat-form-field>
+  
+      <!-- FILTRO FECHA INICIO -->
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Fecha de inicio</mat-label>
+        <input matInput [matDatepicker]="pickerInicio" [(ngModel)]="fechaInicio" (dateChange)="applyFilter()">
+        <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+        <mat-datepicker #pickerInicio></mat-datepicker>
+      </mat-form-field>
+  
+      <!-- FILTRO FECHA FIN -->
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Fecha de fin</mat-label>
+        <input matInput [matDatepicker]="pickerFin" [(ngModel)]="fechaFin" (dateChange)="applyFilter()">
+        <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
+        <mat-datepicker #pickerFin></mat-datepicker>
+      </mat-form-field>
+  
+      <!-- FILTRO ESTADO -->
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Estado</mat-label>
+        <mat-select [(ngModel)]="filterEstado" (selectionChange)="applyFilter()">
+          <mat-option value="">Todos</mat-option>
+          <mat-option *ngFor="let estado of estadoOptions" [value]="estado">{{ estado }}</mat-option>
+        </mat-select>
+        <mat-icon matSuffix>filter_list</mat-icon>
+      </mat-form-field>
+  
+      <!-- BOTÓN REGISTRAR -->
+      <button mat-raised-button class="btn-registrar" (click)="registrarArrendamiento()">
+        <mat-icon>add</mat-icon> Registrar Arrendamiento
+      </button>
+    </div>
+  
+    <!-- SPINNER DE CARGA -->
+    <div *ngIf="loading" class="loader">
+      <mat-spinner></mat-spinner>
+    </div>
+  
+    <!-- MENSAJE DE ERROR -->
+    <div *ngIf="errorMessage" class="error-message animate__animated animate__fadeIn">
+      <mat-icon class="error-icon">error</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button color="primary" (click)="obtenerFincasUsuario()">
+        <mat-icon>refresh</mat-icon> Reintentar
+      </button>
+    </div>
+  
+    <!-- MENSAJE SIN RESULTADOS -->
+    <div *ngIf="!loading && !errorMessage && dataSource.filteredData.length === 0" class="no-results animate__animated animate__fadeIn">
+      <mat-icon class="no-results-icon">assignment</mat-icon>
+      <p>No se encontraron arrendamientos con los filtros aplicados.</p>
+      <button mat-raised-button color="primary" (click)="registrarArrendamiento()">
+        <mat-icon>add</mat-icon> Registrar Nuevo Arrendamiento
+      </button>
+    </div>
+  
+    <!-- VISTA TABLA -->
+    <div *ngIf="!loading && !errorMessage && dataSource.filteredData.length > 0 && vistaActual === 'tabla'" class="table-wrapper animate__animated animate__fadeIn">
+      <table mat-table [dataSource]="dataSource" matSort class="tabla-fincas">
+        <!-- Nombre Finca Columna -->
+        <ng-container matColumnDef="finca">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Finca</th>
+          <td mat-cell *matCellDef="let arrendamiento" class="finca-nombre">
+            {{ arrendamiento.finca?.Nombre || 'No disponible' }}
+          </td>
+        </ng-container>
+  
+        <!-- Arrendatario Columna -->
+        <ng-container matColumnDef="arrendatario">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Arrendatario</th>
+          <td mat-cell *matCellDef="let arrendamiento">
+            {{ arrendamiento.arrendatario?.Nombre || 'No disponible' }}
+          </td>
+        </ng-container>
+  
+        <!-- Parcelas Columna -->
+        <ng-container matColumnDef="parcelas">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Parcelas</th>
+          <td mat-cell *matCellDef="let arrendamiento">
+            <div class="parcelas-chip">{{ arrendamiento.parcelas?.length || 0 }}</div>
+          </td>
+        </ng-container>
+  
+        <!-- Fecha Inicio Columna -->
+        <ng-container matColumnDef="fechaInicio">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Inicio</th>
+          <td mat-cell *matCellDef="let arrendamiento">
+            {{ formatDate(arrendamiento.fechaInicio) }}
+          </td>
+        </ng-container>
+  
+        <!-- Fecha Fin Columna -->
+        <ng-container matColumnDef="fechaFin">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Fin</th>
+          <td mat-cell *matCellDef="let arrendamiento">
+            {{ formatDate(arrendamiento.fechaFin) }}
+          </td>
+        </ng-container>
+  
+        <!-- Estado Columna -->
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+          <td mat-cell *matCellDef="let arrendamiento">
+            <div class="estado-chip" [ngClass]="{'estado-activo': estaActivo(arrendamiento), 'estado-inactivo': !estaActivo(arrendamiento)}">
+              {{ estaActivo(arrendamiento) ? 'Activo' : 'Inactivo' }}
+            </div>
+          </td>
+        </ng-container>
+  
+        <!-- Acciones Columna -->
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let arrendamiento">
+            <div class="action-buttons">
+              <button mat-icon-button matTooltip="Ver detalles" color="primary" (click)="verArrendamiento(arrendamiento)" class="btn-view">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="Editar arrendamiento" color="primary" (click)="editarArrendamiento(arrendamiento)" class="btn-edit">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="Eliminar arrendamiento" color="warn" (click)="eliminarArrendamiento(arrendamiento)" class="btn-delete">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+  
+        <!-- Filas de la tabla -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr 
+          mat-row 
+          *matRowDef="let row; columns: displayedColumns;"
+          class="finca-row"
+          [class.highlight-row]="row === expandedElement"
+          matRipple
+        ></tr>
+      </table>
+  
+      <!-- Paginador -->
+      <mat-paginator 
+        [pageSizeOptions]="[6, 10, 20]" 
+        showFirstLastButtons
+        aria-label="Seleccionar página de arrendamientos">
+      </mat-paginator>
+    </div>
+  
+    <!-- VISTA TARJETAS -->
+    <div *ngIf="!loading && !errorMessage && dataSource.filteredData.length > 0 && vistaActual === 'tarjeta'" class="cards-view animate__animated animate__fadeIn">
+      <app-card-arrendamientos [arrendamientos]="dataSource.filteredData"></app-card-arrendamientos>
+    </div>
+  </div>
+  

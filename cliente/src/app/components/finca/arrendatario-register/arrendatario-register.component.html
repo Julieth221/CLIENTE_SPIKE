@@ -1,0 +1,89 @@
+<div class="container">
+  <div class="form-section">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ editing ? 'Editar Arrendatario' : 'Registrar Arrendatario' }}</mat-card-title>
+        <mat-card-subtitle>Registra y gestiona las personas con quienes se arriendan las parcelas.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="arrendatarioForm" (ngSubmit)="guardarArrendatario()">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nombre del arrendatario</mat-label>
+              <input matInput formControlName="nombre" placeholder="Ej: Pedro Pérez">
+              <mat-error *ngIf="arrendatarioForm.get('nombre')?.hasError('required')">
+                El nombre es obligatorio
+              </mat-error>
+              <mat-error *ngIf="arrendatarioForm.get('nombre')?.hasError('minlength')">
+                El nombre debe tener al menos 3 caracteres
+              </mat-error>
+            </mat-form-field>
+          </div>
+          
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Número de contacto</mat-label>
+              <input matInput formControlName="contacto" placeholder="Ej: 3115559001" maxlength="10">
+              <mat-icon matSuffix>phone</mat-icon>
+              <mat-error *ngIf="arrendatarioForm.get('contacto')?.hasError('required')">
+                El número de contacto es obligatorio
+              </mat-error>
+              <mat-error *ngIf="arrendatarioForm.get('contacto')?.hasError('pattern')">
+                Ingrese un número de teléfono válido de 10 dígitos
+              </mat-error>
+            </mat-form-field>
+          </div>
+          
+          <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" [disabled]="loading">
+              <mat-icon>{{ editing ? 'save' : 'add' }}</mat-icon>
+              {{ editing ? 'Actualizar' : 'Registrar' }}
+            </button>
+            
+            <button mat-button type="button" *ngIf="editing" (click)="cancelarEdicion()">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="list-section">
+    <h2>Arrendatarios Registrados</h2>
+    
+    <div *ngIf="loading" class="loader-container">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+    
+    <div *ngIf="!loading && arrendatarios.length === 0" class="empty-state">
+      <mat-icon>person_off</mat-icon>
+      <p>No hay arrendatarios registrados</p>
+    </div>
+    
+    <div class="cards-grid" *ngIf="!loading && arrendatarios.length > 0">
+      <mat-card class="arrendatario-card" *ngFor="let arrendatario of arrendatarios">
+        <div class="arrendatario-content">
+          <div class="arrendatario-info">
+            <div class="arrendatario-name">
+              <mat-icon>person</mat-icon>
+              <span>{{ arrendatario.Nombre | titlecase }}</span>
+            </div>
+            <div class="arrendatario-contact">
+              <mat-icon>phone</mat-icon>
+              <span>{{ formatPhoneNumber(arrendatario.Contacto) }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-actions">
+          <button mat-icon-button color="primary" matTooltip="Editar" (click)="editarArrendatario(arrendatario)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matTooltip="Eliminar" (click)="eliminarArrendatario(arrendatario)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>

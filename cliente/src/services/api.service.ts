@@ -1,6 +1,7 @@
-import { Injectable} from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders  } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { AuthService } from "./auth.service";
 
 
 @Injectable({
@@ -8,25 +9,31 @@ import { Observable } from "rxjs";
 })
 
 export class ApiService{
-    constructor (private http: HttpClient){}
+    constructor (private http: HttpClient, private authService: AuthService){}
 
-    // Metodo get general
-    get<T>(url:string): Observable<T>{
-        return this.http.get<T>(url);
-        
+    private getAuthHeaders(): HttpHeaders {
+        const token = this.authService.getToken();
+        let headers = new HttpHeaders();
+        if (token) {
+          headers = headers.set('Authorization', `Bearer ${token}`);
+        }
+        return headers;
+      }
+    
+    get<T>(url: string): Observable<T> {
+        return this.http.get<T>(url, { headers: this.getAuthHeaders() });
     }
 
-    post<T>(url:string, data:any): Observable<T>{
-        return this.http.post<T>(url, data);
-        
+    post<T>(url: string, data: any): Observable<T> {
+        return this.http.post<T>(url, data, { headers: this.getAuthHeaders() });
     }
 
-    put<T>(url:string, data:any): Observable<T>{
-        return this.http.put<T>(url, data);
+    put<T>(url: string, data: any): Observable<T>{
+        return this.http.put<T>(url, data, { headers: this.getAuthHeaders() });
     }
 
     delete<T>(url:string): Observable<T>{
-        return this.http.delete<T>(url);
+        return this.http.delete<T>(url, { headers: this.getAuthHeaders() });
     }
 
 }
