@@ -24,10 +24,12 @@ import { CardArrendamientosComponent } from '../card-arrendamientos/card-arrenda
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { AuthService } from '../../../../services/auth.service';
+import { VerArrendamientosComponent } from '../ver-arrendamientos/ver-arrendamientos.component';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-tabla-arrendamientos',
-  standalone: true,
   imports: [
     MatIconModule,
     MatInputModule,
@@ -48,7 +50,10 @@ import { AuthService } from '../../../../services/auth.service';
     MatButtonToggleModule,
     CardArrendamientosComponent,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    // VerArrendamientosComponent,
+    OverlayModule, 
+    MatDialogModule
   ],
   providers: [DatePipe],
   templateUrl: './tabla-arrendamientos.component.html',
@@ -65,6 +70,7 @@ export class TablaArrendamientosComponent implements OnInit, AfterViewInit {
   // Referencias para paginación y ordenamiento
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(VerArrendamientosComponent) verArrendamientosComponent!: VerArrendamientosComponent;
   
   // Control de vista
   vistaActual: 'tabla' | 'tarjeta' = 'tabla';
@@ -98,12 +104,15 @@ export class TablaArrendamientosComponent implements OnInit, AfterViewInit {
     private apiService: ApiService,
     private router: Router,
     private datePipe: DatePipe,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog  
   ) {}
 
   private isMobileView(): boolean {
     return window.innerWidth <= 768;
   }
+
+
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -287,9 +296,22 @@ export class TablaArrendamientosComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/dashboard/finca/arrendamiento']);
   }
 
-  verArrendamiento(arrendamiento: any) {
-    this.router.navigate(['/dashboard/arrendamiento/ver', arrendamiento.id]);
-  }
+    //  abrir modal con MatDialog
+    verArrendamiento(arrendamiento: any): void {
+      this.dialog.open(VerArrendamientosComponent, {
+        data: {
+          arrendamientoId: arrendamiento.id,
+          nombreFinca:     arrendamiento.finca.Nombre,
+          fincaId:   arrendamiento.finca.Id
+        },
+        width: '50%',
+        maxWidth: '1200px',
+        disableClose: true         
+      }).afterClosed().subscribe(() => {
+        
+      });
+    }
+  
 
   editarArrendamiento(arrendamiento: any) {
     this.router.navigate(['/dashboard/arrendamiento/editar', arrendamiento.id]);
