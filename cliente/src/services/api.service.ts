@@ -15,10 +15,10 @@ export class ApiService{
         const token = this.authService.getToken();
         let headers = new HttpHeaders();
         if (token) {
-          headers = headers.set('Authorization', `Bearer ${token}`);
+        headers = headers.set('Authorization', `Bearer ${token}`);
         }
         return headers;
-      }
+    }
     
     get<T>(url: string): Observable<T> {
         return this.http.get<T>(url, { headers: this.getAuthHeaders() });

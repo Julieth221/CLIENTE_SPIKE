@@ -67,6 +67,7 @@ export class RegisterSensorComponent implements OnInit {
     // Redirige al componente registro-t-sensor, pasando los datos a través del estado de la ruta
     this.router.navigate(['/dashboard/registro-t-sensor'], {
       state: { sensorData: data },
+      
     });
   }
 }

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Sensor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Registro de Sensor</h2>
+        <form id="sensorForm" class="space-y-4">
+            <div>
+                <label for="NombreTipoSensor" class="block text-gray-700 text-sm font-bold mb-2">Tipo de Sensor:</label>
+                <input type="text" id="NombreTipoSensor" name="NombreTipoSensor" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div>
+                <label for="Descripcion" class="block text-gray-700 text-sm font-bold mb-2">Descripción:</label>
+                <input type="text" id="Descripcion" name="Descripcion" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div>
+                <label for="Nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre del Sensor:</label>
+                <input type="text" id="Nombre" name="Nombre" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div>
+                <label for="Ubicacion" class="block text-gray-700 text-sm font-bold mb-2">Ubicación:</label>
+                <input type="text" id="Ubicacion" name="Ubicacion" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div>
+                <label for="Cultivo" class="block text-gray-700 text-sm font-bold mb-2">Cultivo:</label>
+                <input type="text" id="Cultivo" name="Cultivo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div>
+                <label for="FechaInstalacion" class="block text-gray-700 text-sm font-bold mb-2">Fecha de Instalación:</label>
+                <input type="date" id="FechaInstalacion" name="FechaInstalacion" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div>
+                <label for="Latitud" class="block text-gray-700 text-sm font-bold mb-2">Latitud:</label>
+                <input type="number" id="Latitud" name="Latitud" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div>
+                <label for="Longitud" class="block text-gray-700 text-sm font-bold mb-2">Longitud:</label>
+                <input type="number" id="Longitud" name="Longitud" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Registrar Sensor</button>
+        </form>
+    </div>
+</body>
+</html>

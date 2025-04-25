@@ -49,7 +49,7 @@
           </button>
           <div class="sub-menu" *ngIf="activeSubMenu === 'sensores'">
             <ul>
-              <li><button type="button">Gestión de Sensores</button></li>
+              <li><button type="button" (click)="goToComponent('gestion-sensores')">Gestión de Sensores</button></li>
               <li><button type="button">Probar Sensor</button></li>
               <li><button type="button">Configuración de Alertas</button></li>
               <li><button type="button">Localización Sensor</button></li>
