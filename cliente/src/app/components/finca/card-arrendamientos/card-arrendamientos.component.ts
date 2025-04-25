@@ -14,6 +14,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { VerArrendamientosComponent } from '../ver-arrendamientos/ver-arrendamientos.component';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { EditarArrendamientosComponent } from '../editar-arrendamientos/editar-arrendamientos.component';
 
 @Component({
   selector: 'app-card-arrendamientos',
@@ -181,8 +182,23 @@ export class CardArrendamientosComponent implements OnInit {
     });
   }
 
-  editarArrendamiento(arrendamiento: any) {
-    this.router.navigate(['/dashboard/arrendamiento/editar', arrendamiento.id]);
+  //  abrir modal con MatDialog
+  editarArrendamiento(arrendamiento: any): void {
+    this.dialog.open(EditarArrendamientosComponent, {
+      data: {
+        arrendamientoId: arrendamiento.id,
+        nombreFinca:     arrendamiento.finca.Nombre,
+        fincaId:   arrendamiento.finca.Id,
+      },
+      width: '50%',
+      maxWidth: '1200px',
+      disableClose: true         
+    }).afterClosed().subscribe((result) => {
+      // Si el resultado indica que se actualizó el arrendamiento, recargamos los datos
+      if (result && result.actualizado) {
+        this.obtenerArrendamientos();
+      }
+    });
   }
 
   eliminarArrendamiento(arrendamiento: any) {

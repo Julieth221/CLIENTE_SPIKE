@@ -27,6 +27,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { VerArrendamientosComponent } from '../ver-arrendamientos/ver-arrendamientos.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { EditarArrendamientosComponent } from '../editar-arrendamientos/editar-arrendamientos.component';
 
 @Component({
   selector: 'app-tabla-arrendamientos',
@@ -71,6 +72,7 @@ export class TablaArrendamientosComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(VerArrendamientosComponent) verArrendamientosComponent!: VerArrendamientosComponent;
+  @ViewChild(EditarArrendamientosComponent) EditarArrendamientosComponent!: EditarArrendamientosComponent;
   
   // Control de vista
   vistaActual: 'tabla' | 'tarjeta' = 'tabla';
@@ -302,7 +304,7 @@ export class TablaArrendamientosComponent implements OnInit, AfterViewInit {
         data: {
           arrendamientoId: arrendamiento.id,
           nombreFinca:     arrendamiento.finca.Nombre,
-          fincaId:   arrendamiento.finca.Id
+          fincaId:   arrendamiento.finca.Id,
         },
         width: '50%',
         maxWidth: '1200px',
@@ -311,11 +313,27 @@ export class TablaArrendamientosComponent implements OnInit, AfterViewInit {
         
       });
     }
+
+    //  abrir modal con MatDialog
+    editarArrendamiento(arrendamiento: any): void {
+      this.dialog.open(EditarArrendamientosComponent, {
+        data: {
+          arrendamientoId: arrendamiento.id,
+          nombreFinca:     arrendamiento.finca.Nombre,
+          fincaId:   arrendamiento.finca.Id,
+        },
+        width: '50%',
+        maxWidth: '1200px',
+        disableClose: true         
+      }).afterClosed().subscribe((result) => {
+        // Si el resultado indica que se actualizó el arrendamiento, recargamos los datos
+        if (result && result.actualizado) {
+          this.obtenerArrendamientos();
+        }
+      });
+    }
   
 
-  editarArrendamiento(arrendamiento: any) {
-    this.router.navigate(['/dashboard/arrendamiento/editar', arrendamiento.id]);
-  }
 
   eliminarArrendamiento(arrendamiento: any) {
     if (confirm(`¿Está seguro de eliminar el arrendamiento de la finca "${arrendamiento.finca.Nombre}"?`)) {
