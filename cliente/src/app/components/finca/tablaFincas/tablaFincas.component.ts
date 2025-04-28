@@ -21,6 +21,8 @@ import { MatRippleModule } from '@angular/material/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { CardFincasComponent } from '../card-fincas/card-fincas.component';
+import { VerfincasComponent } from '../verfincas/verfincas.component';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-tablaFincas',
@@ -42,7 +44,8 @@ import { CardFincasComponent } from '../card-fincas/card-fincas.component';
     MatDividerModule,
     MatRippleModule,
     MatButtonToggleModule,
-    CardFincasComponent
+    CardFincasComponent,
+    MatDialogModule
   ],
   templateUrl: './tablaFincas.component.html',
   styleUrl: './tablaFincas.component.css',
@@ -84,7 +87,8 @@ export class TablaFincasComponent implements OnInit, AfterViewInit {
 
   constructor(
     private apiService: ApiService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog 
   ) {}
 
   private isMobileView(): boolean {
@@ -166,6 +170,20 @@ export class TablaFincasComponent implements OnInit, AfterViewInit {
 
   editarFinca(finca: any) {
     this.router.navigate(['/finca/editar', finca.ID]);
+  }
+  verFinca(finca: any): void {
+      this.dialog.open(VerfincasComponent, {
+        data: {
+          fincaId:   finca.Id,
+          nombreFinca: finca.Nombre,
+          AreaTotal: finca.AreaTotal
+        },
+        width: '50%',
+        maxWidth: '1200px',
+        disableClose: true         
+      }).afterClosed().subscribe(() => {
+        
+      });
   }
 
   eliminarFinca(finca: any) {

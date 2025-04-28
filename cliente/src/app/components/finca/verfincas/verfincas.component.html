@@ -1,0 +1,98 @@
+<div class="dialog-container">
+  <!-- Cabecera del diálogo -->
+  <div class="dialog-header">
+    <h2 mat-dialog-title class="dialog-title">
+      <mat-icon class="title-icon">agriculture</mat-icon>
+      {{ nombreFinca }}
+    </h2>
+    <button mat-icon-button class="close-button" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Contenido del diálogo -->
+  <mat-dialog-content class="dialog-content">
+    <!-- Spinner de carga -->
+    <div *ngIf="loading" class="spinner-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span class="spinner-text">Cargando información de la finca...</span>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="errorMessage && !loading" class="error-message">
+      <mat-icon color="warn">error_outline</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+    <!-- Información general de la finca -->
+    <div *ngIf="!loading && !errorMessage" class="finca-info">
+      <div class="info-grid">
+        <div class="info-card">
+          <mat-icon class="info-icon">grid_view</mat-icon>
+          <div class="info-content">
+            <span class="info-label">Total de Parcelas</span>
+            <span class="info-value">{{ totalParcelas }}</span>
+          </div>
+        </div>
+        <div class="info-card">
+          <mat-icon class="info-icon">straighten</mat-icon>
+          <div class="info-content">
+            <span class="info-label">Área Total</span>
+            <span class="info-value">{{ AreaTotal | number }} m²</span>
+          </div>
+        </div>
+        <div class="info-card">
+          <mat-icon class="info-icon">aspect_ratio</mat-icon>
+          <div class="info-content">
+            <span class="info-label">Área Total Parcelas</span>
+            <span class="info-value">{{ AreaTotalParcelas | number}} m²</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de parcelas -->
+    <div *ngIf="!loading && !errorMessage && parcelas.length > 0" class="parcelas-container">
+      <h3 class="section-title">Parcelas de la Finca</h3>
+      <div class="parcelas-grid">
+        <mat-card *ngFor="let parcela of parcelas" class="parcela-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon class="card-icon">grid_view</mat-icon>
+              {{ parcela.FkParcelaFinca.NombreParcela }}
+            </mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="parcela-info">
+              <div class="info-row">
+                <mat-icon class="info-icon">straighten</mat-icon>
+                <span class="info-label">Tamaño:</span>
+                <span class="info-value">{{ parcela.FkParcelaFinca.TamanoParcela  }} m²</span>
+              </div>
+            </div>
+            
+            <mat-divider class="card-divider"></mat-divider>
+            
+            <div class="mapa-container">
+              <app-ver-mapa
+                [coordenadas]="getCoordenadas(parcela.FkGeolocalizacion)"
+                [nombreParcela]="parcela.FkParcelaFinca.NombreParcela"
+                [tamanoParcela]="parcela.FkParcelaFinca.TamanoParcela"
+                [mostrarDetalles]="true">
+              </app-ver-mapa>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Estado vacío -->
+    <div *ngIf="!loading && !errorMessage && parcelas.length === 0" class="empty-state">
+      <mat-icon class="empty-icon">nature</mat-icon>
+      <h3>No hay parcelas registradas</h3>
+      <p>Esta finca no tiene parcelas asignadas</p>
+    </div>
+  </mat-dialog-content>
+</div>
+  

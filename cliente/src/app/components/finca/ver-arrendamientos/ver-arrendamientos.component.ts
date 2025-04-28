@@ -25,7 +25,7 @@ interface Geolocalizacion {
 interface Parcela {
   Id: number;
   NombreParcela: string;
-  TamañoParcela: number;
+  TamanoParcela: number;
   Activo: boolean;
   FkFincaParcela?: any;
 }
@@ -128,8 +128,6 @@ export class VerArrendamientosComponent implements OnInit, OnDestroy {
             a.FkArrendatamientoParcela.Id
           );
 
-          console.log('Parcelas de la finca filtradas:', parcelasDeLaFinca);
-
           if (parcelasDeLaFinca.length === 0) {
             this.loading = false;
             this.error = 'Esta finca no tiene parcelas arrendadas';
@@ -138,7 +136,6 @@ export class VerArrendamientosComponent implements OnInit, OnDestroy {
 
           // Extraer los IDs de parcelas únicas (evitar duplicados)
           const parcelasIds = [...new Set(parcelasDeLaFinca.map((a: any) => a.FkArrendatamientoParcela.Id))];
-          console.log('IDs de parcelas a consultar:', parcelasIds);
 
           // 2. Obtener detalles de cada parcela
           const parcelasRequests = parcelasIds.map((parcelaId: any) => 
@@ -163,7 +160,6 @@ export class VerArrendamientosComponent implements OnInit, OnDestroy {
                   }
 
                   const parcela = parcelaResponse.Data;
-                  console.log(`Datos de la parcela ${index + 1}:`, parcela);
 
                   // 3. Para cada parcela, buscar su información de geolocalización en FincaParcela
                   return new Promise<ParcelaDetalle | null>((resolve) => {
@@ -184,14 +180,13 @@ export class VerArrendamientosComponent implements OnInit, OnDestroy {
                           // 4. Si existe geolocalización, obtener sus detalles
                           if (fincaParcela.FkGeolocalizacion && fincaParcela.FkGeolocalizacion.Id) {
                             this.apiService.get(`${API_URLS.CRUD.API_CRUD_FINCA}/Geolocalizacion/${fincaParcela.FkGeolocalizacion.Id}`)
-                              .pipe(takeUntil(this.destroy$))
                               .subscribe({
                                 next: (geoResponse: any) => {
                                   if (!geoResponse || !geoResponse.Data) {
                                     resolve({
                                       id: parcela.Id,
                                       nombre: parcela.NombreParcela || `Parcela ${index + 1}`,
-                                      tamano: parcela.TamañoParcela || 0,
+                                      tamano: parcela.TamanoParcela || 0,
                                       coordenadas: {
                                         latitudInicial: 0,
                                         longitudInicial: 0,
@@ -206,7 +201,7 @@ export class VerArrendamientosComponent implements OnInit, OnDestroy {
                                   resolve({
                                     id: parcela.Id,
                                     nombre: parcela.NombreParcela || `Parcela ${index + 1}`,
-                                    tamano: parcela.TamañoParcela || 0,
+                                    tamano: parcela.TamanoParcela || 0,
                                     coordenadas: {
                                       latitudInicial: parseFloat(geo.LatitudInicial),
                                       longitudInicial: parseFloat(geo.LongitudInicial),
@@ -220,7 +215,7 @@ export class VerArrendamientosComponent implements OnInit, OnDestroy {
                                   resolve({
                                     id: parcela.Id,
                                     nombre: parcela.NombreParcela || `Parcela ${index + 1}`,
-                                    tamano: parcela.TamañoParcela || 0,
+                                    tamano: parcela.TamanoParcela || 0,
                                     coordenadas: {
                                       latitudInicial: 0,
                                       longitudInicial: 0,
@@ -234,7 +229,7 @@ export class VerArrendamientosComponent implements OnInit, OnDestroy {
                             resolve({
                               id: parcela.Id,
                               nombre: parcela.NombreParcela || `Parcela ${index + 1}`,
-                              tamano: parcela.TamañoParcela || 0,
+                              tamano: parcela.TamanoParcela || 0,
                               coordenadas: {
                                 latitudInicial: 0,
                                 longitudInicial: 0,

@@ -12,7 +12,6 @@ import { CommonModule } from '@angular/common';
   styleUrl: './ver-mapa.component.css'
 })
 export class VerMapaComponent implements AfterViewInit, OnChanges {
-  // @ViewChild('mapa', { static: false }) map!: GoogleMap;
   @ViewChild('mapa') mapa!: GoogleMap;
   
   @Input() coordenadas: {
@@ -35,19 +34,10 @@ export class VerMapaComponent implements AfterViewInit, OnChanges {
   center: google.maps.LatLngLiteral = { lat: 4.570868, lng: -74.297333 };
   zoom = 14;
   
-  // Opciones del mapa para eventos pasivos
-  // mapOptions: google.maps.MapOptions = {
-  //   gestureHandling: 'greedy',
-  //   clickableIcons: false,
-  //   mapTypeControl: true,
-  //   streetViewControl: false,
-  //   fullscreenControl: true,
-  //   mapTypeId: 'satellite'
-  // };
-  
   // Elementos del mapa
   marcadores: google.maps.Marker[] = [];
   poligono: google.maps.Polygon | null = null;
+  private ultimasCoordenadas: any = null;
   
   ngAfterViewInit() {
     this.inicializarMapa();
@@ -55,15 +45,29 @@ export class VerMapaComponent implements AfterViewInit, OnChanges {
   
   ngOnChanges(changes: SimpleChanges) {
     if (changes['coordenadas'] && !changes['coordenadas'].firstChange) {
-      // Si cambian las coordenadas después de la inicialización, actualizar el mapa
-      this.limpiarMapa();
-      this.inicializarMapa();
+      const nuevasCoordenadas = changes['coordenadas'].currentValue;
+      
+      // Verificar si las coordenadas realmente cambiaron
+      if (!this.sonCoordenadasIguales(this.ultimasCoordenadas, nuevasCoordenadas)) {
+        this.ultimasCoordenadas = { ...nuevasCoordenadas };
+        this.limpiarMapa();
+        this.inicializarMapa();
+      }
     }
+  }
+  
+  private sonCoordenadasIguales(coords1: any, coords2: any): boolean {
+    if (!coords1 || !coords2) return false;
+    return (
+      coords1.latitudInicial === coords2.latitudInicial &&
+      coords1.longitudInicial === coords2.longitudInicial &&
+      coords1.latitudFinal === coords2.latitudFinal &&
+      coords1.longitudFinal === coords2.longitudFinal
+    );
   }
   
   inicializarMapa() {
     if (!this.mapa || !this.mapa.googleMap) {
-      // El mapa aún no está inicializado
       return;
     }
     

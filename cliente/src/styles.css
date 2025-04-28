@@ -5,8 +5,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /* Personalización global de mat-form-field en Angular Material */
 .mdc-text-field {
-    --mdc-outlined-text-field-outline-color: #4CAF50 !important; /* Borde verde */
-    --mdc-outlined-text-field-focus-outline-color: #2E7D32 !important; /* Verde más oscuro al enfocar */
+    --mdc-outlined-text-field-outline-color: #4CAF50 !important; 
+    --mdc-outlined-text-field-focus-outline-color: #2E7D32 !important; 
 }
 
 /* Cambiar el color del texto dentro del input */
@@ -14,7 +14,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /* Cambiar el color del label */
 .mdc-floating-label {
-    color: #73e686 !important;
+    color: #3a3b3a !important;
 }
 
 /* Cambiar color del borde cuando hay error */
