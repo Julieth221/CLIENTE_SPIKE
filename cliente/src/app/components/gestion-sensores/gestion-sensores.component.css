@@ -1,0 +1,102 @@
+.sensor-list-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .sensor-list-card {
+    width: 95%;
+    max-width: 1200px;
+    margin-bottom: 20px;
+  }
+  
+  .sensor-list-card mat-card-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #2196f3; /* Color primario, similar al botón */
+  }
+  
+  .sensor-list-card mat-card-content {
+    padding: 20px;
+  }
+  
+  .header-actions {
+    display: flex;
+    justify-content: flex-end; /* Alinea el botón a la derecha */
+    margin-bottom: 20px;
+  }
+  
+  .loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #777;
+  }
+  
+  .error-message {
+    color: #ff4444;
+    padding: 10px;
+    background-color: #ffe0e0;
+    border: 1px solid #ff4444;
+    margin-bottom: 20px;
+    border-radius: 4px;
+  }
+  
+  .no-data-message {
+    color: #555;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: center;
+  }
+  
+  mat-table {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  th.mat-header-cell {
+    text-align: left;
+    font-weight: bold;
+    color: #333;
+    padding: 12px;
+    background-color: #f5f5f5;
+  }
+  
+  td.mat-cell {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  tr.mat-row:hover {
+    background-color: #f0f8ff; /* Un color de fondo muy claro al pasar el mouse */
+  }
+  
+  /* Estilos para el botón Registrar Sensor */
+  button {
+    background-color: #2196f3; /* Azul primario */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #1976d2; /* Un tono más oscuro al pasar el mouse */
+  }
+  
+  button:disabled {
+    background-color: #b0bec5; /* Gris para deshabilitado */
+    cursor: not-allowed;
+  }
+  

@@ -144,6 +144,7 @@ getLocation() {
         next: (response: any) => {
             console.log('Respuesta del API MID:', response);
             this.router.navigate(['/dashboard/gestion-sensores']);
+            alert('Sensor registrado exitosamente.');
         },
             error: (error: any) => {
             console.error('Error al enviar datos al API MID:', error);

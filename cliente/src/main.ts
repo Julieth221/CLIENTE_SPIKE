@@ -43,7 +43,7 @@ bootstrapApplication(AppComponent,{
               path: 'dashboard',
               component: DashboardComponent,
               children: [
-                  { path: 'register-sensor', loadComponent: ()  => import('./app/components/register-sensor/register-sensor.component').then(m => m.RegisterSensorComponent)},
+                  { path: 'register-sensor', component: RegisterSensorComponent },
                   { path: 'registro-t-sensor', component: RegistroTSensorComponent},
                   { path: 'finca/registrar', component: FincaRegisterComponent },
                   { path: 'finca/arrendatario', component: ArrendatarioRegisterComponent },

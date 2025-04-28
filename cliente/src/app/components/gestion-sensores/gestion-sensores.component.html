@@ -1,55 +1,69 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Sensor</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@tailwindcss/browser@latest"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
-</head>
-<body class="bg-gray-100 flex justify-center items-center min-h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Registro de Sensor</h2>
-        <form id="sensorForm" class="space-y-4">
-            <div>
-                <label for="NombreTipoSensor" class="block text-gray-700 text-sm font-bold mb-2">Tipo de Sensor:</label>
-                <input type="text" id="NombreTipoSensor" name="NombreTipoSensor" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-            <div>
-                <label for="Descripcion" class="block text-gray-700 text-sm font-bold mb-2">Descripción:</label>
-                <input type="text" id="Descripcion" name="Descripcion" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-            <div>
-                <label for="Nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre del Sensor:</label>
-                <input type="text" id="Nombre" name="Nombre" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-            <div>
-                <label for="Ubicacion" class="block text-gray-700 text-sm font-bold mb-2">Ubicación:</label>
-                <input type="text" id="Ubicacion" name="Ubicacion" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-            <div>
-                <label for="Cultivo" class="block text-gray-700 text-sm font-bold mb-2">Cultivo:</label>
-                <input type="text" id="Cultivo" name="Cultivo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-            <div>
-                <label for="FechaInstalacion" class="block text-gray-700 text-sm font-bold mb-2">Fecha de Instalación:</label>
-                <input type="date" id="FechaInstalacion" name="FechaInstalacion" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-            <div>
-                <label for="Latitud" class="block text-gray-700 text-sm font-bold mb-2">Latitud:</label>
-                <input type="number" id="Latitud" name="Latitud" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-            <div>
-                <label for="Longitud" class="block text-gray-700 text-sm font-bold mb-2">Longitud:</label>
-                <input type="number" id="Longitud" name="Longitud" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Registrar Sensor</button>
-        </form>
+<div class="container mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-4 text-center text-gray-800">Datos de Sensores</h1>
+
+  <div class="mb-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <mat-form-field>
+        <mat-label>ID</mat-label>
+        <input matInput [(ngModel)]="filtros.id" (input)="aplicarFiltros()">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="filtros.nombre" (input)="aplicarFiltros()">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Ubicación</mat-label>
+        <input matInput [(ngModel)]="filtros.ubicacion" (input)="aplicarFiltros()">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Cultivo</mat-label>
+        <input matInput [(ngModel)]="filtros.cultivo" (input)="aplicarFiltros()">
+      </mat-form-field>
     </div>
-</body>
-</html>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table mat-table [dataSource]="dataFilter" class="w-full mat-elevation-z-1">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let row">{{ row.nombre }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="ubicacion">
+        <th mat-header-cell *matHeaderCellDef>Ubicación</th>
+        <td mat-cell *matCellDef="let row">{{ row.ubicacion }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="latitud">
+        <th mat-header-cell *matHeaderCellDef>Latitud</th>
+        <td mat-cell *matCellDef="let row">{{ row.latitud }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="longitud">
+        <th mat-header-cell *matHeaderCellDef>Longitud</th>
+        <td mat-cell *matCellDef="let row">{{ row.longitud }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="cultivo">
+        <th mat-header-cell *matHeaderCellDef>Cultivo</th>
+        <td mat-cell *matCellDef="let row">{{ row.cultivo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="fechaRegistro">
+        <th mat-header-cell *matHeaderCellDef>Fecha de Registro</th>
+        <td mat-cell *matCellDef="let row">{{ row.fechaRegistro }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>
