@@ -1,0 +1,138 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon class="title-icon">edit</mat-icon>
+    Editar Arrendamiento
+  </h2>
+  
+  <mat-dialog-content class="dialog-content">
+    <!-- Spinner de carga -->
+    <div *ngIf="loading" class="spinner-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span class="spinner-text">Cargando información...</span>
+    </div>
+    
+    <!-- Mensaje de error -->
+    <div *ngIf="errorMessage && !loading" class="error-message">
+      <mat-icon color="warn">error_outline</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+    
+    <!-- Formulario -->
+    <form [formGroup]="arrendamientoForm" (ngSubmit)="onSubmit()" *ngIf="!loading && !errorMessage">
+      <div class="form-header">
+        <div class="header-info">
+          <div class="info-item">
+            <mat-icon class="info-icon">location_on</mat-icon>
+            <span class="info-label">Finca:</span>
+            <span class="info-value">{{ data.nombreFinca }}</span>
+          </div>
+          <div class="info-item" *ngIf="arrendatario">
+            <mat-icon class="info-icon">person</mat-icon>
+            <span class="info-label">Arrendatario:</span>
+            <span class="info-value">{{ arrendatario.Nombre }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <!-- Selección de parcela -->
+      <h3 class="section-title">Parcela Asignada</h3>
+      
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Seleccionar Parcela</mat-label>
+          <mat-select formControlName="parcela" [disabled]="parcelasDisponibles.length === 0">
+            <mat-option *ngFor="let parcela of parcelasDisponibles" [value]="parcela.Id">
+              {{ parcela.NombreParcela }}
+            </mat-option>
+          </mat-select>
+          <mat-hint *ngIf="parcelasDisponibles.length === 0">No hay parcelas disponibles para asignar</mat-hint>
+          <mat-error *ngIf="arrendamientoForm.get('parcela')?.hasError('required')">
+            Debe seleccionar una parcela
+          </mat-error>
+        </mat-form-field>
+      </div>
+      
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tamaño de la parcela (m²)</mat-label>
+          <input matInput formControlName="tamanoParcela" readonly>
+          <mat-icon matSuffix>straighten</mat-icon>
+        </mat-form-field>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <!-- Fechas y valor -->
+      <h3 class="section-title">Términos del Arrendamiento</h3>
+      
+      <div class="form-row dates-container">
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de inicio</mat-label>
+          <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio">
+          <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+          <mat-datepicker #pickerInicio></mat-datepicker>
+          <mat-error *ngIf="arrendamientoForm.get('fechaInicio')?.hasError('required')">
+            La fecha de inicio es requerida
+          </mat-error>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de finalización</mat-label>
+          <input matInput [matDatepicker]="pickerFin" formControlName="fechaFin">
+          <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFin></mat-datepicker>
+          <mat-error *ngIf="arrendamientoForm.get('fechaFin')?.hasError('required')">
+            La fecha de finalización es requerida
+          </mat-error>
+        </mat-form-field>
+      </div>
+      
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Valor del arrendamiento</mat-label>
+          <input matInput type="number" formControlName="valor" min="1" (input)="formatCurrency($event)">
+          <span matTextPrefix>$&nbsp;</span>
+          <mat-error *ngIf="arrendamientoForm.get('valor')?.hasError('required')">
+            El valor del arrendamiento es requerido
+          </mat-error>
+          <mat-error *ngIf="arrendamientoForm.get('valor')?.hasError('min')">
+            El valor debe ser mayor a cero
+          </mat-error>
+        </mat-form-field>
+      </div>
+      
+      <!-- Mensaje de validación de fechas -->
+      <div *ngIf="arrendamientoForm.errors?.['fechasInvalidas'] && arrendamientoForm.touched" class="validation-error">
+        <mat-icon>warning</mat-icon>
+        <span>La fecha de finalización debe ser posterior a la fecha de inicio</span>
+      </div>
+    </form>
+    
+    <!-- Mensaje de éxito -->
+    <div *ngIf="exito" class="success-message">
+      <mat-icon color="primary">check_circle</mat-icon>
+      <span>¡Arrendamiento actualizado con éxito!</span>
+    </div>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions align="end">
+    <button 
+      mat-button 
+      [mat-dialog-close]="false" 
+      (click)="onCancel()"
+      [disabled]="submitting">
+      Cancelar
+    </button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      [disabled]="arrendamientoForm.invalid || submitting || loading" 
+      (click)="onSubmit()">
+      <mat-icon *ngIf="!submitting">save</mat-icon>
+      <mat-spinner *ngIf="submitting" diameter="20" class="button-spinner"></mat-spinner>
+      <span>{{ submitting ? 'Guardando...' : 'Guardar cambios' }}</span>
+    </button>
+  </mat-dialog-actions>
+</div>

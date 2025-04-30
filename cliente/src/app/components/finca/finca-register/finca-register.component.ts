@@ -86,7 +86,7 @@ export class FincaRegisterComponent {
       Nombre: formValue.nombre,
       AreaTotal: formValue.areaTotal,
       TotalParcelas: formValue.cantidadParcelas,
-      TamañoParcelas: formValue.tamanoTotalParcelas,
+      TamanoParcelas: formValue.tamanoTotalParcelas,
       tipo_suelo: formValue.tipoSuelo,
       parcelas: formValue.parcelas.map((p: any, index: number) => {
         let geo = {
@@ -109,7 +109,7 @@ export class FincaRegisterComponent {
   
         return {
           NombreParcela: `Parcela ${index + 1}`,
-          TamañoParcela: formValue.tamanoTotalParcelas,
+          TamanoParcela: formValue.tamanoTotalParcelas,
           geolocalizacion: geo
         };
       })

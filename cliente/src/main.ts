@@ -23,6 +23,7 @@ import { CardFincasComponent } from './app/components/finca/card-fincas/card-fin
 import { RegisterTipoSueloComponent } from './app/components/finca/register-tipo-suelo/register-tipo-suelo.component';
 import { TablaArrendamientosComponent } from './app/components/finca/tabla-arrendamientos/tabla-arrendamientos.component';
 import { GestionSensoresComponent } from './app/components/gestion-sensores/gestion-sensores.component';
+import { VerArrendamientosComponent } from './app/components/finca/ver-arrendamientos/ver-arrendamientos.component';
 
 
 
@@ -39,6 +40,7 @@ bootstrapApplication(AppComponent,{
             { path: 'pwdSuccess', component: PwdSuccessComponent },
             { path: 'registro-t-sensor', component: RegistroTSensorComponent},
             { path: 'register', component: RegisterComponent },
+            { path: 'verArrendamiento', component: VerArrendamientosComponent},
             {
               path: 'dashboard',
               component: DashboardComponent,
@@ -53,9 +55,12 @@ bootstrapApplication(AppComponent,{
                   { path: 'finca/datosFinca', component: RegisterTipoSueloComponent },
                   { path: 'finca/datosArrendamiento', component: TablaArrendamientosComponent},
                   { path: 'gestion-sensores', component: GestionSensoresComponent },
+                  { path: 'finca/verArrendamiento', component: VerArrendamientosComponent}
               ],
             },
+
           ]),
+          
         provideAnimations(),
         provideHttpClient(),
         importProvidersFrom(MatDialogModule)

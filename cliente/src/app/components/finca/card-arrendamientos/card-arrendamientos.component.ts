@@ -12,6 +12,9 @@ import { ApiService } from '../../../../services/api.service';
 import { API_URLS } from '../../../../config/api_config';
 import { AuthService } from '../../../../services/auth.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { VerArrendamientosComponent } from '../ver-arrendamientos/ver-arrendamientos.component';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { EditarArrendamientosComponent } from '../editar-arrendamientos/editar-arrendamientos.component';
 
 @Component({
   selector: 'app-card-arrendamientos',
@@ -25,7 +28,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatChipsModule,
     MatDividerModule,
     MatBadgeModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDialogModule
   ],
   providers: [DatePipe],
   templateUrl: './card-arrendamientos.component.html',
@@ -45,7 +49,8 @@ export class CardArrendamientosComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
     private datePipe: DatePipe,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -166,11 +171,34 @@ export class CardArrendamientosComponent implements OnInit {
   }
 
   verArrendamiento(arrendamiento: any) {
-    this.router.navigate(['/dashboard/arrendamiento/ver', arrendamiento.id]);
+    // Abrir el diálogo con los datos del arrendamiento
+    this.dialog.open(VerArrendamientosComponent, {
+      data: {
+        arrendamientoId: arrendamiento.id,
+        nombreFinca: arrendamiento.finca.Nombre
+      },
+      width: '90%',
+      maxWidth: '1200px'
+    });
   }
 
-  editarArrendamiento(arrendamiento: any) {
-    this.router.navigate(['/dashboard/arrendamiento/editar', arrendamiento.id]);
+  //  abrir modal con MatDialog
+  editarArrendamiento(arrendamiento: any): void {
+    this.dialog.open(EditarArrendamientosComponent, {
+      data: {
+        arrendamientoId: arrendamiento.id,
+        nombreFinca:     arrendamiento.finca.Nombre,
+        fincaId:   arrendamiento.finca.Id,
+      },
+      width: '50%',
+      maxWidth: '1200px',
+      disableClose: true         
+    }).afterClosed().subscribe((result) => {
+      // Si el resultado indica que se actualizó el arrendamiento, recargamos los datos
+      if (result && result.actualizado) {
+        this.obtenerArrendamientos();
+      }
+    });
   }
 
   eliminarArrendamiento(arrendamiento: any) {

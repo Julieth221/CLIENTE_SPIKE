@@ -39,6 +39,9 @@ export class CardFincasComponent implements OnInit {
   editarFinca(finca: any) {
     this.router.navigate(['/finca/editar', finca.ID]);
   }
+  verFinca(finca: any) {
+    this.router.navigate(['/finca/editar', finca.ID]);
+  }
 
   eliminarFinca(finca: any) {
     if (confirm(`¿Está seguro de eliminar la finca "${finca.Nombre}"?`)) {
