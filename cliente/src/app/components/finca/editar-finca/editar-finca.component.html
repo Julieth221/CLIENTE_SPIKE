@@ -1,1 +1,168 @@
-<p>editar-finca works!</p>
+<div class="editar-finca-container">
+  <!-- Spinner de carga -->
+  <div *ngIf="loading" class="loader">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <!-- Contenido principal -->
+  <div *ngIf="!loading" class="content">
+    <!-- Encabezado -->
+    <div class="header">
+      <h1>Editar Finca</h1>
+      <button mat-raised-button color="primary" (click)="actualizarFinca()">
+        <mat-icon>save</mat-icon>
+        Guardar Cambios
+      </button>
+    </div>
+
+    <!-- Información general de la finca -->
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-card-title>Información General</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-grid">
+          <!-- Nombre de la finca -->
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre de la Finca</mat-label>
+            <input matInput [(ngModel)]="finca.Nombre" required>
+          </mat-form-field>
+
+          <!-- Tipo de suelo -->
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo de Suelo</mat-label>
+            <mat-select [(ngModel)]="finca.TipoSuelo" required>
+              <mat-option *ngFor="let tipo of tiposSuelo" [value]="tipo.Id">
+                {{ tipo.Nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+
+          <!-- Área total (no editable) -->
+          <mat-form-field appearance="outline">
+            <mat-label>Área Total (m²)</mat-label>
+            <input matInput [value]="finca.AreaTotal" disabled>
+          </mat-form-field>
+
+          <!-- Total de parcelas (no editable) -->
+          <mat-form-field appearance="outline">
+            <mat-label>Total de Parcelas</mat-label>
+            <input matInput [value]="finca.TotalParcelas" disabled>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Gestión de parcelas -->
+    <div class="parcelas-section">
+      <mat-card class="parcelas-card">
+        <mat-card-header>
+          <mat-card-title>Parcelas</mat-card-title>
+          <button mat-raised-button color="primary" (click)="toggleFormularioNuevaParcela()">
+            <mat-icon>add</mat-icon>
+            Agregar Parcela
+          </button>
+        </mat-card-header>
+
+        <!-- Formulario de nueva parcela -->
+        <mat-card-content *ngIf="mostrarFormularioNuevaParcela" class="nueva-parcela-form">
+          <form [formGroup]="nuevaParcelaForm" (ngSubmit)="registrarNuevaParcela()">
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>Nombre de la Parcela</mat-label>
+                <input matInput formControlName="NombreParcela" placeholder="Ingrese el nombre de la parcela">
+                <mat-error *ngIf="nuevaParcelaForm.get('NombreParcela')?.hasError('required')">
+                  El nombre es requerido
+                </mat-error>
+                <mat-error *ngIf="nuevaParcelaForm.get('NombreParcela')?.hasError('minlength')">
+                  El nombre debe tener al menos 3 caracteres
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Tamaño (m²)</mat-label>
+                <input matInput type="number" formControlName="TamanoParcela" placeholder="Ingrese el tamaño en metros cuadrados">
+                <mat-error *ngIf="nuevaParcelaForm.get('TamanoParcela')?.hasError('required')">
+                  El tamaño es requerido
+                </mat-error>
+                <mat-error *ngIf="nuevaParcelaForm.get('TamanoParcela')?.hasError('min')">
+                  El tamaño debe ser mayor a 0
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="mapa-nueva-parcela">
+              <h4>Seleccione la ubicación de la parcela</h4>
+              <app-map (onGeolocalizacionChange)="onGeolocalizacionChange($event)"></app-map>
+            </div>
+
+            <div class="acciones-formulario">
+              <button mat-button type="button" (click)="toggleFormularioNuevaParcela()">Cancelar</button>
+              <button mat-raised-button color="primary" type="submit" [disabled]="nuevaParcelaForm.invalid || !geolocalizacionNuevaParcela">
+                Registrar Parcela
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+
+        <!-- Lista de parcelas existentes -->
+        <mat-card-content>
+          <div class="parcelas-grid">
+            <div class="parcela-item" *ngFor="let parcela of finca.parcelas; let i = index">
+              <div class="parcela-info">
+                <div class="parcela-header">
+                  <h3>{{parcela.NombreParcela}}</h3>
+                  <span class="estado-badge" [style.background-color]="getEstadoColor(getEstadoParcela(parcela))">
+                    {{getEstadoParcela(parcela)}}
+                  </span>
+                  <button mat-icon-button class="btnDelete" (click)="eliminarParcela()">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+                
+                <div class="parcela-details">
+                  <div class="parcela-field">
+                    <label>Nombre:</label>
+                    <input *ngIf="getEstadoParcela(parcela) === 'Disponible'"
+                           [(ngModel)]="parcela.NombreParcela"
+                           placeholder="Nombre de la parcela">
+                    <span *ngIf="getEstadoParcela(parcela) !== 'Disponible'">
+                      {{parcela.NombreParcela}}
+                    </span>
+                  </div>
+                  
+                  <div class="parcela-field">
+                    <label>Tamaño (m²):</label>
+                    <input *ngIf="getEstadoParcela(parcela) === 'Disponible'"
+                           type="number"
+                           [(ngModel)]="parcela.TamanoParcela"
+                           placeholder="Tamaño en metros cuadrados">
+                    <span *ngIf="getEstadoParcela(parcela) !== 'Disponible'">
+                      {{parcela.TamanoParcela}}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="parcela-mapa">
+                  <app-editar-mapa
+                    [coordenadas]="parcela.Geolocalizacion"
+                    [editable]="getEstadoParcela(parcela) === 'Disponible'"
+                    (onGeolocalizacionEditada)="guardarCoordenadasParcela($event, i)"
+                    #mapaComponent>
+                  </app-editar-mapa>
+                </div>
+                <div class="parcela-actions" *ngIf="getEstadoParcela(parcela) === 'Disponible'">
+                  <button mat-raised-button color="primary" (click)="guardarCambiosParcela(mapaComponent, parcela, i)">
+                    <mat-icon>save</mat-icon>
+                    Guardar Cambios
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+<div class="mapa-container">
+  <google-map #mapa
+    [center]="center"
+    [zoom]="zoom"
+    height="400px"
+    width="100%"
+    [options]="{
+      mapTypeControl: true,
+      streetViewControl: false,
+      fullscreenControl: true,
+      zoomControl: true
+    }">
+  </google-map>
+
+  <div class="coordenadas-info" *ngIf="coordenadasActualizadas">
+    <h4>Coordenadas actuales:</h4>
+    <div class="coordenadas-grid">
+      <div class="coordenada-item">
+        <span class="label">Noroeste:</span>
+        <span class="valor">{{coordenadasActualizadas.latitudInicial | number:'1.6-6'}}, {{coordenadasActualizadas.longitudInicial | number:'1.6-6'}}</span>
+      </div>
+      <div class="coordenada-item">
+        <span class="label">Noreste:</span>
+        <span class="valor">{{coordenadasActualizadas.latitudInicial | number:'1.6-6'}}, {{coordenadasActualizadas.longitudFinal | number:'1.6-6'}}</span>
+      </div>
+      <div class="coordenada-item">
+        <span class="label">Sureste:</span>
+        <span class="valor">{{coordenadasActualizadas.latitudFinal | number:'1.6-6'}}, {{coordenadasActualizadas.longitudFinal | number:'1.6-6'}}</span>
+      </div>
+      <div class="coordenada-item">
+        <span class="label">Suroeste:</span>
+        <span class="valor">{{coordenadasActualizadas.latitudFinal | number:'1.6-6'}}, {{coordenadasActualizadas.longitudInicial | number:'1.6-6'}}</span>
+      </div>
+    </div>
+  </div>
+
+ 
+</div>
