@@ -1,14 +1,16 @@
 <div class="registers-container">
     <mat-card class="registers-card">
-        <h1 class="title">REGISTRO SENSOR</h1>
-        <p class="subtitle">Seleccione el sensor a registrar</p>
+        <mat-card-header class="registers-header verde">
+        <h1 class="title blanco">REGISTRO SENSOR</h1>
+        <p class="subtitle blanco">Seleccione el sensor a registrar</p>
+        </mat-card-header>
         <div class="button-column-container">
             <button mat-fab extended
                     matTooltip="Registra un nuevo sensor de temperatura"
                     matTooltipPosition="above"
                     aria-label="Registrar Sensor de Temperatura"
                     (click)="goToComponent('temperatura')"
-                    class="boton-register">  
+                    class="boton-register blanco">
                     <mat-icon>device_thermostat</mat-icon>
                 Temperatura
             </button>
@@ -17,18 +19,16 @@
                     matTooltipPosition="above"
                     aria-label="Registrar Sensor de Humedad"
                     (click)="goToComponent('humedad')"
-                    class="boton-register">
-                    <mat-icon>
-                    <img src="/humedad.png" alt="sensor humedad" style="width: 24px; height: 24px;">
-                    </mat-icon>
+                    class="boton-register blanco">
+                    <mat-icon>bloodtype-outline-rounded </mat-icon>
                 Humedad
             </button>
             <button mat-fab extended
-                    matTooltip="Registra un nuevo sensor de calidad del aire"
+                    matTooltip="Registra un nuevo sensor de PH"
                     matTooltipPosition="above"
-                    aria-label="Registrar Sensor de Calidad del Aire"
+                    aria-label="Registrar Sensor de PH"
                     (click)="goToComponent('ph')"
-                    class="boton-register">
+                    class="boton-register blanco">
                     <mat-icon>
                     <img src="/medidor-ph.png" alt="sensor ph" style="width: 24px; height: 24px;">
                     </mat-icon>

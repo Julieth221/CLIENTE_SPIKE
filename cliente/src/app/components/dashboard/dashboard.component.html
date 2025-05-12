@@ -7,69 +7,6 @@
           <p>{{ currentUser?.rol }}</p>
         </div>
       </header>
-      <ul>
-        <li>
-          <button type="button" (click)="goToComponent('inicio'); activeSubMenu = 'inicio'" [class.active]="activeSubMenu === 'inicio'">
-            <i class="fas fa-home"></i>
-            <p>Inicio</p>
-          </button>
-        </li>
-        
-        <li>
-          <button type="button" (click)="toggleSubMenu('cultivo')" [class.active]="activeSubMenu === 'cultivo'">
-            <i class="fas fa-seedling"></i>
-            <p>Cultivo</p>
-            <mat-icon>expand_more</mat-icon>
-          </button>
-          <div class="sub-menu" *ngIf="activeSubMenu === 'cultivo'">
-            <ul>
-              <li><button type="button" (click)="goToComponent('cultivo/gestion')">Gestión de Cultivos</button></li>
-              <li><button type="button" (click)="goToComponent('cultivo/insumos')">Historial de Insumos</button></li>
-              <li><button type="button" (click)="goToComponent('cultivo/registrar')">Registrar Cultivo</button></li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <button type="button" (click)="toggleSubMenu('sensores')" [class.active]="activeSubMenu === 'sensores'">
-            <i class="fas fa-microchip"></i>
-            <p>Sensores</p>
-            <mat-icon>expand_more</mat-icon>
-          </button>
-          <div class="sub-menu" *ngIf="activeSubMenu === 'sensores'">
-            <ul>
-              <li><button type="button" (click)="goToComponent('gestion-sensores')">Gestión de Sensores</button></li>
-              <li><button type="button">Probar Sensor</button></li>
-              <li><button type="button">Configuración de Alertas</button></li>
-              <li><button type="button">Localización Sensor</button></li>
-              <li><button type="button" (click)="goToComponent('register-sensor')">Registrar Sensor</button></li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <button type="button" (click)="goToComponent('usuarios')">
-            <i class="bi bi-people-fill"></i>
-            <p>Usuarios</p>
-          </button>
-        </li>
-        <li>
-          <button type="button" (click)="goToComponent('perfil'); activeSubMenu = 'miperfil'" [class.active]="activeSubMenu === 'miperfil'">
-            <i class="fas fa-user-circle"></i>
-            <p>Mi perfil</p>
-          </button>
-        </li>
-        <li>
-          <button type="button" (click)="goToComponent('configuracion')">
-            <i class="fas fa-cog"></i>
-            <p>Configuración</p>
-          </button>
-        </li>
-      </ul>
-      <div class="Btn-logout">
-        <button class="logout-btn" (click)="logout()">
-          <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-        </button>
-      </div>
-    
     <ul>
       <li>
         <button type="button" (click)="activeSubMenu = 'inicio'" [class.active]="activeSubMenu === 'inicio'">
@@ -123,7 +60,7 @@
         </button>
         <div class="sub-menu" *ngIf="activeSubMenu === 'sensores'">
           <ul>
-            <li><button type="button">
+            <li><button type="button" routerLink="sensor/gestion-sensores">
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Gestión de Sensores</button></li>
             <li><button type="button">
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Probar Sensor</button></li>
@@ -131,7 +68,7 @@
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Configuración de Alertas</button></li>
             <li><button type="button">
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Localización Sensor</button></li>
-            <li><button type="button">
+            <li><button type="button" routerLink="register-sensor">
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Registrar Sensor</button></li>
           </ul>
         </div>

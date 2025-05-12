@@ -143,7 +143,7 @@ getLocation() {
         .subscribe({
         next: (response: any) => {
             console.log('Respuesta del API MID:', response);
-            this.router.navigate(['/dashboard/gestion-sensores']);
+            this.router.navigate(['/dashboard/sensor/gestion-sensores']);
             alert('Sensor registrado exitosamente.');
         },
             error: (error: any) => {

@@ -1,102 +1,453 @@
-.sensor-list-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+.fincas-container {
+  padding: 2rem;
+  background: white;
+  min-height: calc(100vh - 64px);
+  color: #667085;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #747a80;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+mat-label{
+  color: #667085
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+.filter-field {
+  margin-top: 1.3rem; 
+}
+
+.search-field {
+  width: 400px;
+  margin-bottom: 0;
+  margin-top: 1.3rem;
+  margin-left: 0;
+}
+
+.search-field .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.search-icon {
+  color: #667085;
+}
+
+.filters-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.filter-field {
+  width: 220px;
+}
+
+
+.mat-mdc-select-trigger {
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.btn-registrar {
+  background-color: #28C76F;
+  color: white;
+  transition: all 0.25s ease;
+  font-weight: 600;
+  height: 48px;
+  width: 180px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(40, 199, 111, 0.25);
+  letter-spacing: 0.5px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: left;
+  gap: 8px;
+  margin-left: 0.5rem;
+}
+
+.btn-registrar:hover {
+  background-color: #22b35c;
+  box-shadow: 0 6px 15px rgba(40, 199, 111, 0.35);
+  transform: translateY(-2px);
+}
+
+.btn-registrar:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(40, 199, 111, 0.2);
+}
+
+.btn-registrar mat-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  margin: 4rem 0;
+}
+
+/* Contenedor para tabla y cards */
+.data-container {
+  width: 100%;
+}
+
+/* Estilo para la tabla */
+.table-wrapper {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  margin: 1px rgba(102, 100, 100, 0.08);
+  
+}
+.table-wrapper table.tabla-fincas {
+  width: 100%;
+  background-color: white;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+/* Estilo para celdas (td) */
+.table-wrapper table.tabla-fincas td,
+.table-wrapper table.tabla-fincas th {
+  border-bottom: 1px solid #EAECF0;
+}
+/* Estilo para el encabezado de tabla */
+.table-wrapper table.tabla-fincas th {
+  background-color: #FCFCFD;
+  color: #344054;
+  font-weight: 600;
+}
+
+.tabla-fincas {
+  width: 100%;
+}
+
+.mat-cell {
+  padding: 1rem;
+  font-size: 0.95rem;
+  vertical-align: middle;
+}
+
+.finca-nombre {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.finca-row {
+  transition: background-color 0.2s ease;
+  height: 60px;
+}
+
+.finca-row:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.highlight-row {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.ubicacion-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.parcelas-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #e0e0e0;
+  color: #333;
+  font-weight: 600;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 14px;
+  padding: 0 10px;
+}
+
+.tipo-suelo-chip {
+  display: inline-flex;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+  background-color: #9e9e9e;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-edit {
+  color: #4caf50;
+  transition: all 0.2s ease;
+}
+
+.btn-delete {
+  color: #f44336;
+  transition: all 0.2s ease;
+}
+
+.btn-edit:hover, .btn-delete:hover {
+  transform: scale(1.15);
+}
+
+
+
+.finca-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.finca-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.09);
+  transform: translateY(-3px);
+}
+
+mat-card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.card-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  color: #607d8b;
+}
+
+.mobile-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.card-info-row {
+  display: flex;
+  margin: 8px 0;
+  align-items: center;
+}
+
+.info-label {
+  min-width: 100px;
+  color: #78909c;
+  font-weight: 500;
+}
+
+.info-value {
+  font-weight: 500;
+}
+
+.no-results {
+  background: white;
+  padding: 3rem;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.no-results-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #a39f9f;
+}
+
+.animate__animated {
+  animation-duration: 0.5s;
+}
+
+.animate__fadeIn {
+  animation-name: fadeIn;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mat-paginator {
+  background: transparent;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .actions {
+    flex-wrap: wrap;
   }
   
-  .sensor-list-card {
-    width: 95%;
-    max-width: 1200px;
-    margin-bottom: 20px;
-  }
-  
-  .sensor-list-card mat-card-title {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #2196f3; /* Color primario, similar al botón */
-  }
-  
-  .sensor-list-card mat-card-content {
-    padding: 20px;
-  }
-  
-  .header-actions {
-    display: flex;
-    justify-content: flex-end; /* Alinea el botón a la derecha */
-    margin-bottom: 20px;
-  }
-  
-  .loading-indicator {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    color: #777;
-  }
-  
-  .error-message {
-    color: #ff4444;
-    padding: 10px;
-    background-color: #ffe0e0;
-    border: 1px solid #ff4444;
-    margin-bottom: 20px;
-    border-radius: 4px;
-  }
-  
-  .no-data-message {
-    color: #555;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    margin-bottom: 20px;
-    border-radius: 4px;
-    text-align: center;
-  }
-  
-  mat-table {
+  .search-field {
     width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .fincas-container {
+    padding: 1rem;
   }
   
-  th.mat-header-cell {
-    text-align: left;
-    font-weight: bold;
-    color: #333;
-    padding: 12px;
-    background-color: #f5f5f5;
+  .actions {
+    flex-direction: column;
+    padding: 0.5rem;
   }
   
-  td.mat-cell {
-    text-align: left;
-    padding: 12px;
-    border-bottom: 1px solid #eee;
+  .filters-group {
+    flex-direction: column;
+    width: 100%;
   }
   
-  tr.mat-row:hover {
-    background-color: #f0f8ff; /* Un color de fondo muy claro al pasar el mouse */
+  .filter-field,
+  .search-field,
+  .btn-registrar {
+    width: 100%;
+    max-width: none;
   }
   
-  /* Estilos para el botón Registrar Sensor */
-  button {
-    background-color: #2196f3; /* Azul primario */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+  /* Ajustar el botón toggle en móvil */
+  .toggle-vista {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
   }
   
-  button:hover {
-    background-color: #1976d2; /* Un tono más oscuro al pasar el mouse */
+  .toggle-vista .mat-button-toggle-group {
+    width: 100%;
   }
   
-  button:disabled {
-    background-color: #b0bec5; /* Gris para deshabilitado */
-    cursor: not-allowed;
+  .toggle-vista .mat-button-toggle {
+    flex: 1;
+    text-align: center;
   }
   
+  /* Ajustes para la vista de tarjetas en móvil */
+  .cards-view {
+    padding: 0;
+  }
+  
+  /* Cambio de visualización tabla/cards */
+  .table-wrapper {
+    display: none; /* Ocultar tabla */
+  }
+  
+  
+
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+  .filters-group {
+    justify-content: space-between;
+  }
+  
+  .filter-field {
+    max-width: 220px;
+  }
+}
+
+/* Bordes grises para los campos de formulario */
+:host ::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: white;
+  border: 1px solid #D0D5DD !important;
+  border-radius: 8px !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field-outline {
+  color: #D0D5DD !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field-outline-thick {
+  color: #D0D5DD !important;
+}
+
+.toggle-vista {
+  margin-left: auto;
+  margin-right: 1rem;
+}
+
+.toggle-vista mat-button-toggle {
+  font-weight: 500;
+}
+
+.toggle-vista mat-button-toggle mat-icon {
+  margin-right: 4px;
+}
+
+/* Añadir estilos para la vista de tarjetas */
+.cards-view {
+  margin-top: 24px;
+}
+
+/* Estilo específico para el selector de vista */
+.toggle-vista {
+  /* display: flex; */
+  /* justify-content: flex-end; */
+  margin-bottom: 16px;
+}
+
+.toggle-vista .mat-button-toggle-group {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.toggle-vista .mat-button-toggle {
+  background-color: white;
+  color: #667085;
+  font-weight: 500;
+}
+
+.toggle-vista .mat-button-toggle-checked {
+  background-color: #f0f6ff;
+  color: #4285F4;
+}
+
+.toggle-vista .mat-button-toggle-button {
+  height: 40px;
+  padding: 0 16px;
+}
+
+.toggle-vista mat-icon {
+  margin-right: 6px;
+}
+

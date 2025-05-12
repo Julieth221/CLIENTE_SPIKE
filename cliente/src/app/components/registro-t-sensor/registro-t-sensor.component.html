@@ -7,8 +7,8 @@
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label style="color: silver;">Nombre del Sensor</mat-label>
                 <input matInput
-                       placeholder="Ingrese el nombre del sensor"
-                       formControlName="nombre">
+                    placeholder="Ingrese el nombre del sensor"
+                    formControlName="nombre">
                 <mat-error *ngIf="sensorForm.get('nombre')?.invalid">
                     Nombre es requerido.
                 </mat-error>
@@ -17,9 +17,9 @@
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label style="color: silver;">Ubicación</mat-label>
                 <input matInput
-                       placeholder="Ingrese la ubicación o use el botón"
-                       formControlName="ubicacion"
-                       readonly>
+                    placeholder="Ingrese la ubicación o use el botón"
+                    formControlName="ubicacion"
+                    readonly>
                 <button mat-icon-button
                         matSuffix
                         (click)="getLocation()"

@@ -1,0 +1,76 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2 mat-dialog-title class="dialog-title">
+      <mat-icon class="title-icon">agriculture</mat-icon>
+      {{ nombreSensor }}
+    </h2>
+    <button mat-icon-button class="close-button" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content class="dialog-content">
+    <div *ngIf="loading" class="spinner-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span class="spinner-text">Cargando información del sensor...</span>
+    </div>
+
+    <div *ngIf="errorMessage && !loading" class="error-message">
+      <mat-icon color="warn">error_outline</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+    <div *ngIf="!loading && !errorMessage" class="sensor-info">
+      <div class="info-grid">
+        <div class="info-card">
+          <mat-icon class="info-icon">sensors</mat-icon>
+          <div class="info-content">
+            <span class="info-label">Total de Sensores</span>
+            <span class="info-value">{{ sensorGeolocalizaciones.length }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!loading && !errorMessage && sensorGeolocalizaciones.length > 0" class="sensores-container">
+      <h3 class="section-title">Sensores</h3>
+      <div class="sensores-grid">
+        <mat-card *ngFor="let sensor of sensorGeolocalizaciones" class="sensor-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon class="card-icon">sensors</mat-icon>
+              {{ sensor.FkSensor.NombreSensor }}
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="sensor-info">
+              <div class="info-row">
+                <span class="info-label">Fecha Instalación:</span>
+                <span class="info-value">{{ sensor.FkSensor.FechaInstalacion | date }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Activo:</span>
+                <span class="info-value">{{ sensor.Activo ? 'Sí' : 'No' }}</span>
+              </div>
+            </div>
+            <mat-divider class="card-divider"></mat-divider>
+            <div class="mapa-container">
+              <app-ver-mapa
+                [coordenadas]="getCoordenadas(sensor.FkGeolocalizacionSensor)"
+                [nombreParcela]="sensor.FkSensor.NombreSensor"
+                [mostrarDetalles]="true">
+              </app-ver-mapa>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <div *ngIf="!loading && !errorMessage && sensorGeolocalizaciones.length === 0" class="empty-state">
+      <mat-icon class="empty-icon">sensors_off</mat-icon>
+      <h3>No hay sensores registrados</h3>
+      <p>No se encontraron sensores para este sensor</p>
+    </div>
+  </mat-dialog-content>
+</div>
