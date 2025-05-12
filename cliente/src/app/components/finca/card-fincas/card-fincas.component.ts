@@ -10,6 +10,8 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { Router } from '@angular/router';
 import { ApiService } from '../../../../services/api.service';
 import { API_URLS } from '../../../../config/api_config';
+import { VerfincasComponent } from '../verfincas/verfincas.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-card-fincas',
@@ -31,7 +33,8 @@ export class CardFincasComponent implements OnInit {
   
   constructor(
     private router: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void { }
@@ -39,9 +42,20 @@ export class CardFincasComponent implements OnInit {
   editarFinca(finca: any) {
     this.router.navigate(['/finca/editar', finca.ID]);
   }
-  verFinca(finca: any) {
-    this.router.navigate(['/finca/editar', finca.ID]);
-  }
+  verFinca(finca: any): void {
+    this.dialog.open(VerfincasComponent, {
+      data: {
+        fincaId:   finca.Id,
+        nombreFinca: finca.Nombre,
+        AreaTotal: finca.AreaTotal
+      },
+      width: '50%',
+      maxWidth: '1200px',
+      disableClose: true         
+    }).afterClosed().subscribe(() => {
+      
+    });
+}
 
   eliminarFinca(finca: any) {
     if (confirm(`¿Está seguro de eliminar la finca "${finca.Nombre}"?`)) {

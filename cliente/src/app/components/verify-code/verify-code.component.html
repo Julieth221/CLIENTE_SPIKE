@@ -7,16 +7,11 @@
         </p>
   
         <div class="code-inputs">
-          <input matInput
-          *ngFor="let digit of code; let i = index"
-          id="code-{{ i }}"
-          type="text"
-          maxlength="1"
-          [(ngModel)]="code[i]"
-          (input)="onInputChange($event, i)"
-          (keydown)="onKeyDown($event, i)"
-          autocomplete="off"
-        />
+          <input matInput id="code-0" type="text" maxlength="1" [(ngModel)]="code[0]" (input)="onInputChange($event, 0)" (keydown)="onKeyDown($event, 0)" autocomplete="off" />
+          <input matInput id="code-1" type="text" maxlength="1" [(ngModel)]="code[1]" (input)="onInputChange($event, 1)" (keydown)="onKeyDown($event, 1)" autocomplete="off" />
+          <input matInput id="code-2" type="text" maxlength="1" [(ngModel)]="code[2]" (input)="onInputChange($event, 2)" (keydown)="onKeyDown($event, 2)" autocomplete="off" />
+          <input matInput id="code-3" type="text" maxlength="1" [(ngModel)]="code[3]" (input)="onInputChange($event, 3)" (keydown)="onKeyDown($event, 3)" autocomplete="off" />
+          <input matInput id="code-4" type="text" maxlength="1" [(ngModel)]="code[4]" (input)="onInputChange($event, 4)" (keydown)="onKeyDown($event, 4)" autocomplete="off" />
         </div>
   
         <p>

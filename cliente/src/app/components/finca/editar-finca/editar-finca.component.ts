@@ -56,6 +56,8 @@ export class EditarFincaComponent implements OnInit {
     parcelas: []
   };
 
+  arrendamientosActivos: any[] = [];
+  parcelasArrendadas: Set<string> = new Set();
   
   tiposSuelo: any[] = [];
   loading: boolean = true;
@@ -97,6 +99,7 @@ export class EditarFincaComponent implements OnInit {
     this.obtenerFinca();
     this.obtenerTiposSuelo();
     this.obtenerParcelas();
+    this.obtenerArrendamientosActivos();
   }
       
     
@@ -152,9 +155,27 @@ export class EditarFincaComponent implements OnInit {
           console.log("esta es la geolocalizacion de la parcela: ", parcela.Geolocalizacion)
           return parcela;
         });
+        this.loading = false;
       },
       error: () => {
         this.snackBar.open('No se pudieron cargar las parcelas', 'Cerrar', { duration: 3000 });
+      }
+    });
+  }
+
+  obtenerArrendamientosActivos() {
+    this.apiService.get(`${API_URLS.MID.API_MID_SPIKE}/arrendamiento/activos/${this.fincaId}/`).subscribe({
+      next: (response: any) => {
+        this.arrendamientosActivos = response;
+        // Crear un conjunto con los nombres de las parcelas arrendadas
+        this.parcelasArrendadas = new Set(
+          response.flatMap((arr: any) => arr.Parcelas || [])
+        );
+        console.log('Parcelas arrendadas:', Array.from(this.parcelasArrendadas));
+      },
+      error: (error) => {
+        console.error('Error al obtener arrendamientos activos:', error);
+        this.snackBar.open('Error al obtener información de arrendamientos', 'Cerrar', { duration: 3000 });
       }
     });
   }
@@ -207,8 +228,7 @@ export class EditarFincaComponent implements OnInit {
   actualizarParcela(parcela: any, index: number) {
     console.log("Iniciando actualización de parcela");
 
-    parcela = this.finca.parcelas[index];
-    if (this.getEstadoParcela(parcela) !== 'Disponible') {
+    if (this.parcelasArrendadas.has(parcela.NombreParcela)) {
       this.snackBar.open('No se puede editar una parcela que está arrendada', 'Cerrar', { duration: 3000 });
       return;
     }
@@ -227,7 +247,8 @@ export class EditarFincaComponent implements OnInit {
         LatitudFinal: parcelaActualizada.Geolocalizacion.LatitudFinal.toString(),
         LongitudInicial: parcelaActualizada.Geolocalizacion.LongitudInicial.toString(),
         LongitudFinal: parcelaActualizada.Geolocalizacion.LongitudFinal.toString()
-      } : null
+      } : null,
+      Finca: this.fincaId
     };
 
     console.log("Datos que se enviarán al servidor:", datosActualizacion);
@@ -253,7 +274,7 @@ export class EditarFincaComponent implements OnInit {
     this.apiService.patch(`${API_URLS.MID.API_MID_SPIKE}/finca/${this.fincaId}`, this.finca).subscribe({
       next: () => {
         this.snackBar.open('Finca actualizada exitosamente', 'Cerrar', { duration: 3000 });
-        this.router.navigate(['/dashboard/finca']);
+        
       },
       error: (error) => {
         console.error('Error al actualizar la finca:', error);
@@ -315,11 +336,11 @@ export class EditarFincaComponent implements OnInit {
   }
 
   editarParcela(parcela: any) {
-    if (parcela.Estado === 'Arrendada' || parcela.Estado === 'Arrendamiento vencido') {
-      // Lógica para editar parcela
-    } else {
+    if (this.parcelasArrendadas.has(parcela.NombreParcela)) {
       this.snackBar.open('Esta parcela no puede editarse porque tiene un arrendamiento activo', 'Cerrar', { duration: 5000 });
+      return;
     }
+    // Continuar con la lógica de edición si la parcela está disponible
   }
 
   desactivarArrendamiento(parcela: any) {
@@ -338,15 +359,7 @@ export class EditarFincaComponent implements OnInit {
   }
 
   getEstadoParcela(parcela: any): string {
-    if (!parcela.ArrendamientoId) return 'Disponible';
-    
-    const ahora = new Date();
-    const fechaFin = new Date(parcela.FechaFin);
-    
-    if (parcela.Activo && ahora > fechaFin) return 'Arrendamiento vencido';
-    if (parcela.Activo) return 'Arrendada';
-    
-    return 'Disponible';
+    return this.parcelasArrendadas.has(parcela.NombreParcela) ? 'Arrendamiento activo' : 'Disponible';
   }
 
   eliminarParcela(){
@@ -356,8 +369,7 @@ export class EditarFincaComponent implements OnInit {
   getEstadoColor(estado: string): string {
     switch (estado) {
       case 'Disponible': return '#28C76F';
-      case 'Arrendada': return '#FF9F43';
-      case 'Arrendamiento vencido': return '#EA5455';
+      case 'Arrendamiento activo': return '#EA5455';
       default: return '#B9B9C3';
     }
   }

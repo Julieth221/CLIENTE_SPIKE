@@ -21,6 +21,7 @@ import { CardFincasComponent } from './app/components/finca/card-fincas/card-fin
 import { RegisterTipoSueloComponent } from './app/components/finca/register-tipo-suelo/register-tipo-suelo.component';
 import { TablaArrendamientosComponent } from './app/components/finca/tabla-arrendamientos/tabla-arrendamientos.component';
 import { VerArrendamientosComponent } from './app/components/finca/ver-arrendamientos/ver-arrendamientos.component';
+import { EditarFincaComponent } from './app/components/finca/editar-finca/editar-finca.component';
 
 
 
@@ -49,7 +50,8 @@ bootstrapApplication(AppComponent,{
                   { path: 'finca/verCardFincas', component: CardFincasComponent },
                   { path: 'finca/datosFinca', component: RegisterTipoSueloComponent },
                   { path: 'finca/datosArrendamiento', component: TablaArrendamientosComponent},
-                  { path: 'finca/verArrendamiento', component: VerArrendamientosComponent}
+                  { path: 'finca/verArrendamiento', component: VerArrendamientosComponent},
+                  { path: 'finca/editarFinca', component: EditarFincaComponent}
 
                 ],
               },

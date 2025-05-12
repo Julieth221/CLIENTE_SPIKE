@@ -94,6 +94,7 @@ export class VerfincasComponent implements OnInit {
         next: (response: any) => {
           if (response && response.Data && Array.isArray(response.Data)) {
             this.parcelas = response.Data;
+            console.log("Informacion de la parcela: ", this.parcelas)
             this.totalParcelas = this.parcelas.length;
             
             

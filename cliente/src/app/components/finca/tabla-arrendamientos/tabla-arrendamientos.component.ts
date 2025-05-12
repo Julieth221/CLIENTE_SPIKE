@@ -28,6 +28,8 @@ import { VerArrendamientosComponent } from '../ver-arrendamientos/ver-arrendamie
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EditarArrendamientosComponent } from '../editar-arrendamientos/editar-arrendamientos.component';
+import { forkJoin } from 'rxjs';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-tabla-arrendamientos',
@@ -151,7 +153,6 @@ export class TablaArrendamientosComponent implements OnInit, AfterViewInit {
       next: (response: any) => {
         console.log('Respuesta de fincas recibida:', response);
         
-        // Verificar que la respuesta contiene la propiedad Data y es un array
         if (response && response.Data && Array.isArray(response.Data)) {
           // Filtrar solo las fincas que pertenecen al usuario actual
           this.fincasUsuario = response.Data.filter((finca: any) => finca.Id_Usuario === this.userId);
@@ -181,36 +182,68 @@ export class TablaArrendamientosComponent implements OnInit, AfterViewInit {
   }
 
   obtenerArrendamientos() {
-    // Consultar todos los arrendamientos
-    this.apiService.get(`${API_URLS.CRUD.API_CRUD_FINCA}/Arrendamiento`).subscribe({
+    this.loading = true;
+    this.errorMessage = '';
+    
+    // Primero obtener todos los arrendamientos
+    this.apiService.get(`${API_URLS.MID.API_MID_SPIKE}/arrendamiento/`).subscribe({
       next: (response: any) => {
-        console.log('Arrendamientos obtenidos:', response);
-        
-        // Verificar que la respuesta contiene la propiedad Data y es un array
-        if (response && response.Data && Array.isArray(response.Data)) {
-          // Filtrar solo los arrendamientos relacionados con las fincas del usuario
-          const fincasIds = this.fincasUsuario.map(finca => finca.Id);
+        if (Array.isArray(response)) {
+          // Obtener los IDs únicos de las fincas que tienen arrendamientos
+          const fincasConArrendamientos = new Set(
+            response.map((arr: any) => arr.FincaID)
+          );
           
-          let arrendamientosFiltrados = response.Data.filter((arrendamiento: any) => {
-            return arrendamiento.FkArrendamientoFinca && 
-                   fincasIds.includes(arrendamiento.FkArrendamientoFinca.Id);
+          console.log('Fincas con arrendamientos:', Array.from(fincasConArrendamientos));
+
+          // Consultar arrendamientos activos solo para las fincas que tienen arrendamientos
+          const observables = Array.from(fincasConArrendamientos).map(fincaId => {
+            console.log('Consultando arrendamientos activos para finca ID:', fincaId);
+            return this.apiService.get(`${API_URLS.MID.API_MID_SPIKE}/arrendamiento/activos/${fincaId}/`);
           });
-          
-          console.log('Arrendamientos filtrados:', arrendamientosFiltrados);
-          
-          // Procesar los arrendamientos para agruparlos por finca y arrendatario
-          this.arrendamientos = this.procesarArrendamientos(arrendamientosFiltrados);
-          this.dataSource.data = this.arrendamientos;
-          
-          // Configurar el filtro personalizado
-          this.dataSource.filterPredicate = this.createFilterPredicate();
+
+          forkJoin(observables).subscribe({
+            next: (responses: any[]) => {
+              console.log('Respuestas de arrendamientos activos:', responses);
+              
+              // Procesar todas las respuestas
+              const arrendamientosActivos = new Set<number>();
+              responses.forEach((response, index) => {
+                if (Array.isArray(response)) {
+                  response.forEach(arrendamiento => {
+                    if (arrendamiento && arrendamiento.Id) {
+                      console.log('Arrendamiento activo encontrado:', arrendamiento);
+                      arrendamientosActivos.add(arrendamiento.Id);
+                    }
+                  });
+                }
+              });
+
+              // Marcar los arrendamientos como activos o inactivos
+              this.arrendamientos = response.map(arrendamiento => {
+                const esActivo = arrendamientosActivos.has(arrendamiento.Id);
+                console.log(`Arrendamiento ${arrendamiento.Id} - Activo: ${esActivo}`);
+                return {
+                  ...arrendamiento,
+                  activo: esActivo
+                };
+              });
+              
+              this.dataSource.data = this.arrendamientos;
+              this.loading = false;
+            },
+            error: (error: any) => {
+              this.errorMessage = 'Error al obtener los arrendamientos activos';
+              console.error(this.errorMessage, error);
+              this.loading = false;
+            }
+          });
         } else {
-          this.errorMessage = 'Formato de respuesta inválido: no se encontró el arreglo de arrendamientos';
+          this.errorMessage = 'Formato de respuesta inválido';
           console.error(this.errorMessage, response);
+          this.loading = false;
           this.dataSource.data = [];
         }
-        
-        this.loading = false;
       },
       error: (error: any) => {
         this.errorMessage = 'Error al obtener los arrendamientos';
@@ -259,8 +292,8 @@ export class TablaArrendamientosComponent implements OnInit, AfterViewInit {
       
       // Filtro por texto (nombre de la finca o arrendatario)
       const textoMatch = !searchTerms.searchText || 
-        (data.finca?.Nombre?.toLowerCase().includes(searchTerms.searchText.toLowerCase()) ||
-         data.arrendatario?.Nombre?.toLowerCase().includes(searchTerms.searchText.toLowerCase()));
+        (data.arrendamiento?.Finca?.toLowerCase().includes(searchTerms.searchText.toLowerCase()) ||
+         data.arrendamiento?.Arrendatario?.toLowerCase().includes(searchTerms.searchText.toLowerCase()));
       
       // Filtro por estado
       const estadoMatch = !searchTerms.filterEstado || 
@@ -302,9 +335,9 @@ export class TablaArrendamientosComponent implements OnInit, AfterViewInit {
     verArrendamiento(arrendamiento: any): void {
       this.dialog.open(VerArrendamientosComponent, {
         data: {
-          arrendamientoId: arrendamiento.id,
-          nombreFinca:     arrendamiento.finca.Nombre,
-          fincaId:   arrendamiento.finca.Id,
+          arrendamientoId: arrendamiento.Id,
+          nombreFinca:     arrendamiento.Finca,
+          fincaId:   arrendamiento.FincaID,
         },
         width: '50%',
         maxWidth: '1200px',
@@ -319,7 +352,7 @@ export class TablaArrendamientosComponent implements OnInit, AfterViewInit {
       this.dialog.open(EditarArrendamientosComponent, {
         data: {
           arrendamientoId: arrendamiento.id,
-          nombreFinca:     arrendamiento.finca.Nombre,
+          nombreFinca:     arrendamiento.Finca,
           fincaId:   arrendamiento.finca.Id,
         },
         width: '50%',
@@ -336,7 +369,7 @@ export class TablaArrendamientosComponent implements OnInit, AfterViewInit {
 
 
   eliminarArrendamiento(arrendamiento: any) {
-    if (confirm(`¿Está seguro de eliminar el arrendamiento de la finca "${arrendamiento.finca.Nombre}"?`)) {
+    if (confirm(`¿Está seguro de eliminar el arrendamiento de la finca "${arrendamiento.arrendamiento.Finca}"?`)) {
       this.apiService.delete(`${API_URLS.CRUD.API_CRUD_FINCA}/Arrendamiento/${arrendamiento.id}`).subscribe({
         next: () => {
           this.obtenerArrendamientos();
@@ -355,9 +388,20 @@ export class TablaArrendamientosComponent implements OnInit, AfterViewInit {
   }
 
   estaActivo(arrendamiento: any): boolean {
+    if (!arrendamiento) return false;
+    
+    // Verificar si el arrendamiento tiene la propiedad activo
+    if (arrendamiento.activo !== undefined) {
+      return arrendamiento.activo;
+    }
+    
+    // Si no tiene la propiedad activo, verificar las fechas
     const ahora = new Date();
-    return arrendamiento.activo && 
-           ahora >= arrendamiento.fechaInicio && 
-           ahora <= arrendamiento.fechaFin;
+    const fechaInicio = new Date(arrendamiento.FechaInicio);
+    const fechaFin = new Date(arrendamiento.FechaFin);
+    
+    return arrendamiento.Activo && 
+           ahora >= fechaInicio && 
+           ahora <= fechaFin;
   }
 }

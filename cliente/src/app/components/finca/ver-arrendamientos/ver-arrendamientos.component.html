@@ -1,66 +1,79 @@
-<h2 mat-dialog-title>Parcela(s) del Arrendamiento</h2>
+<div class="dialog-container">
+  <!-- Cabecera del diálogo -->
+  <div class="dialog-header">
+    <h2 mat-dialog-title class="dialog-title">
+      <mat-icon class="title-icon">agriculture</mat-icon>
+      Parcelas del Arrendamiento
+    </h2>
     <h3 class="dialog-subtitle">{{ data.nombreFinca }}</h3>
-    
-    <mat-dialog-content>
-      <!-- Estado de carga -->
-      <div *ngIf="loading" class="loading-container">
-        <mat-spinner diameter="40"></mat-spinner>
-        <p class="loading-text">Cargando parcelas...</p>
-      </div>
+  </div>
 
-      <!-- Mensaje de error -->
-      <div *ngIf="error && !loading" class="error-container">
-        <mat-icon class="error-icon">error</mat-icon>
-        <p class="error-text">{{ error }}</p>
-      </div>
+  <!-- Contenido del diálogo -->
+  <mat-dialog-content class="dialog-content">
+    <!-- Spinner de carga -->
+    <div *ngIf="loading" class="spinner-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span class="spinner-text">Cargando parcelas...</span>
+    </div>
 
-      <!-- Contenido de parcelas -->
-      <div *ngIf="!loading && !error && parcelas.length > 0" class="parcelas-grid">
-        <div *ngFor="let parcela of parcelas" class="parcela-card">
-          <mat-card>
-            <mat-card-header>
-              <mat-card-title class="parcela-nombre">{{ parcela.nombre }}</mat-card-title>
-            </mat-card-header>
+    <!-- Mensaje de error -->
+    <div *ngIf="error && !loading" class="error-message">
+      <mat-icon color="warn">error_outline</mat-icon>
+      <span>{{ error }}</span>
+    </div>
 
-            <mat-card-content class="parcela-content">
-              <div class="parcela-info">
-                <div class="info-item">
-                  <mat-icon class="info-icon">straighten</mat-icon>
-                  <span class="info-label">Tamaño:</span>
-                  <span class="info-value">{{ parcela.tamano | number:'1.2-2' }} ha</span>
-                </div>
-                <div class="info-item">
-                  <mat-icon class="info-icon">location_on</mat-icon>
-                  <!-- <span class="info-label">ID Parcela:</span>
-                  <span class="info-value">{{ parcela.id }}</span> -->
-                </div>
+    <!-- Lista de parcelas -->
+    <div *ngIf="!loading && !error && parcelas.length > 0" class="parcelas-container">
+      <div class="parcelas-grid">
+        <mat-card *ngFor="let parcela of parcelas" class="parcela-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon class="card-icon">grid_view</mat-icon>
+              {{ parcela.nombre }}
+            </mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="parcela-info">
+              <div class="info-row">
+                <mat-icon class="info-icon">straighten</mat-icon>
+                <span class="info-label">Tamaño:</span>
+                <span class="info-value">{{ parcela.tamano | number:'1.2-2' }} ha</span>
               </div>
-              
-              <div class="parcela-map-container">
-                <app-ver-mapa 
-                  [coordenadas]="parcela.coordenadas"
-                  [nombreParcela]="parcela.nombre"
-                  [tamanoParcela]="parcela.tamano">
-                </app-ver-mapa>
+              <div class="info-row">
+                <mat-icon class="info-icon">location_on</mat-icon>
+                <span class="info-label">ID Parcela:</span>
+                <span class="info-value">{{ parcela.id }}</span>
               </div>
-            </mat-card-content>
-          </mat-card>
-        </div>
+            </div>
+            
+            <mat-divider class="card-divider"></mat-divider>
+            
+            <div class="mapa-container">
+              <app-ver-mapa
+                [coordenadas]="parcela.coordenadas"
+                [nombreParcela]="parcela.nombre"
+                [tamanoParcela]="parcela.tamano"
+                [mostrarDetalles]="true">
+              </app-ver-mapa>
+            </div>
+          </mat-card-content>
+        </mat-card>
       </div>
+    </div>
 
-      
+    <!-- Estado vacío -->
+    <div *ngIf="!loading && !error && parcelas.length === 0" class="empty-state">
+      <mat-icon class="empty-icon">nature</mat-icon>
+      <h3>No hay parcelas disponibles</h3>
+      <p>No hay parcelas registradas para este arrendamiento</p>
+    </div>
+  </mat-dialog-content>
 
-      <!-- Mensaje sin parcelas -->
-      <div *ngIf="!loading && !error && parcelas.length === 0" class="empty-container">
-        <mat-icon class="empty-icon">agriculture</mat-icon>
-        <p class="empty-text">No hay parcelas disponibles para este arrendamiento</p>
-      </div>
-    </mat-dialog-content>
-
-
-    <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>
-        <mat-icon>close</mat-icon>
-        Cerrar
-      </button>
-    </mat-dialog-actions>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+      Cerrar
+    </button>
+  </mat-dialog-actions>
+</div>
