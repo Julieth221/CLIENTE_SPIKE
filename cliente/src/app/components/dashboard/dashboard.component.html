@@ -1,12 +1,12 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav mode="side" [(opened)]="isSidenavOpened" class="sidebar">
-    <header>
-      <div class="logo sidenav-header">
-        <img src="logo2.png" alt="Logo" class="logo-img" />
-        <h3>{{ currentUser?.nombre }} {{ currentUser?.apellido }}</h3>
-        <p>{{ currentUser?.rol }}</p>
-      </div>
-    </header>
+    <mat-sidenav mode="side" [(opened)]="isSidenavOpened" class="sidebar">
+      <header>
+        <div class="logo sidenav-header">
+          <img src="logo2.png" alt="Logo" class="logo-img" />
+          <h3>{{ currentUser?.nombre }} {{ currentUser?.apellido }}</h3>
+          <p>{{ currentUser?.rol }}</p>
+        </div>
+      </header>
     <ul>
       <li>
         <button type="button" (click)="activeSubMenu = 'inicio'" [class.active]="activeSubMenu === 'inicio'">
@@ -60,7 +60,7 @@
         </button>
         <div class="sub-menu" *ngIf="activeSubMenu === 'sensores'">
           <ul>
-            <li><button type="button">
+            <li><button type="button" routerLink="sensor/gestion-sensores">
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Gestión de Sensores</button></li>
             <li><button type="button">
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Probar Sensor</button></li>
@@ -68,7 +68,7 @@
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Configuración de Alertas</button></li>
             <li><button type="button">
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Localización Sensor</button></li>
-            <li><button type="button">
+            <li><button type="button" routerLink="register-sensor">
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Registrar Sensor</button></li>
           </ul>
         </div>

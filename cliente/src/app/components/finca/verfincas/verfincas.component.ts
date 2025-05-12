@@ -105,13 +105,13 @@ export class VerfincasComponent implements OnInit {
             }, 0);
 
              // Calcular área total de todas las parcelas
-             this.AreaTotalParcelas = 0;
-             this.parcelas.forEach(parcela => {
-               this.AreaTotalParcelas += parcela.FkParcelaFinca?.TamanoParcela || 0;
-             });
+            this.AreaTotalParcelas = 0;
+            this.parcelas.forEach(parcela => {
+              this.AreaTotalParcelas += parcela.FkParcelaFinca?.TamanoParcela || 0;
+            });
             
             this.loading = false;
-             
+            
           } else {
             this.errorMessage = 'No se encontraron parcelas para esta finca';
             this.loading = false;

@@ -57,7 +57,7 @@ export class CardArrendamientosComponent implements OnInit {
   ngOnInit(): void {
     // Si no recibimos arrendamientos como input, los cargamos directamente
     if (this.arrendamientos.length === 0) {
-      this.userId = this.authService.getIdFromToken();
+      // this.userId = this.authService.getIdFromToken();
       this.obtenerFincasUsuario();
     } else {
       this.arrendamientosData = this.arrendamientos;

@@ -12,14 +12,17 @@ import { VerifyCodeComponent } from './app/components/verify-code/verify-code.co
 import { PwdRecoveryComponent } from './app/components/pwd-recovery/pwd-recovery.component';
 import { PwdSuccessComponent } from './app/components/pwd-success/pwd-success.component';
 import { importProvidersFrom } from '@angular/core';
+import { RegisterSensorComponent } from './app/components/register-sensor/register-sensor.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FincaRegisterComponent } from './app/components/finca/finca-register/finca-register.component';
+import { RegistroTSensorComponent } from './app/components/registro-t-sensor/registro-t-sensor.component';
 import { ArrendatarioRegisterComponent } from './app/components/finca/arrendatario-register/arrendatario-register.component';
 import { ArrendamientoRegisterComponent } from './app/components/finca/arrendamiento-register/arrendamiento-register.component';
 import { TablaFincasComponent } from './app/components/finca/tablaFincas/tablaFincas.component';
 import { CardFincasComponent } from './app/components/finca/card-fincas/card-fincas.component';
 import { RegisterTipoSueloComponent } from './app/components/finca/register-tipo-suelo/register-tipo-suelo.component';
 import { TablaArrendamientosComponent } from './app/components/finca/tabla-arrendamientos/tabla-arrendamientos.component';
+import { GestionSensoresComponent } from './app/components/sensor/gestion-sensores/gestion-sensores.component';
 import { VerArrendamientosComponent } from './app/components/finca/ver-arrendamientos/ver-arrendamientos.component';
 import { EditarFincaComponent } from './app/components/finca/editar-finca/editar-finca.component';
 
@@ -36,13 +39,15 @@ bootstrapApplication(AppComponent,{
             { path: 'verifyCode', component: VerifyCodeComponent },
             { path: 'pwdRecovery', component: PwdRecoveryComponent },
             { path: 'pwdSuccess', component: PwdSuccessComponent },
-            { path: 'register', component: RegisterComponent },
+            { path: 'registro-t-sensor', component: RegistroTSensorComponent},
             { path: 'register', component: RegisterComponent },
             { path: 'verArrendamiento', component: VerArrendamientosComponent},
             {
-                path: 'dashboard',
-                component: DashboardComponent,
-                children: [
+              path: 'dashboard',
+              component: DashboardComponent,
+              children: [
+                  { path: 'register-sensor', component: RegisterSensorComponent },
+                  { path: 'registro-t-sensor', component: RegistroTSensorComponent},
                   { path: 'finca/registrar', component: FincaRegisterComponent },
                   { path: 'finca/arrendatario', component: ArrendatarioRegisterComponent },
                   { path: 'finca/arrendamiento', component: ArrendamientoRegisterComponent },
@@ -51,11 +56,14 @@ bootstrapApplication(AppComponent,{
                   { path: 'finca/datosFinca', component: RegisterTipoSueloComponent },
                   { path: 'finca/datosArrendamiento', component: TablaArrendamientosComponent},
                   { path: 'finca/verArrendamiento', component: VerArrendamientosComponent},
-                  { path: 'finca/editarFinca', component: EditarFincaComponent}
+                  { path: 'finca/editarFinca', component: EditarFincaComponent},
+                  { path: 'sensor/gestion-sensores', component: GestionSensoresComponent },
+                //   { path: 'finca/verArrendamiento', component: VerArrendamientosComponent}
+              ],
+            },
 
-                ],
-              },
           ]),
+          
         provideAnimations(),
         provideHttpClient(),
         importProvidersFrom(MatDialogModule)

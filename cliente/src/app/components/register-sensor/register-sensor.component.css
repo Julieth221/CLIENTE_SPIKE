@@ -1,0 +1,71 @@
+.registers-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* Para posicionar la tarjeta de información absolutamente */
+}
+.registers-header {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: #0e6800;
+}
+
+.registers-card {
+    width: 500px;
+    padding: 60px;
+    background: #ffffffa1;
+    max-width: 500px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.button-column-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.button-column-container button {
+    margin-bottom: 16px;
+    width: 100%;
+    max-width: 250px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(6, 100, 14);
+    transition: background-color 0.5s ease, transform 0.3s ease; /* opcional: mejora suavidad en entrada/salida */
+}
+
+.button-column-container button:hover {
+    background-color: rgb(16, 214, 65);
+    transform: scale(1.05);   /* Aumenta tamaño al 105% */
+    color: black;
+    
+}
+
+.title {
+    color: rgb(16, 214, 65);
+}
+
+.subtitle {
+    color: rgb(193, 255, 203);
+}
+
+.boton-register{
+    border-radius: 50px;
+    margin: 15px  15px ;
+
+}
+
+.verde{
+    background-color: #0e6800;
+}
+
+.blanco{
+    color: white;
+}
