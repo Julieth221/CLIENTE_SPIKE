@@ -9,7 +9,7 @@
 .register-card {
     width: 300px;
     padding: 20px;
-    background: #044c0fdd;
+    background: #0e6f1cdd;
     max-width: 400px;
     border-radius: 10px;
     text-align: center;
@@ -35,7 +35,7 @@
 }
 
 .title {
-    color: rgb(126, 255, 255);
+    color: rgb(255, 255, 255);
 }
 
 .subtitle {

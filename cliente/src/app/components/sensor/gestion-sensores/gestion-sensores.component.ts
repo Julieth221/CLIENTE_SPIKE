@@ -90,7 +90,7 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
   loading: boolean = true;
 
   // Columnas para mostrar
-  displayedColumns: string[] = ['nombre', 'ubicacion', 'tipo sensor','fecha instalacion', 'acciones'];
+  displayedColumns: string[] = ['nombre', 'ubicacion', 'tipo sensor','fecha instalacion', 'Estado', 'acciones'];
 
 
 

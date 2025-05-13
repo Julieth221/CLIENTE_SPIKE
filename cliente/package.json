@@ -34,6 +34,8 @@
     "@angular-devkit/build-angular": "^19.0.6",
     "@angular/cli": "^19.0.6",
     "@angular/compiler-cli": "^19.0.0",
+    "@iconify-json/material-symbols": "^1.2.20",
+    "@iconify-json/material-symbols-light": "^1.2.20",
     "@types/jasmine": "~5.1.0",
     "jasmine-core": "~5.4.0",
     "karma": "~6.4.0",

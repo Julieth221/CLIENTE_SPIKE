@@ -1,39 +1,70 @@
-<div class="registers-container">
-    <mat-card class="registers-card">
-        <mat-card-header class="registers-header verde">
-        <h1 class="title blanco">REGISTRO SENSOR</h1>
-        <p class="subtitle blanco">Seleccione el sensor a registrar</p>
+<div class="card-container">
+    <mat-card class="sensor-card">
+        <mat-card-header>
+            <mat-card-title>Registrar Sensor de Temperatura</mat-card-title>
         </mat-card-header>
-        <div class="button-column-container">
-            <button mat-fab extended
-                    matTooltip="Registra un nuevo sensor de temperatura"
-                    matTooltipPosition="above"
-                    aria-label="Registrar Sensor de Temperatura"
+        <mat-card-content>
+            <!-- <p style="margin-bottom: 40px;">Seleccione el tipo de sensor de temperatura que desea registrar.</p> -->
+            <div class="button-container">
+                <button
+                    mat-raised-button
+                    color="primary"
                     (click)="goToComponent('temperatura')"
-                    class="boton-register blanco">
-                    <mat-icon>device_thermostat</mat-icon>
-                Temperatura
-            </button>
-            <button mat-fab extended
-                    matTooltip="Registra un nuevo sensor de humedad"
-                    matTooltipPosition="above"
-                    aria-label="Registrar Sensor de Humedad"
-                    (click)="goToComponent('humedad')"
-                    class="boton-register blanco">
-                    <mat-icon>bloodtype-outline-rounded </mat-icon>
-                Humedad
-            </button>
-            <button mat-fab extended
-                    matTooltip="Registra un nuevo sensor de PH"
-                    matTooltipPosition="above"
-                    aria-label="Registrar Sensor de PH"
-                    (click)="goToComponent('ph')"
-                    class="boton-register blanco">
-                    <mat-icon>
-                    <img src="/medidor-ph.png" alt="sensor ph" style="width: 24px; height: 24px;">
-                    </mat-icon>
-                Ph
-            </button>
-        </div>
+                    class="sensor-button"
+                >
+                    Temperatura
+                    <span class="hover-text">Seleccione el tipo de sensor de temperatura que desea registrar.</span>
+                </button>
+            </div>
+        </mat-card-content>
     </mat-card>
+
+    <mat-card class="sensor-card">
+        <mat-card-header>
+            <mat-card-title>Registrar Sensor de Humedad</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <!-- <p style="margin-bottom: 40px;">Seleccione el tipo de sensor de humedad que desea registrar.</p> -->
+            <div class="button-container">
+                <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="goToComponent('humedad')"
+                    class="sensor-button"
+                >
+                    Humedad
+                    <span class="hover-text">Seleccione el tipo de sensor de humedad que desea registrar.</span>
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="sensor-card">
+        <mat-card-header>
+            <mat-card-title>Registrar Sensor de pH</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="button-container">
+                <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="goToComponent('ph')"
+                    class="sensor-button ph-button"
+                >
+                    PH
+                    <span class="hover-text">Seleccione el tipo de sensor de pH que desea registrar.</span>
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <button
+        mat-icon-button
+        color="warn"
+        (click)="onExit()"
+        *ngIf="showExitIcon"
+        class="exit-button"
+        matTooltip="Volver"
+    >
+        <mat-icon>360</mat-icon> </button>
 </div>
