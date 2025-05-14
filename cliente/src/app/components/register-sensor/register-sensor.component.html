@@ -1,61 +1,74 @@
 <div class="card-container">
     <mat-card class="sensor-card">
         <mat-card-header>
-            <mat-card-title>Registrar Sensor de Temperatura</mat-card-title>
+            <mat-card-title class="white-title">Registrar Sensor de Temperatura</mat-card-title>
+            <!-- <mat-card-subtitle>Temperature Sensor</mat-card-subtitle> -->
         </mat-card-header>
+        <img mat-card-image src="sensor-de-temperatura.jpg" alt="Sensor de Temperatura" class="sensor-image">
         <mat-card-content>
-            <!-- <p style="margin-bottom: 40px;">Seleccione el tipo de sensor de temperatura que desea registrar.</p> -->
-            <div class="button-container">
-                <button
-                    mat-raised-button
-                    color="primary"
-                    (click)="goToComponent('temperatura')"
-                    class="sensor-button"
-                >
-                    Temperatura
-                    <span class="hover-text">Seleccione el tipo de sensor de temperatura que desea registrar.</span>
-                </button>
-            </div>
+            <!-- <p>
+                Seleccione el tipo de sensor de temperatura que desea registrar.
+            </p> -->
         </mat-card-content>
+        <mat-card-actions class="actions-container">
+            <button
+                mat-raised-button
+                color="primary"
+                (click)="goToComponent('temperatura')"
+                class="sensor-button"
+            >
+                Temperatura
+                <span class="hover-text">Registrar Sensor de Temperatura para medir la temperatura ambiente.</span>
+            </button>
+        </mat-card-actions>
     </mat-card>
 
     <mat-card class="sensor-card">
         <mat-card-header>
-            <mat-card-title>Registrar Sensor de Humedad</mat-card-title>
+            <mat-card-title class="white-title">Registrar Sensor de Humedad</mat-card-title>
+            <!-- <mat-card-subtitle>Humidity Sensor</mat-card-subtitle> -->
         </mat-card-header>
+        <img mat-card-image src="sensor-humedad.jpeg" alt="Sensor de Humedad" class="sensor-image">
         <mat-card-content>
-            <!-- <p style="margin-bottom: 40px;">Seleccione el tipo de sensor de humedad que desea registrar.</p> -->
-            <div class="button-container">
-                <button
-                    mat-raised-button
-                    color="primary"
-                    (click)="goToComponent('humedad')"
-                    class="sensor-button"
-                >
-                    Humedad
-                    <span class="hover-text">Seleccione el tipo de sensor de humedad que desea registrar.</span>
-                </button>
-            </div>
+            <!-- <p>
+                Seleccione el tipo de sensor de humedad que desea registrar.
+            </p> -->
         </mat-card-content>
+        <mat-card-actions class="actions-container">
+            <button
+                mat-raised-button
+                color="primary"
+                (click)="goToComponent('humedad')"
+                class="sensor-button"
+            >
+                Humedad
+                <span class="hover-text">Registrar Sensor de Humedad para medir la humedad relativa.</span>
+            </button>
+        </mat-card-actions>
     </mat-card>
 
     <mat-card class="sensor-card">
         <mat-card-header>
-            <mat-card-title>Registrar Sensor de pH</mat-card-title>
+            <mat-card-title class="white-title">Registrar Sensor de acidez (PH)</mat-card-title>
+            <!-- <mat-card-subtitle>pH Sensor</mat-card-subtitle> -->
         </mat-card-header>
-        <mat-card-content>
-            <div class="button-container">
-                <button
-                    mat-raised-button
-                    color="primary"
-                    (click)="goToComponent('ph')"
-                    class="sensor-button ph-button"
-                >
-                    PH
-                    <span class="hover-text">Seleccione el tipo de sensor de pH que desea registrar.</span>
-                </button>
-            </div>
-        </mat-card-content>
+        <img mat-card-image src="sensor-ph.jpeg" alt="Sensor de pH" class="sensor-image">
+        <!-- <mat-card-content> -->
+            <!-- <p>
+                Seleccione el tipo de sensor de pH que desea registrar.
+            </p> -->
+        <!-- </mat-card-content> -->
+        <mat-card-actions class="actions-container">
+            <button
+                mat-raised-button
+                color="primary"
+                (click)="goToComponent('ph')"
+                class="sensor-button ph-button"
+            >
+                PH
+                <span class="hover-text">Registrar Sensor de pH para medir la acidez o alcalinidad del suelo.</span>
+            </button>
+        </mat-card-actions>
     </mat-card>
 
     <button
@@ -66,5 +79,6 @@
         class="exit-button"
         matTooltip="Volver"
     >
-        <mat-icon>360</mat-icon> </button>
+        <mat-icon>360</mat-icon>
+    </button>
 </div>

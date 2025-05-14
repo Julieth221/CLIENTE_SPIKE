@@ -24,6 +24,9 @@ import { RegisterTipoSueloComponent } from './app/components/finca/register-tipo
 import { TablaArrendamientosComponent } from './app/components/finca/tabla-arrendamientos/tabla-arrendamientos.component';
 import { GestionSensoresComponent } from './app/components/sensor/gestion-sensores/gestion-sensores.component';
 import { VerArrendamientosComponent } from './app/components/finca/ver-arrendamientos/ver-arrendamientos.component';
+import { AlertasSensorComponent } from './app/components/sensor/alertas-sensor/alertas-sensor.component';
+import { LocalizarSensorComponent } from './app/components/sensor/localizar-sensor/localizar-sensor.component';
+import { ProbarSensorComponent } from './app/components/sensor/probar-sensor/probar-sensor.component';
 
 
 
@@ -55,7 +58,10 @@ bootstrapApplication(AppComponent,{
                   { path: 'finca/datosFinca', component: RegisterTipoSueloComponent },
                   { path: 'finca/datosArrendamiento', component: TablaArrendamientosComponent},
                   { path: 'sensor/gestion-sensores', component: GestionSensoresComponent },
-                  { path: 'finca/verArrendamiento', component: VerArrendamientosComponent}
+                  { path: 'finca/verArrendamiento', component: VerArrendamientosComponent},
+                  { path: 'sensor/alertas-sensor', component: AlertasSensorComponent},
+                  { path: 'sensor/localizar-sensor', component: LocalizarSensorComponent},
+                  { path: 'sensor/probar-sensor', component: ProbarSensorComponent},
               ],
             },
 
