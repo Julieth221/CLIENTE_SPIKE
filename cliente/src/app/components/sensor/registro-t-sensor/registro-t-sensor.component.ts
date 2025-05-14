@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterModule, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
-import { ApiService } from '../../../services/api.service';
+import { ApiService } from '../../../../services/api.service';
 import { Location } from '@angular/common';
 import { filter } from 'rxjs/operators';
 
@@ -16,8 +16,7 @@ interface SensorData {
 }
 
 @Component({
-  selector: 'app-register-sensor',
-  standalone: true,
+  selector: 'app-registro-t-sensor',
   imports: [
     MatCardModule,
     MatIconModule,
@@ -28,10 +27,10 @@ interface SensorData {
     HttpClientModule,
     CommonModule,
   ],
-  templateUrl: './register-sensor.component.html',
-  styleUrl: './register-sensor.component.css',
+  templateUrl: './registro-t-sensor.component.html',
+  styleUrl: './registro-t-sensor.component.css'
 })
-export class RegisterSensorComponent implements OnInit {
+export class RegistroTSensorComponent implements OnInit {
   private API_MID_SENSORES = 'http://localhost:8082/v1/sensores';
   public showExitIcon = false;
 

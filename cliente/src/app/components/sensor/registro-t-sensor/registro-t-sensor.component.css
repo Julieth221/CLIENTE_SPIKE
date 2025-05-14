@@ -57,14 +57,14 @@
     cursor: pointer;
     position: relative;
     overflow: visible;
-    background-color: #046b0b;
+    background-color: #056e0c;
     color: #ffffff;
     transition: background-color 0.3s ease;
     margin-top: 20px;
 }
 
 .sensor-button:hover {
-    background-color: #05800c;
+    background-color: #09a711;
 }
 
 
