@@ -1,0 +1,122 @@
+.alertas-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.alertas-cards-container { /* Nuevo contenedor para las tarjetas */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Espacio entre las tarjetas */
+    width: 100%;
+    max-width: 800px; /* Ancho máximo para el contenedor de las tarjetas */
+    margin-bottom: 20px;
+}
+
+.config-card,
+.edit-card {
+    width: 48%; /* Ancho para dos tarjetas en la misma fila */
+    margin-bottom: 20px; /* Espacio entre las tarjetas */
+    box-sizing: border-box; /* Incluir padding y border en el ancho */
+    
+}
+.config-card mat-card-header,
+.edit-card mat-card-header {
+    background-color: #0e7609;
+    color: white;
+    padding: 12px;
+    border-radius: 4px 4px 0 0;
+}
+
+/* Estilos para pantallas más pequeñas (como móviles) */
+@media (max-width: 768px) {
+    .config-card,
+    .edit-card {
+        width: 100%; /* Las tarjetas ocupan el 100% del ancho en pantallas pequeñas */
+    }
+    .alertas-cards-container {
+        flex-direction: column;
+    }
+}
+
+
+.alertas-header {
+    background-color: #0e7609;
+    color: white;
+    padding: 12px;
+    border-radius: 4px 4px 0 0;
+}
+
+.alertas-header mat-card-subtitle {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #e1cece;
+}
+
+.alertas-content {
+    padding: 15px;
+}
+
+.config-card,
+.edit-card {
+    margin-top: 14px;
+}
+
+.config-header,
+.edit-header {
+    background-color: #156809;
+    padding: 12px;
+    color: aliceblue;
+    transition: all 0.3s ease 0s;
+    font-size: 1rem;
+    
+}
+
+.config-header:hover,
+.edit-header:hover {
+    transform: translateY(-7px);
+}
+
+.config-header mat-card-subtitle,
+.edit-header mat-card-subtitle {
+    color: #dad4d4;
+    font-size: 0.85rem;
+}
+
+.config-card mat-card-actions,
+.edit-card mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 12px;
+}
+
+.config-card button,
+.edit-card button {
+    margin-left: 5px;
+    background-color: #086303;
+    color: white;
+    padding: 0.7em 1em; /* Padding más pequeño para los botones */
+    text-transform: uppercase;
+    font-size: 0.9rem; /* Tamaño de fuente más pequeño */
+    letter-spacing: 2px;
+    font-weight: 500;
+    border: none;
+    border-radius: 45px;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.config-card button:hover,
+.edit-card button:hover {
+    background-color: #0b9004;
+    color: #ffffff;
+    transform: translateY(-7px);
+}
+
+.config-card button:active,
+.edit-card button:active {
+    transform: translateY(-1px);
+}

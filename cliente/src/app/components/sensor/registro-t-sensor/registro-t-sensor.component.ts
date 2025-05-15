@@ -85,7 +85,7 @@ export class RegistroTSensorComponent implements OnInit {
       Descripcion: sensorDescription,
     };
 
-    this.router.navigate(['/dashboard/registro-t-sensor'], {
+    this.router.navigate(['/dashboard/sensor/registro-sensor'], {
       state: { sensorData: data },
     });
   }

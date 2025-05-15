@@ -1,0 +1,131 @@
+.registroTsensor-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.register-card {
+    width: 90%;
+    max-width: 400px;
+    padding: 20px;
+    background: #0e6f1cdd;
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+
+.register-card mat-card-header {
+    margin-bottom: 10px;
+}
+
+.register-card mat-card-title{
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.register-card mat-card-subtitle{
+    color: white;
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+}
+
+.sensor-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.mat-form-field {
+    width: 100%;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline {
+    color: white;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-label {
+    color: lightgray;
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-label {
+    color: rgb(126, 255, 255);
+}
+
+.mat-form-field-appearance-outline .mat-form-field-infix {
+    color: lightgray;
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color: rgb(126, 255, 255);
+}
+
+.mat-form-field-appearance-outline .mat-icon {
+    color: lightgray;
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-icon {
+    color: black;
+}
+
+.mat-select-value {
+    color: lightgray !important;
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-select-value {
+    color: lightgray !important;
+}
+
+.mat-input-element::placeholder {
+    color: lightgray;
+}
+
+.full-width{
+    width: 100%;
+    line-height: 2.5em;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.register-button, .cancel-button {
+    width: 100%;
+    max-width: 200px;
+}
+
+.register-button{
+    background-color: #046b0b;
+    color: #ffffff;
+}
+
+.register-button:hover {
+    background-color: #05800c;
+}
+
+.cancel-button {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.cancel-button:hover {
+    background-color: #c82333;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: white;
+}

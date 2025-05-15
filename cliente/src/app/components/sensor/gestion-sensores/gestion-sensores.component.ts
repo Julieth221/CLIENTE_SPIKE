@@ -179,7 +179,7 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
   }
 
   registrarSensor() {
-    this.router.navigate(['/dashboard/register-sensor']);
+    this.router.navigate(['/dashboard/sensor/registro-t-sensor']);
   }
 
   editarSensor(sensores: any) {

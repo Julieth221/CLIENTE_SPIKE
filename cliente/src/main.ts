@@ -28,6 +28,7 @@ import { AlertasSensorComponent } from './app/components/sensor/alertas-sensor/a
 import { LocalizarSensorComponent } from './app/components/sensor/localizar-sensor/localizar-sensor.component';
 import { ProbarSensorComponent } from './app/components/sensor/probar-sensor/probar-sensor.component';
 import { RegistroTSensorComponent } from './app/components/sensor/registro-t-sensor/registro-t-sensor.component';
+import { RegistroSensorComponent } from './app/components/sensor/registro-sensor/registro-sensor.component';
 
 
 bootstrapApplication(AppComponent,{
@@ -48,6 +49,7 @@ bootstrapApplication(AppComponent,{
               component: DashboardComponent,
               children: [
                   { path: 'sensor/registro-t-sensor', component: RegistroTSensorComponent},
+                  { path: 'sensor/registro-sensor', component: RegistroSensorComponent},
                   { path: 'finca/registrar', component: FincaRegisterComponent },
                   { path: 'finca/arrendatario', component: ArrendatarioRegisterComponent },
                   { path: 'finca/arrendamiento', component: ArrendamientoRegisterComponent },
