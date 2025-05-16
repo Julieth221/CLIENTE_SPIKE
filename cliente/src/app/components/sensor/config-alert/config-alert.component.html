@@ -1,0 +1,97 @@
+<div class="config-alt-container">
+    <mat-card class="config-alert-card">
+        <mat-card-header class="config-alt-header">
+            <mat-icon (click)="onExit()">arrow_back</mat-icon>
+            <mat-card-title>Configuración de Alertas</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-form-field appearance="fill" class="sensor-type-select">
+                <mat-label>Filtrar por tipo de sensor</mat-label>
+                <mat-select [(ngModel)]="filterSensorType" (ngModelChange)="onFilterTypeChange()">
+                    <mat-option value="">Todos</mat-option>
+                    <mat-option value="ph">pH</mat-option>
+                    <mat-option value="humedad">Humedad</mat-option>
+                    <mat-option value="temperatura">Temperatura</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="sensor-select">
+                <mat-label>Selecciona o busca un sensor</mat-label>
+                <input type="text" matInput [matAutocomplete]="auto" [formControl]="sensorInputControl">
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSensorSelected($event)">
+                    <mat-option *ngFor="let sensor of filteredSensors | async" [value]="sensor.nombre">
+                        {{ sensor.nombre }}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-select *ngIf="!sensorInputControl.value" [(ngModel)]="selectedSensorId" (ngModelChange)="onSensorIdSelected()">
+                    <mat-option *ngFor="let sensor of filteredSensorsByType" [value]="sensor.id">
+                        {{ sensor.nombre }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-radio-group aria-label="Selecciona el tipo de alerta" [(ngModel)]="alertType">
+                <mat-radio-button value="alto">Valor Alto</mat-radio-button>
+                <mat-radio-button value="bajo">Valor Bajo</mat-radio-button>
+                <mat-radio-button value="rango">Rango</mat-radio-button>
+            </mat-radio-group>
+
+            <div *ngIf="alertType === 'alto'">
+                <mat-form-field appearance="fill">
+                    <mat-label>Valor Máximo</mat-label>
+                    <input matInput type="number" [(ngModel)]="highThreshold">
+                    <span matSuffix>{{ selectedSensorUnit }}</span>
+                </mat-form-field>
+            </div>
+
+            <div *ngIf="alertType === 'bajo'">
+                <mat-form-field appearance="fill">
+                    <mat-label>Valor Mínimo</mat-label>
+                    <input matInput type="number" [(ngModel)]="lowThreshold">
+                    <span matSuffix>{{ selectedSensorUnit }}</span>
+                </mat-form-field>
+            </div>
+
+            <div *ngIf="alertType === 'rango'">
+                <mat-form-field appearance="fill">
+                    <mat-label>Valor Mínimo</mat-label>
+                    <input matInput type="number" [(ngModel)]="rangeMin">
+                    <span matSuffix>{{ selectedSensorUnit }}</span>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Valor Máximo</mat-label>
+                    <input matInput type="number" [(ngModel)]="rangeMax">
+                    <span matSuffix>{{ selectedSensorUnit }}</span>
+                </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Frecuencia de Verificación</mat-label>
+                <mat-select [(ngModel)]="verificationFrequency">
+                    <mat-option value="5">Cada 5 minutos</mat-option>
+                    <mat-option value="15">Cada 15 minutos</mat-option>
+                    <mat-option value="60">Cada 1 hora</mat-option>
+                    <mat-option value="1440">Diariamente</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div class="notifications-column">
+                <mat-checkbox [(ngModel)]="notifyApp">Notificación en la aplicación/web</mat-checkbox>
+                <mat-checkbox [(ngModel)]="notifyEmail">Correo electrónico</mat-checkbox>
+                <mat-checkbox [(ngModel)]="notifySMS">Mensaje de texto (SMS)</mat-checkbox>
+            </div>
+
+            <div class="alert-status">
+                <mat-slide-toggle [disabled]="!selectedSensorId && !filterSensorType" [(ngModel)]="alertEnabled">Alerta Activa</mat-slide-toggle>
+            </div>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Nombre de la Alerta (Opcional)</mat-label>
+                <input matInput [(ngModel)]="alertName">
+            </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button color="primary" [disabled]="!isFormValid()" (click)="saveAlert()">Guardar Alerta</button>
+        </mat-card-actions>
+    </mat-card>
+</div>

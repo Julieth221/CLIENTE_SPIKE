@@ -1,0 +1,81 @@
+.config-alt-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.config-alt-container.loaded {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.config-alert-card {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 20px;
+}
+
+.config-alt-header {
+    display: flex;
+    align-items: center; /* Alinea verticalmente el icono y el título */
+}
+
+.config-alt-header mat-icon {
+    cursor: pointer;
+    margin-right: 16px; /* Espacio entre el icono y el título */
+}
+
+.config-alt-header mat-card-title {
+    flex-grow: 1; /* Permite que el título ocupe el espacio restante */
+}
+
+.mat-radio-group {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.mat-form-field {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.notifications-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.notifications-column mat-checkbox {
+    margin-bottom: 8px;
+}
+
+.alert-status {
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.alert-status mat-slide-toggle {
+    margin-left: 16px; /* Espacio entre la etiqueta y el slide (opcional) */
+}
+
+.mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.sensor-type-select {
+    margin-bottom: 16px;
+}
+
+.sensor-select {
+    margin-bottom: 20px;
+}
