@@ -1,7 +1,7 @@
 <div class="config-alt-container">
     <mat-card class="config-alert-card">
         <mat-card-header class="config-alt-header">
-            <mat-icon (click)="onExit()">arrow_back</mat-icon>
+            <mat-icon (click)="onExit()" class="icon-exit">arrow_back</mat-icon>
             <mat-card-title>Configuración de Alertas</mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -76,7 +76,7 @@
             </mat-form-field>
 
             <div class="notifications-column">
-                <mat-checkbox [(ngModel)]="notifyApp">Notificación en la aplicación/web</mat-checkbox>
+                <mat-checkbox [(ngModel)]="notifyApp">Notificación en la aplicación web</mat-checkbox>
                 <mat-checkbox [(ngModel)]="notifyEmail">Correo electrónico</mat-checkbox>
                 <mat-checkbox [(ngModel)]="notifySMS">Mensaje de texto (SMS)</mat-checkbox>
             </div>

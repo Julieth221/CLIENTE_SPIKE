@@ -30,6 +30,9 @@ import { ProbarSensorComponent } from './app/components/sensor/probar-sensor/pro
 import { RegistroTSensorComponent } from './app/components/sensor/registro-t-sensor/registro-t-sensor.component';
 import { RegistroSensorComponent } from './app/components/sensor/registro-sensor/registro-sensor.component';
 import { ConfigAlertComponent } from './app/components/sensor/config-alert/config-alert.component';
+import { EditAlertComponent } from './app/components/sensor/edit-alert/edit-alert.component';
+import { VersensorComponent } from './app/components/sensor/versensor/versensor.component';
+import { GestionAlertComponent } from './app/components/sensor/gestion-alert/gestion-alert.component';
 
 
 bootstrapApplication(AppComponent,{
@@ -64,6 +67,9 @@ bootstrapApplication(AppComponent,{
                   { path: 'sensor/localizar-sensor', component: LocalizarSensorComponent},
                   { path: 'sensor/probar-sensor', component: ProbarSensorComponent},
                   { path: 'sensor/config-alert', component: ConfigAlertComponent},
+                  { path: 'sensor/edit-alert', component: EditAlertComponent},
+                  { path: 'sensor/verSensor', component: VersensorComponent},
+                  { path: 'sensor/gestion-alert', component: GestionAlertComponent},
               ],
             },
 

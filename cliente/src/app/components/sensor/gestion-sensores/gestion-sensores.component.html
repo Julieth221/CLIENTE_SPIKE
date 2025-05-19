@@ -1,156 +1,144 @@
 <div class="fincas-container">
 
-    <h2 class="title">SENSORES REGISTRADOS</h2>
-  
-    <!-- BOTONES DE VISTA -->
-    <mat-button-toggle-group 
-      name="vistaToggle" 
-      [(ngModel)]="vistaActual" 
-      class="toggle-vista"
-      appearance="standard"
-    >
-      <mat-button-toggle value="tabla">
-        <mat-icon>table_chart</mat-icon>
-        Tabla
-      </mat-button-toggle>
-      <mat-button-toggle value="tarjeta">
-        <mat-icon>view_module</mat-icon>
-        Tarjeta
-      </mat-button-toggle>
-    </mat-button-toggle-group>
-  
-    <div class="actions">
-      <!-- BUSCADOR -->
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Buscar sensores...</mat-label>
-        <input matInput [(ngModel)]="searchText" (input)="applyFilter()">
-        <mat-icon matSuffix class="search-icon">search</mat-icon>
-      </mat-form-field>
-  
-      <!-- FILTRO PARCELAS -->
-      <!-- <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Parcelas</mat-label>
-        <mat-select [(ngModel)]="filterParcela" (selectionChange)="applyFilter()">
-          <mat-option value="">Todas</mat-option>
-          <mat-option *ngFor="let count of parcelaOptions" [value]="count">{{count}}</mat-option>
-        </mat-select>
-        <mat-icon matSuffix>filter_list</mat-icon>
-      </mat-form-field> -->
-  
-      <!-- FILTRO TIPO DE SENSOR -->
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Tipo de sensor</mat-label>
-        <mat-select [(ngModel)]="filterTSensor" (selectionChange)="applyFilter()">
-          <mat-option value="">Todos</mat-option>
-          <mat-option *ngFor="let tipo of tipoSensorOptions" [value]="tipo">{{ tipo }}</mat-option>
-        </mat-select>
-        <mat-icon matSuffix>layers</mat-icon>
-      </mat-form-field>
-  
-      <!-- BOTÓN REGISTRAR -->
-      <button mat-raised-button class="btn-registrar" (click)="registrarSensor()">
-        <mat-icon>add</mat-icon> Registrar Sensor
-      </button>
-    </div>
-  
-    <!-- SPINNER DE CARGA -->
-    <div *ngIf="loading" class="loader">
-      <mat-spinner></mat-spinner>
-    </div>
-  
-    <!-- MENSAJE SIN RESULTADOS -->
-    <div *ngIf="!loading && dataSource.filteredData.length === 0" class="no-results animate__animated animate__fadeIn">
-      <mat-icon class="no-results-icon">memory</mat-icon>
-      <p>No se encontraron sensores con los filtros aplicados.</p>
-      <button mat-raised-button color="primary" (click)="registrarSensor()">
-        <mat-icon>add</mat-icon> Registrar Nuevo Sensor
-      </button>
-    </div>
-  
-    <!-- VISTA TABLA -->
-    <div *ngIf="!loading && dataSource.filteredData.length > 0 && vistaActual === 'tabla'" class="table-wrapper animate__animated animate__fadeIn">
-      <table mat-table [dataSource]="dataSource" matSort class="tabla-fincas">
-        <!-- Nombre Columna -->
-        <ng-container matColumnDef="nombre">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
-          <td mat-cell *matCellDef="let finca" class="finca-nombre">{{ finca.Nombre }}</td>
-        </ng-container>
-  
-        <!-- Ubicación Columna -->
-        <ng-container matColumnDef="ubicacion">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Ubicación</th>
-          <td mat-cell *matCellDef="let finca">
-            <div class="ubicacion-cell">
-              <mat-icon color="primary">place</mat-icon>
-              <span>{{ finca.Ubicacion }}</span>
-            </div>
-          </td>
-        </ng-container>
-  
-        <!-- Tamaño Columna -->
-        <ng-container matColumnDef="tamano">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Tamaño en m²</th>
-          <td mat-cell *matCellDef="let finca">{{ finca.AreaTotal | number }}</td>
-        </ng-container>
-  
-        <!-- Parcelas Columna -->
-        <!-- <ng-container matColumnDef="parcelas">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Parcelas</th>
-          <td mat-cell *matCellDef="let finca">
-            <div class="parcelas-chip">{{ finca.TotalParcelas }}</div>
-          </td>
-        </ng-container> -->
-  
-        <!-- Tipo Suelo Columna -->
-        <ng-container matColumnDef="suelo">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de suelo</th>
-          <td mat-cell *matCellDef="let finca">
-            <div class="tipo-suelo-chip">
-              {{ finca.TipoSuelo }}
-            </div>
-          </td>
-        </ng-container>
-  
-        <!-- Acciones Columna -->
-        <ng-container matColumnDef="acciones">
-          <th mat-header-cell *matHeaderCellDef>Acciones</th>
-          <td mat-cell *matCellDef="let finca">
-            <div class="action-buttons">
-              <button mat-icon-button matTooltip="Ver Finca" color="primary" (click)="verSensor(finca)" class="btn-view">
-                <mat-icon>visibility</mat-icon>
-              </button>
-              <button mat-icon-button matTooltip="Editar finca" color="primary" (click)="editarSensor(finca)" class="btn-edit">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button mat-icon-button matTooltip="Eliminar finca" color="warn" (click)="eliminarSensor(finca)" class="btn-delete">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
-          </td>
-        </ng-container>
-  
-        <!-- Filas de la tabla -->
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr 
-          mat-row 
-          *matRowDef="let row; columns: displayedColumns;"
-          class="finca-row"
-          [class.highlight-row]="row === expandedElement"
-          matRipple
-        ></tr>
-      </table>
-  
-      <!-- Paginador -->
-      <mat-paginator 
-        [pageSizeOptions]="[6, 10, 20]" 
-        showFirstLastButtons
-        aria-label="Seleccionar página de fincas">
-      </mat-paginator>
-    </div>
-  
-    <!-- VISTA TARJETAS -->
-    <!-- <div *ngIf="!loading && dataSource.filteredData.length > 0 && vistaActual === 'tarjeta'" class="cards-view animate__animated animate__fadeIn">
-      <app-card-fincas [fincas]="dataSource.filteredData"></app-card-fincas>
-    </div> -->
+  <h2 class="title">SENSORES REGISTRADOS</h2>
+
+  <mat-button-toggle-group
+    name="vistaToggle"
+    [(ngModel)]="vistaActual"
+    class="toggle-vista"
+    appearance="standard"
+  >
+    <mat-button-toggle value="tabla">
+      <mat-icon>table_chart</mat-icon>
+      Tabla
+    </mat-button-toggle>
+    <mat-button-toggle value="tarjeta">
+      <mat-icon>view_module</mat-icon>
+      Tarjeta
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+
+  <div class="actions">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar sensores...</mat-label>
+      <input matInput [(ngModel)]="searchText" (input)="applyFilter()">
+      <mat-icon matSuffix class="search-icon">search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Tipo de sensor</mat-label>
+      <mat-select [(ngModel)]="filterTSensor" (selectionChange)="applyFilter()">
+        <mat-option value="">Todos</mat-option>
+        <mat-option *ngFor="let tipo of tipoSensorOptions" [value]="tipo">{{ tipo }}</mat-option>
+      </mat-select>
+      <mat-icon matSuffix>layers</mat-icon>
+    </mat-form-field>
+
+    <button mat-raised-button class="btn-registrar" (click)="registrarSensor()">
+      <mat-icon>add</mat-icon> Registrar Sensor
+    </button>
   </div>
-  
+
+  <div *ngIf="loading" class="loader">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading && dataSource.filteredData.length === 0" class="no-results animate__animated animate__fadeIn">
+    <mat-icon class="no-results-icon">memory</mat-icon>
+    <p>No se encontraron sensores con los filtros aplicados.</p>
+    <button mat-raised-button color="primary" (click)="registrarSensor()">
+      <mat-icon>add</mat-icon> Registrar Nuevo Sensor
+    </button>
+  </div>
+
+  <div *ngIf="!loading && dataSource.filteredData.length > 0 && vistaActual === 'tabla'" class="table-wrapper animate__animated animate__fadeIn">
+    <table mat-table [dataSource]="dataSource" matSort class="tabla-fincas">
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+        <td mat-cell *matCellDef="let sensor" class="finca-nombre">{{ sensor.nombre }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="ubicacion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Ubicación</th>
+        <td mat-cell *matCellDef="let sensor">
+          <div class="ubicacion-cell">
+            <mat-icon color="primary">place</mat-icon>
+            <span>{{ sensor.ubicacion }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="tipo sensor">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de sensor</th>
+        <td mat-cell *matCellDef="let sensor">
+          <div class="tipo-suelo-chip">
+            {{ sensor.TipoSensor }}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="fecha instalacion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Instalación</th>
+        <td mat-cell *matCellDef="let sensor">{{ sensor.FechaInstalacion }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="Estado">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+        <td mat-cell *matCellDef="let sensor">{{ sensor.Estado }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let sensor">
+          <div class="action-buttons">
+            <button mat-icon-button matTooltip="Ver Sensor" color="primary" (click)="verSensor(sensor)" class="btn-view">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Editar Sensor" color="primary" (click)="editarSensor(sensor)" class="btn-edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Eliminar Sensor" color="warn" (click)="eliminarSensor(sensor)" class="btn-delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns;"
+        class="finca-row"
+        [class.highlight-row]="row === expandedElement"
+        matRipple
+      ></tr>
+    </table>
+
+    <mat-paginator
+      [pageSizeOptions]="[6, 10, 20]"
+      showFirstLastButtons
+      aria-label="Seleccionar página de fincas">
+    </mat-paginator>
+  </div>
+
+  <div *ngIf="!loading && dataSource.filteredData.length > 0 && vistaActual === 'tarjeta'" class="cards-view animate__animated animate__fadeIn">
+    <div *ngFor="let sensor of dataSource.filteredData" class="sensor-card">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ sensor.nombre }}</mat-card-title>
+          <mat-card-subtitle>{{ sensor.ubicacion }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p><strong>Tipo:</strong> {{ sensor.TipoSensor }}</p>
+          <p><strong>Fecha Instalación:</strong> {{ sensor.FechaInstalacion }}</p>
+          <p><strong>Estado:</strong> {{ sensor.Estado }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="primary" (click)="verSensor(sensor)">VER</button>
+          <button mat-button color="primary" (click)="editarSensor(sensor)">EDITAR</button>
+          <button mat-button color="warn" (click)="eliminarSensor(sensor)">ELIMINAR</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

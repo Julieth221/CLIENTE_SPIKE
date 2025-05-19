@@ -1,0 +1,114 @@
+.main-container {
+  padding: 20px;
+}
+
+.page-title {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 500;
+  color: #333;
+}
+
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: #666;
+}
+
+.loading-indicator mat-progress-spinner {
+  margin-bottom: 10px;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background-color: #ffebee;
+  color: #d32f2f;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.error-message mat-icon {
+  margin-right: 8px;
+}
+
+.content-wrapper {
+  display: flex;
+  gap: 20px;
+}
+
+.left-section {
+  flex: 1;
+}
+
+.right-section {
+  width: 320px;
+}
+
+.alert-table-card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alert-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.alert-table th, .alert-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+}
+
+.alert-table th {
+  background-color: #f5f5f5;
+  font-weight: 500;
+}
+
+.alert-table tbody tr:hover {
+  background-color: #f0f4c3;
+}
+
+
+.alert-details-card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alert-details-card mat-card-header {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+
+.detail-row {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.detail-label {
+  font-weight: 500;
+  margin-right: 8px;
+  color: #666;
+  width: 100px;
+}
+
+.detail-value {
+  color: #333;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+  .right-section {
+    width: 100%;
+  }
+}

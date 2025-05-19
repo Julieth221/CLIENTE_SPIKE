@@ -23,9 +23,9 @@ interface Alerta {
 }
 
 @Component({
-  selector: 'app-edit-alert',
+  selector: 'app-gestion-alert',
   imports: [
-    CommonModule,
+     CommonModule,
     MatCardModule,
     MatIconModule,
     MatButtonModule,
@@ -38,17 +38,17 @@ interface Alerta {
     MatPaginatorModule,
     MatSortModule
   ],
-  templateUrl: './edit-alert.component.html',
-  styleUrl: './edit-alert.component.css',
+  templateUrl: './gestion-alert.component.html',
+  styleUrl: './gestion-alert.component.css',
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0' })),
       state('expanded', style({ height: '*' })),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
-  ],
+  ]
 })
-export class EditAlertComponent implements OnInit {
+export class GestionAlertComponent implements OnInit {
   alertaForm: FormGroup;
   isEditing: boolean = false;
   loading: boolean = false;
