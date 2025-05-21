@@ -116,7 +116,9 @@
                   <span class="estado-badge" [style.background-color]="getEstadoColor(getEstadoParcela(parcela))">
                     {{getEstadoParcela(parcela)}}
                   </span>
-                  <button mat-icon-button class="btnDelete" (click)="eliminarParcela()">
+                  <button mat-icon-button class="btnDelete" 
+                          (click)="eliminarParcela()"
+                          [disabled]="parcelasArrendadas.has(parcela.NombreParcela)">
                     <mat-icon>delete</mat-icon>
                   </button>
                 </div>
@@ -124,21 +126,21 @@
                 <div class="parcela-details">
                   <div class="parcela-field">
                     <label>Nombre:</label>
-                    <input *ngIf="getEstadoParcela(parcela) === 'Disponible'"
+                    <input *ngIf="!parcelasArrendadas.has(parcela.NombreParcela)"
                            [(ngModel)]="parcela.NombreParcela"
                            placeholder="Nombre de la parcela">
-                    <span *ngIf="getEstadoParcela(parcela) !== 'Disponible'">
+                    <span *ngIf="parcelasArrendadas.has(parcela.NombreParcela)">
                       {{parcela.NombreParcela}}
                     </span>
                   </div>
                   
                   <div class="parcela-field">
                     <label>Tamaño (m²):</label>
-                    <input *ngIf="getEstadoParcela(parcela) === 'Disponible'"
+                    <input *ngIf="!parcelasArrendadas.has(parcela.NombreParcela)"
                            type="number"
                            [(ngModel)]="parcela.TamanoParcela"
                            placeholder="Tamaño en metros cuadrados">
-                    <span *ngIf="getEstadoParcela(parcela) !== 'Disponible'">
+                    <span *ngIf="parcelasArrendadas.has(parcela.NombreParcela)">
                       {{parcela.TamanoParcela}}
                     </span>
                   </div>
@@ -147,12 +149,12 @@
                 <div class="parcela-mapa">
                   <app-editar-mapa
                     [coordenadas]="parcela.Geolocalizacion"
-                    [editable]="getEstadoParcela(parcela) === 'Disponible'"
+                    [editable]="!parcelasArrendadas.has(parcela.NombreParcela)"
                     (onGeolocalizacionEditada)="guardarCoordenadasParcela($event, i)"
                     #mapaComponent>
                   </app-editar-mapa>
                 </div>
-                <div class="parcela-actions" *ngIf="getEstadoParcela(parcela) === 'Disponible'">
+                <div class="parcela-actions" *ngIf="!parcelasArrendadas.has(parcela.NombreParcela)">
                   <button mat-raised-button color="primary" (click)="guardarCambiosParcela(mapaComponent, parcela, i)">
                     <mat-icon>save</mat-icon>
                     Guardar Cambios
@@ -165,4 +167,5 @@
       </mat-card>
     </div>
   </div>
+ 
 </div>

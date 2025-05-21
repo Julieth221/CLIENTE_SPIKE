@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders  } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { AuthService } from "./auth.service";
+import { API_URLS } from "../config/api_config";
 
 
 @Injectable({
@@ -36,4 +37,7 @@ export class ApiService{
         return this.http.delete<T>(url, { headers: this.getAuthHeaders() });
     }
 
+    patch<T>(url: string, data: any): Observable<T> {
+        return this.http.patch<T>(url, data, { headers: this.getAuthHeaders() });
+    }
 }

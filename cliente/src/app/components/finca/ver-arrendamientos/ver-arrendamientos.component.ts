@@ -99,8 +99,8 @@ export class VerArrendamientosComponent implements OnInit, OnDestroy {
   }
 
   cargarParcelas(): void {
-    if (!this.data.fincaId) {
-      this.error = 'ID de finca no válido';
+    if (!this.data.arrendamientoId) {
+      this.error = 'ID de arrendamiento no válido';
       this.loading = false;
       return;
     }
@@ -108,163 +108,38 @@ export class VerArrendamientosComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.error = '';
     this.parcelas = [];
+    console.log('No se recibió arrendamientoId:', this.data.arrendamientoId);
 
-    // 1. Obtener todos los arrendamientos asociados a esta finca
-    this.apiService.get(`${API_URLS.CRUD.API_CRUD_FINCA}/Arrendamiento`)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (arrendamientosResponse: any) => {
-          if (!arrendamientosResponse || !arrendamientosResponse.Data || !Array.isArray(arrendamientosResponse.Data)) {
+    // Obtener las parcelas asociadas al arrendamiento
+    this.apiService.get(`${API_URLS.MID.API_MID_SPIKE}/arrendamiento/parcelasarrendamiento/${this.data.arrendamientoId}`).subscribe({
+        next: (parcelasResponse: any) => {
+          if (!Array.isArray(parcelasResponse)) {
             this.loading = false;
-            this.error = 'Error al obtener los arrendamientos de la finca';
+            this.error = 'Formato de respuesta inválido';
             return;
           }
 
-          // Filtrar solo los arrendamientos de la finca actual que tienen parcelas asociadas
-          const parcelasDeLaFinca = arrendamientosResponse.Data.filter((a: any) => 
-            a.FkArrendamientoFinca && 
-            a.FkArrendamientoFinca.Id === this.data.fincaId && 
-            a.FkArrendatamientoParcela && 
-            a.FkArrendatamientoParcela.Id
-          );
+          // Procesar las parcelas recibidas
+          const parcelasDetalle: ParcelaDetalle[] = parcelasResponse.map((parcela: any) => ({
+            id: parcela.IdParcela,
+            nombre: parcela.NombreParcela,
+            tamano: parcela.TamanoParcela,
+            coordenadas: {
+              latitudInicial: parseFloat(parcela.Geolocalizacion.LatitudInicial),
+              longitudInicial: parseFloat(parcela.Geolocalizacion.LongitudInicial),
+              latitudFinal: parseFloat(parcela.Geolocalizacion.LatitudFinal),
+              longitudFinal: parseFloat(parcela.Geolocalizacion.LongitudFinal)
+            }
+          }));
 
-          if (parcelasDeLaFinca.length === 0) {
-            this.loading = false;
-            this.error = 'Esta finca no tiene parcelas arrendadas';
-            return;
-          }
-
-          // Extraer los IDs de parcelas únicas (evitar duplicados)
-          const parcelasIds = [...new Set(parcelasDeLaFinca.map((a: any) => a.FkArrendatamientoParcela.Id))];
-
-          // 2. Obtener detalles de cada parcela
-          const parcelasRequests = parcelasIds.map((parcelaId: any) => 
-            this.apiService.get(`${API_URLS.CRUD.API_CRUD_FINCA}/Parcela/${parcelaId}`)
-          );
-
-          if (parcelasRequests.length === 0) {
-            this.loading = false;
-            this.error = 'No se pudo obtener información de las parcelas';
-            return;
-          }
-
-          // Procesar todas las solicitudes de parcelas en paralelo
-          forkJoin(parcelasRequests)
-            .pipe(takeUntil(this.destroy$))
-            .subscribe({
-              next: (parcelasResponses: any) => {
-                // Procesar cada respuesta de parcela
-                const parcelasPromises = parcelasResponses.map((parcelaResponse: any, index: any) => {
-                  if (!parcelaResponse || !parcelaResponse.Data) {
-                    return Promise.resolve(null);
-                  }
-
-                  const parcela = parcelaResponse.Data;
-
-                  // 3. Para cada parcela, buscar su información de geolocalización en FincaParcela
-                  return new Promise<ParcelaDetalle | null>((resolve) => {
-                    // Buscar el registro en FincaParcela que coincida con el ID de la parcela
-                    this.apiService.get(`${API_URLS.CRUD.API_CRUD_FINCA}/FincaParcela?fkParcelaFinca=${parcela.Id}&activo=true`)
-                      .pipe(takeUntil(this.destroy$))
-                      .subscribe({
-                        next: (fincaParcelaResponse: any) => {
-                          if (!fincaParcelaResponse || !fincaParcelaResponse.Data || 
-                              !Array.isArray(fincaParcelaResponse.Data) || 
-                              fincaParcelaResponse.Data.length === 0) {
-                            resolve(null);
-                            return;
-                          }
-
-                          const fincaParcela = fincaParcelaResponse.Data[0];
-                          
-                          // 4. Si existe geolocalización, obtener sus detalles
-                          if (fincaParcela.FkGeolocalizacion && fincaParcela.FkGeolocalizacion.Id) {
-                            this.apiService.get(`${API_URLS.CRUD.API_CRUD_FINCA}/Geolocalizacion/${fincaParcela.FkGeolocalizacion.Id}`)
-                              .subscribe({
-                                next: (geoResponse: any) => {
-                                  if (!geoResponse || !geoResponse.Data) {
-                                    resolve({
-                                      id: parcela.Id,
-                                      nombre: parcela.NombreParcela || `Parcela ${index + 1}`,
-                                      tamano: parcela.TamanoParcela || 0,
-                                      coordenadas: {
-                                        latitudInicial: 0,
-                                        longitudInicial: 0,
-                                        latitudFinal: 0,
-                                        longitudFinal: 0
-                                      }
-                                    });
-                                    return;
-                                  }
-
-                                  const geo = geoResponse.Data;
-                                  resolve({
-                                    id: parcela.Id,
-                                    nombre: parcela.NombreParcela || `Parcela ${index + 1}`,
-                                    tamano: parcela.TamanoParcela || 0,
-                                    coordenadas: {
-                                      latitudInicial: parseFloat(geo.LatitudInicial),
-                                      longitudInicial: parseFloat(geo.LongitudInicial),
-                                      latitudFinal: parseFloat(geo.LatitudFinal),
-                                      longitudFinal: parseFloat(geo.LongitudFinal)
-                                    }
-                                  });
-                                },
-                                error: (err) => {
-                                  console.error(`Error al obtener geolocalización para parcela ${parcela.Id}:`, err);
-                                  resolve({
-                                    id: parcela.Id,
-                                    nombre: parcela.NombreParcela || `Parcela ${index + 1}`,
-                                    tamano: parcela.TamanoParcela || 0,
-                                    coordenadas: {
-                                      latitudInicial: 0,
-                                      longitudInicial: 0,
-                                      latitudFinal: 0,
-                                      longitudFinal: 0
-                                    }
-                                  });
-                                }
-                              });
-                          } else {
-                            resolve({
-                              id: parcela.Id,
-                              nombre: parcela.NombreParcela || `Parcela ${index + 1}`,
-                              tamano: parcela.TamanoParcela || 0,
-                              coordenadas: {
-                                latitudInicial: 0,
-                                longitudInicial: 0,
-                                latitudFinal: 0,
-                                longitudFinal: 0
-                              }
-                            });
-                          }
-                        },
-                        error: (err) => {
-                          console.error(`Error al obtener FincaParcela para parcela ${parcela.Id}:`, err);
-                          resolve(null);
-                        }
-                      });
-                  });
-                });
-
-                // Esperar a que todas las parcelas se procesen
-                Promise.all(parcelasPromises).then(resultados => {
-                  this.todasLasParcelas = resultados.filter(p => p !== null) as ParcelaDetalle[];
-                  this.parcelas = this.todasLasParcelas;
-                  this.loading = false;
-                });
-              },
-              error: (err) => {
-                console.error('Error al obtener detalles de parcelas:', err);
-                this.loading = false;
-                this.error = 'Error al obtener información detallada de las parcelas';
-              }
-            });
-        },
-        error: (err) => {
-          console.error('Error al obtener arrendamientos:', err);
+          this.todasLasParcelas = parcelasDetalle;
+          this.parcelas = this.todasLasParcelas;
           this.loading = false;
-          this.error = 'Error al buscar parcelas asociadas a la finca';
+        },
+        error: (error: any) => {
+          console.error('Error al obtener las parcelas del arrendamiento:', error);
+          this.loading = false;
+          this.error = 'Error al cargar la información de las parcelas';
         }
       });
   }

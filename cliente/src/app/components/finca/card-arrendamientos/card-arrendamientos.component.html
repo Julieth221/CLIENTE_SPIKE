@@ -17,10 +17,10 @@
   <div class="arrendamiento-card" *ngFor="let arrendamiento of arrendamientos.length > 0 ? arrendamientos : arrendamientosData" [attr.data-id]="arrendamiento.id">
     <div class="card-header">
       <div class="card-title-area">
-        <h3 class="card-title">{{ arrendamiento.finca?.Nombre || 'Finca no disponible' }}</h3>
+        <h3 class="card-title">{{ arrendamiento.Finca || 'Finca no disponible' }}</h3>
         <div class="arrendatario">
           <mat-icon class="person-icon">person</mat-icon>
-          <span>{{ arrendamiento.arrendatario?.Nombre || 'Arrendatario no disponible' }}</span>
+          <span>{{ arrendamiento.Arrendatario || 'Arrendatario no disponible' }}</span>
         </div>
       </div>
       <div class="card-actions">
@@ -47,7 +47,7 @@
             </div>
             <div class="info-details">
               <span class="info-label">Parcelas</span>
-              <span class="info-value">{{ arrendamiento.parcelas?.length || 0 }}</span>
+              <span class="info-value">{{ arrendamiento.CantidadParcelas }}</span>
             </div>
           </div>
           
@@ -57,7 +57,7 @@
             </div>
             <div class="info-details">
               <span class="info-label">Valor</span>
-              <span class="info-value">{{ arrendamiento.valor || 'No especificado' }}</span>
+              <span class="info-value">{{ arrendamiento.Valor || 'No especificado' }}</span>
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@
           <mat-icon class="date-icon">event</mat-icon>
           <div class="date-details">
             <span class="date-label">Fecha inicio</span>
-            <span class="date-value">{{ formatDate(arrendamiento.fechaInicio) }}</span>
+            <span class="date-value">{{ formatDate(arrendamiento.FechaInicio) }}</span>
           </div>
         </div>
         
@@ -76,7 +76,7 @@
           <mat-icon class="date-icon">event_busy</mat-icon>
           <div class="date-details">
             <span class="date-label">Fecha fin</span>
-            <span class="date-value">{{ formatDate(arrendamiento.fechaFin) }}</span>
+            <span class="date-value">{{ formatDate(arrendamiento.FechaFin) }}</span>
           </div>
         </div>
       </div>

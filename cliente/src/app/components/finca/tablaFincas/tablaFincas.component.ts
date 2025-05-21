@@ -23,6 +23,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { CardFincasComponent } from '../card-fincas/card-fincas.component';
 import { VerfincasComponent } from '../verfincas/verfincas.component';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-tablaFincas',
@@ -65,6 +66,7 @@ export class TablaFincasComponent implements OnInit, AfterViewInit {
   // Control de vista
   vistaActual: 'tabla' | 'tarjeta' = 'tabla';
 
+
   // Datos y filtrados
   fincas: any[] = [];
   dataSource = new MatTableDataSource<any>([]);
@@ -88,7 +90,7 @@ export class TablaFincasComponent implements OnInit, AfterViewInit {
   constructor(
     private apiService: ApiService,
     private router: Router,
-    private dialog: MatDialog 
+    private dialog: MatDialog ,
   ) {}
 
   private isMobileView(): boolean {
@@ -169,7 +171,7 @@ export class TablaFincasComponent implements OnInit, AfterViewInit {
   }
 
   editarFinca(finca: any) {
-    this.router.navigate(['/finca/editar', finca.ID]);
+    this.router.navigate(['/dashboard/finca/editarFinca'], { state: { fincaId: finca.Id } });
   }
   verFinca(finca: any): void {
       this.dialog.open(VerfincasComponent, {

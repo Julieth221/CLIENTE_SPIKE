@@ -1,1 +1,70 @@
-<p>localizar-sensor works!</p>
+<div class="main-container">
+  <div class="header-section">
+    <h2 class="page-title">Localizar Sensores <mat-icon>location_on</mat-icon></h2>
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar sensores...</mat-label>
+      <input matInput [(ngModel)]="searchText" (input)="applyFilter()">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="loading" class="loading-indicator">
+    <mat-progress-spinner diameter="50"></mat-progress-spinner>
+    <p>Cargando sensores...</p>
+  </div>
+
+  <div *ngIf="errorMessage && !loading" class="error-message">
+    <mat-icon color="warn">error</mat-icon>
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div *ngIf="!loading && !errorMessage" class="content-wrapper">
+    <div class="left-section sensor-cards-list">
+      <mat-card *ngFor="let sensor of filteredSensors" class="sensor-card">
+        <mat-card-header>
+          <mat-card-title class="sensor-name">{{ sensor.nombre }}</mat-card-title>
+          <mat-card-subtitle>
+            <div class="subtitle-item">
+              <mat-icon>grass</mat-icon> {{ sensor.nombreCultivo }}
+            </div>
+            <div class="subtitle-item">
+              <mat-icon>sensors</mat-icon> {{ sensor.TipoSensor }}
+            </div>
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="card-detail-row">
+            <mat-icon>place</mat-icon>
+            <span>Ubicación: {{ sensor.ubicacion }}</span>
+          </div>
+          <div class="card-detail-row">
+            <mat-icon>calendar_today</mat-icon>
+            <span>Instalación: {{ sensor.FechaInstalacion }}</span>
+          </div>
+          <div class="card-detail-row">
+            <mat-icon [ngClass]="{'status-active': sensor.Estado === 'Activo', 'status-inactive': sensor.Estado === 'Inactivo'}">
+              {{ sensor.Estado === 'Activo' ? 'check_circle' : 'cancel' }}
+            </mat-icon>
+            <span>Estado: {{ sensor.Estado }}</span>
+          </div>
+        </mat-card-content>
+        <mat-card-actions class="card-actions-bottom">
+          <button mat-raised-button color="primary" (click)="verMapa(sensor)">
+            <mat-icon>map</mat-icon> Ver mapa
+          </button>
+        </mat-card-actions>
+      </mat-card>
+      <div *ngIf="filteredSensors.length === 0 && searchText" class="no-results">
+        <mat-icon>sentiment_dissatisfied</mat-icon>
+        <p>No se encontraron sensores con ese criterio de búsqueda.</p>
+      </div>
+      <div *ngIf="filteredSensors.length === 0 && !searchText && !loading" class="no-results">
+        <mat-icon>memory</mat-icon>
+        <p>No hay sensores registrados.</p>
+      </div>
+    </div>
+
+    <div class="right-section map-container">
+      <app-maps-sensor></app-maps-sensor> </div>
+  </div>
+</div>

@@ -1,0 +1,207 @@
+main-container {
+  padding: 20px;
+  max-width: 1400px; /* Ancho máximo para el contenedor principal */
+  margin: 0 auto;
+}
+
+.header-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #3fb578; /* Color azul de Material Design */
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 400px;
+}
+
+.loading-indicator,
+.error-message,
+.no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
+  color: #666;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #d32f2f;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.error-message mat-icon {
+  margin-bottom: 10px;
+}
+
+.no-results mat-icon {
+  font-size: 48px;
+  color: #9e9e9e;
+  margin-bottom: 15px;
+}
+
+.content-wrapper {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap; /* Permite que las secciones se envuelvan en pantallas pequeñas */
+}
+
+.left-section {
+  flex: 1; /* Permite que la lista de tarjetas crezca */
+  min-width: 300px; /* Ancho mínimo para la lista de tarjetas */
+  max-height: 700px; /* Altura máxima para la lista de tarjetas */
+  overflow-y: auto; /* Habilita el scroll si hay muchas tarjetas */
+  padding-right: 10px; /* Espacio para la barra de scroll */
+}
+
+.right-section {
+  flex: 2; /* Permite que el mapa crezca más que la lista */
+  min-width: 500px; /* Ancho mínimo para el mapa */
+  height: 600px; /* Altura fija para el mapa */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden; /* Asegura que el mapa no se desborde del borde redondeado */
+}
+
+.sensor-cards-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Grid para tarjetas */
+  gap: 15px;
+}
+
+.sensor-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  transition: transform 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Asegura que las tarjetas tengan la misma altura en el grid */
+}
+
+.sensor-card:hover {
+  transform: translateY(-5px);
+}
+
+.sensor-card mat-card-header {
+  background-color: #e3f2fd; /* Azul claro para el encabezado de la tarjeta */
+  padding: 15px;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  flex-direction: column; /* Para que título y subtítulos se apilen */
+  align-items: flex-start;
+}
+
+.sensor-card .sensor-name {
+  font-size: 1.3rem; /* Título más grande y negrita */
+  font-weight: bold;
+  color: #41b53f;
+  margin-bottom: 5px;
+}
+
+.sensor-card mat-card-subtitle {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.sensor-card .subtitle-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sensor-card .subtitle-item mat-icon {
+  font-size: 18px;
+  color: #777;
+}
+
+.sensor-card mat-card-content {
+  padding: 15px;
+  flex-grow: 1; /* Permite que el contenido crezca y empuje las acciones hacia abajo */
+}
+
+.card-detail-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.card-detail-row mat-icon {
+  font-size: 20px;
+  color: #777;
+}
+
+.status-active {
+  color: #4caf50; /* Verde */
+}
+
+.status-inactive {
+  color: #f44336; /* Rojo */
+}
+
+.card-actions-bottom {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 15px 15px 15px;
+  margin-top: auto; /* Empuja los botones al final de la tarjeta */
+}
+
+.card-actions-bottom button {
+  font-size: 0.9rem;
+  padding: 8px 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 900px) {
+  .content-wrapper {
+    flex-direction: column; /* Apila las secciones en pantallas más pequeñas */
+  }
+
+  .left-section,
+  .right-section {
+    width: 100%; /* Ambas secciones ocupan todo el ancho */
+    min-width: unset; /* Elimina el min-width para mayor flexibilidad */
+    max-height: unset; /* Elimina la altura máxima para la lista */
+    height: auto; /* Altura automática para el mapa en móvil */
+  }
+
+  .right-section.map-container {
+    height: 400px; /* Altura del mapa en móvil */
+  }
+
+  .sensor-cards-list {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Ajusta el grid */
+  }
+}
+
+@media (max-width: 500px) {
+  .sensor-cards-list {
+    grid-template-columns: 1fr; /* Una sola columna en pantallas muy pequeñas */
+  }
+  .page-title {
+    font-size: 1.8rem;
+  }
+}

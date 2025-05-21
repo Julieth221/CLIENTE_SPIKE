@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Inject, ViewChild, AfterViewInit, ChangeDetectorRef  } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject, ViewChild, AfterViewInit, ChangeDetectorRef, OnInit  } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,8 +13,29 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { Router, RouterModule  } from '@angular/router';
+import { ApiService } from '../../../services/api.service';
+import { API_URLS } from '../../../config/api_config';
+import { AuthService } from '../../../services/auth.service';
 
+interface Usuario {
+  Id: number;
+  Nombre: string;
+  Apellido: string;
+  Contacto: string;
+  CorreoElectronico: string;
+  Activo: boolean;
+}
 
+interface RolUsuario {
+  Id: number;
+  FkUsuarioRoles: Usuario;
+  FkRolesUsuario: {
+    Id: number;
+    Nombre: string;
+    Activo: boolean;
+  };
+  Activo: boolean;
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -38,7 +59,7 @@ import { Router, RouterModule  } from '@angular/router';
   styleUrl: './dashboard.component.css',
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent  {
+export class DashboardComponent implements OnInit {
   isSidenavOpened = true;
   activeSubMenu: string | null = null;
 
@@ -46,9 +67,9 @@ export class DashboardComponent  {
 
   // Usuario actual, puedes modificar esto según de dónde obtienes los datos
   currentUser: any = {
-    nombre: 'Juan',
-    apellido: 'Pérez',
-    rol: 'Propietario'
+    nombre: '',
+    apellido: '',
+    rol: ''
   };
 
   sectionVisibility = {
@@ -57,25 +78,59 @@ export class DashboardComponent  {
     sensores: false
   };
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private apiService: ApiService,
+    private authService: AuthService
+  ) {}
 
-  // Ir a un componente mediante rutas dinámicas
-  goToComponent(path: string) {
-    const segments = path.split('/');
-    console.log('Navegando a:', segments);
-    this.router.navigate(['/dashboard',  ...segments]);
-    
+  ngOnInit() {
+    this.obtenerDatosUsuario();
+  }
+
+  obtenerDatosUsuario() {
+    const userId = this.authService.getIdFromToken();
+    if (!userId) {
+      console.error('No se pudo obtener el ID del usuario');
+      return;
+    }
+
+    // Obtener datos del usuario
+    this.apiService.get(`${API_URLS.CRUD.API_CRUD_USUARIO}/Usuario/${userId}`).subscribe({
+      next: (response: any) => {
+        if (response.Success && response.Data) {
+          const usuario = response.Data;
+          this.currentUser.nombre = usuario.Nombre;
+          this.currentUser.apellido = usuario.Apellido;
+
+          // Obtener el rol del usuario
+          this.apiService.get(`${API_URLS.CRUD.API_CRUD_USUARIO}/Roles_Usuario?query=FkUsuarioRoles.Id:${userId},Activo:true`).subscribe({
+            next: (rolesResponse: any) => {
+              if (rolesResponse.Success && rolesResponse.Data && rolesResponse.Data.length > 0) {
+                this.currentUser.rol = rolesResponse.Data[0].FkRolesUsuario.Nombre;
+              }
+            },
+            error: (error) => {
+              console.error('Error al obtener el rol del usuario:', error);
+            }
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener datos del usuario:', error);
+      }
+    });
   }
 
   toggleSection(section: 'finca' | 'cultivo' | 'sensores') {
     this.sectionVisibility[section] = !this.sectionVisibility[section];
   }
 
-    // Alternar visibilidad del submenú
+  // Alternar visibilidad del submenú
   toggleSubMenu(menu: string) {
     this.activeSubMenu = this.activeSubMenu === menu ? null : menu;
   }
-    // this.cdRef.markForCheck(); // Forzar verificación de cambios
+  // this.cdRef.markForCheck(); // Forzar verificación de cambios
   
 
   // Método para cerrar sesión

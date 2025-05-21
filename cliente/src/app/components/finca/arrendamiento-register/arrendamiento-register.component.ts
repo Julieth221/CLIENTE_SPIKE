@@ -54,6 +54,13 @@ interface ArrendamientoRequest {
   Valor: string;
 }
 
+interface ArrendamientoActivo {
+  Id: number;
+  Parcelas: string[];
+  FechaInicio: string;
+  FechaFin: string;
+  Activo: boolean;
+}
 
 @Component({
   selector: 'app-arrendamiento-register',
@@ -213,12 +220,12 @@ export class ArrendamientoRegisterComponent implements OnInit {
   }
   
   verificarParcelasArrendadas(fincaId: number): void {
-    this.apiService.get(`${API_URLS.MID.API_MID_SPIKE}/arrendamiento/activos/${fincaId}`)
+    this.apiService.get(`${API_URLS.MID.API_MID_SPIKE}/arrendamiento/activos/${fincaId}/`)
       .subscribe({
         next: (response: any) => {
           console.log("Respuesta de arrendamientos activos:", response);
           
-          let arrendamientosActivos: any[] = [];
+          let arrendamientosActivos: ArrendamientoActivo[] = [];
           
           if (response === null) {
             console.log("La respuesta de arrendamientos activos es null, se usará un array vacío");
@@ -239,28 +246,39 @@ export class ArrendamientoRegisterComponent implements OnInit {
       });
   }
   
-  procesarParcelasDisponibles(arrendamientosActivos: any[]): void {
+  procesarParcelasDisponibles(arrendamientosActivos: ArrendamientoActivo[]): void {
     if (!this.parcelas || !Array.isArray(this.parcelas)) {
       console.error("No hay parcelas disponibles para procesar");
       this.parcelasDisponibles = 0;
       return;
     }
     
+    // Obtener todas las parcelas que están en arrendamientos activos
+    const parcelasArrendadas = new Set<string>();
+    arrendamientosActivos.forEach(arrendamiento => {
+      if (arrendamiento.Parcelas && Array.isArray(arrendamiento.Parcelas)) {
+        arrendamiento.Parcelas.forEach(nombreParcela => {
+          parcelasArrendadas.add(nombreParcela);
+        });
+      }
+    });
+    
+    // Marcar las parcelas como arrendadas o disponibles
     this.parcelas = this.parcelas.map(parcela => {
       if (!parcela) return parcela;
       
-      const estaArrendada = arrendamientosActivos.some(
-        (a: any) => a && a.FkArrendatamientoParcela && a.FkArrendatamientoParcela.Id === parcela.Id
-      );
-      
+      const estaArrendada = parcelasArrendadas.has(parcela.NombreParcela);
       return { ...parcela, arrendada: estaArrendada };
     });
     
+    // Filtrar solo las parcelas disponibles
     this.filteredParcelas = this.parcelas.filter(p => !p.arrendada);
     this.parcelasDisponibles = this.filteredParcelas.length;
     
     console.log(`Parcelas disponibles: ${this.parcelasDisponibles} de ${this.parcelas.length} total`);
+    console.log('Parcelas arrendadas:', Array.from(parcelasArrendadas));
     
+    // Actualizar validadores del control numParcelas
     const numParcelasControl = this.arrendamientoForm.get('numParcelas');
     if (numParcelasControl) {
       numParcelasControl.setValidators([
@@ -270,6 +288,7 @@ export class ArrendamientoRegisterComponent implements OnInit {
       ]);
       numParcelasControl.updateValueAndValidity();
       
+      // Ajustar el valor actual si es necesario
       const valorActual = numParcelasControl.value;
       if (valorActual > this.parcelasDisponibles) {
         numParcelasControl.setValue(Math.max(1, this.parcelasDisponibles));
@@ -291,7 +310,7 @@ export class ArrendamientoRegisterComponent implements OnInit {
       parcelasArray.push(
         this.fb.group({
           parcela: ['', Validators.required],
-          tamano: [{value: '', disabled: true}]
+          TamanoParcela: [{value: '', disabled: true}]
         })
       );
     }
@@ -304,8 +323,8 @@ export class ArrendamientoRegisterComponent implements OnInit {
     
     if (parcelaSeleccionada) {
       // Establece el tamaño de la parcela seleccionada
-      (this.parcelasArray.at(index) as FormGroup).get('tamano')?.setValue(
-        parcelaSeleccionada.TamañoParcela
+      (this.parcelasArray.at(index) as FormGroup).get('TamanoParcela')?.setValue(
+        parcelaSeleccionada.TamanoParcela
       );
       
       // Eliminar esta parcela de las opciones disponibles para otros selects

@@ -15,6 +15,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { VerArrendamientosComponent } from '../ver-arrendamientos/ver-arrendamientos.component';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { EditarArrendamientosComponent } from '../editar-arrendamientos/editar-arrendamientos.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-card-arrendamientos',
@@ -102,35 +103,55 @@ export class CardArrendamientosComponent implements OnInit {
   }
 
   obtenerArrendamientos() {
-    // Consultar todos los arrendamientos
-    this.apiService.get(`${API_URLS.CRUD.API_CRUD_FINCA}/Arrendamiento`).subscribe({
-      next: (response: any) => {
-        console.log('Arrendamientos obtenidos:', response);
+    this.loading = true;
+    this.errorMessage = '';
+    
+    // Obtener arrendamientos activos para cada finca
+    const observables = this.fincasUsuario.map(finca => 
+      this.apiService.get(`${API_URLS.MID.API_MID_SPIKE}/arrendamiento/activos/${finca.Id}/`)
+    );
+    
+    forkJoin(observables).subscribe({
+      next: (responses: any[]) => {
+        console.log('Respuestas de arrendamientos activos:', responses);
         
-        // Verificar que la respuesta contiene la propiedad Data y es un array
-        if (response && response.Data && Array.isArray(response.Data)) {
-          // Filtrar solo los arrendamientos relacionados con las fincas del usuario
-          const fincasIds = this.fincasUsuario.map(finca => finca.Id);
-          
-          let arrendamientosFiltrados = response.Data.filter((arrendamiento: any) => {
-            return arrendamiento.FkArrendamientoFinca && 
-                   fincasIds.includes(arrendamiento.FkArrendamientoFinca.Id);
-          });
-          
-          console.log('Arrendamientos filtrados:', arrendamientosFiltrados);
-          
-          // Procesar los arrendamientos para agruparlos por finca y arrendatario
-          this.arrendamientosData = this.procesarArrendamientos(arrendamientosFiltrados);
-        } else {
-          this.errorMessage = 'Formato de respuesta inválido: no se encontró el arreglo de arrendamientos';
-          console.error(this.errorMessage, response);
-          this.arrendamientosData = [];
-        }
+        // Procesar todas las respuestas
+        const arrendamientosActivos = new Set<number>();
+        responses.forEach(response => {
+          if (Array.isArray(response)) {
+            response.forEach(arrendamiento => {
+              if (arrendamiento.Id) {
+                arrendamientosActivos.add(arrendamiento.Id);
+              }
+            });
+          }
+        });
         
-        this.loading = false;
+        // Obtener todos los arrendamientos
+        this.apiService.get(`${API_URLS.MID.API_MID_SPIKE}/arrendamiento/`).subscribe({
+          next: (response: any) => {
+            if (Array.isArray(response)) {
+              // Marcar los arrendamientos como activos o inactivos
+              this.arrendamientosData = response.map(arrendamiento => ({
+                ...arrendamiento,
+                activo: arrendamientosActivos.has(arrendamiento.Id)
+              }));
+            } else {
+              this.errorMessage = 'Formato de respuesta inválido';
+              console.error(this.errorMessage, response);
+              this.arrendamientosData = [];
+            }
+            this.loading = false;
+          },
+          error: (error: any) => {
+            this.errorMessage = 'Error al obtener los arrendamientos';
+            console.error(this.errorMessage, error);
+            this.loading = false;
+          }
+        });
       },
       error: (error: any) => {
-        this.errorMessage = 'Error al obtener los arrendamientos';
+        this.errorMessage = 'Error al obtener los arrendamientos activos';
         console.error(this.errorMessage, error);
         this.loading = false;
       }
@@ -174,10 +195,12 @@ export class CardArrendamientosComponent implements OnInit {
     // Abrir el diálogo con los datos del arrendamiento
     this.dialog.open(VerArrendamientosComponent, {
       data: {
-        arrendamientoId: arrendamiento.id,
-        nombreFinca: arrendamiento.finca.Nombre
+        arrendamientoId: arrendamiento.Id,
+        nombreFinca: arrendamiento.Finca,
+        fincaId:   arrendamiento.FincaID,
+
       },
-      width: '90%',
+      width: '50%',
       maxWidth: '1200px'
     });
   }
@@ -228,10 +251,7 @@ export class CardArrendamientosComponent implements OnInit {
   }
 
   estaActivo(arrendamiento: any): boolean {
-    const ahora = new Date();
-    return arrendamiento.activo && 
-           ahora >= arrendamiento.fechaInicio && 
-           ahora <= arrendamiento.fechaFin;
+    return arrendamiento.activo;
   }
 
   getEstadoColor(arrendamiento: any): string {
