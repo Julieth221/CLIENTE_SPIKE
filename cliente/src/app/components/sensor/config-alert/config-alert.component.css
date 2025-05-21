@@ -33,6 +33,7 @@
 
 .config-alt-header mat-card-title {
     flex-grow: 1; /* Permite que el título ocupe el espacio restante */
+    cursor: pointer;
 }
 
 .mat-radio-group {
