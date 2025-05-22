@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,6 +15,10 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Location } from '@angular/common';
+import { MapsSensorComponent } from '../maps-sensor/maps-sensor.component'; // Import MapsSensorComponent
+import { VerMapaComponent } from '../../finca/ver-mapa/ver-mapa.component';   // Import VerMapaComponent
+import { MatSnackBar } from '@angular/material/snack-bar'; // Import MatSnackBar
+import { MatDividerModule } from '@angular/material/divider';
 
 // Define custom date formats
 const MY_DATE_FORMATS = {
@@ -23,15 +27,27 @@ const MY_DATE_FORMATS = {
   },
   display: {
     dateInput: 'DD/MM/YYYY',
-    monthYearLabel: 'MMMgetFullYear()',
+    monthYearLabel: 'MMM YYYY', // Corrected format
     dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMMgetFullYear()',
+    monthYearA11yLabel: 'MMMM YYYY', // Corrected format
   },
 };
 
 interface SensorData {
   NombreTipoSensor: string;
   Descripcion: string;
+}
+
+interface CultivationArea {
+  nombre: string;
+  ubicacion: string;
+  coordenadas: {
+    latitudInicial: number;
+    longitudInicial: number;
+    latitudFinal: number;
+    longitudFinal: number;
+  };
+  tamano: number; // in hectares
 }
 
 @Component({
@@ -49,6 +65,9 @@ interface SensorData {
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
+    MapsSensorComponent, // Add MapsSensorComponent to imports
+    VerMapaComponent,    // Add VerMapaComponent to imports
+    MatDividerModule,
   ],
   templateUrl: './registro-sensor.component.html',
   styleUrl: './registro-sensor.component.css',
@@ -57,9 +76,8 @@ interface SensorData {
       { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
     ]
 })
-export class RegistroSensorComponent implements OnInit {
+export class RegistroSensorComponent implements OnInit, AfterViewInit {
   sensorForm: FormGroup;
-  ubicacion: string = '';
   latitud: number | null = null;
   longitud: number | null = null;
   cultivos: string[] = [];
@@ -67,69 +85,86 @@ export class RegistroSensorComponent implements OnInit {
   sensorData: SensorData | null = null;
   private API_MID_SENSORES = 'http://localhost:8082/v1/sensores';
 
+  // Burned-in data for cultivation area
+  cultivationArea: CultivationArea = {
+    nombre: 'Parcela de Tomate',
+    ubicacion: 'Finca La Esperanza, Sector Norte',
+    coordenadas: {
+      latitudInicial: 4.6500,
+      longitudInicial: -74.0950,
+      latitudFinal: 4.6530,
+      longitudFinal: -74.0920
+    },
+    tamano: 1.5 // hectares
+  };
+
+  @ViewChild(MapsSensorComponent) mapsSensorComponent!: MapsSensorComponent;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private http: HttpClient,
     private location: Location,
+    private snackBar: MatSnackBar // Inject MatSnackBar
   ) {
     this.sensorForm = this.fb.group({
       nombre: ['', Validators.required],
-      ubicacion: ['', Validators.required],
-      cultivo: [''],
+      ubicacion: ['', Validators.required], // This will store the Lat/Long string
+      cultivo: ['', Validators.required], // Made required as per common form practices
       fecha: ['', Validators.required],
     });
   }
 
   ngOnInit(): void {
-    this.cultivos = ['Blanco', 'Azul', 'Cualquiera', 'Amarillo'];
+    this.cultivos = ['Tomate', 'Maíz', 'Lechuga', 'Fresa', 'Pimentón']; // More realistic examples
     this.sensorData = history.state.sensorData;
     console.log('Este es el tipo de sensor a registrar:', this.sensorData);
 
     if (!this.sensorData) {
       console.error('No se recibieron datos del sensor.');
-      alert('No se recibieron los datos del sensor. Por favor, vuelva a intentar el registro.');
-      this.router.navigate(['/dashboard/register-sensor']);
+      this.snackBar.open('No se recibieron los datos del sensor. Por favor, vuelva a intentar el registro.', 'Cerrar', { duration: 3000 });
+      this.router.navigate(['/dashboard/sensor/register-sensor']); // Adjust this route as needed
     }
   }
 
-  getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.latitud = position.coords.latitude;
-        this.longitud = position.coords.longitude;
-        this.sensorForm.patchValue({
-          ubicacion: `Lat: ${this.latitud}, Long: ${this.longitud}`,
-        });
-      }, (error) => {
-        console.error('Error al obtener la ubicación:', error);
-        alert('No se pudo obtener la ubicación. Por favor, asegúrate de que la geolocalización esté habilitada en tu navegador.');
-      });
-    } else {
-      alert('Geolocalización no soportada por el navegador.');
-    }
+  ngAfterViewInit(): void {
+    // Optionally set initial map center if needed, or let MapsSensorComponent handle its default
+  }
+
+  // This method will be called by MapsSensorComponent when a point is selected/dragged
+  onMapGeolocalizacionChange(geoPoint: { Latitud: string, Longitud: string }) {
+    this.latitud = parseFloat(geoPoint.Latitud);
+    this.longitud = parseFloat(geoPoint.Longitud);
+    this.sensorForm.patchValue({
+      ubicacion: `Lat: ${this.latitud}, Long: ${this.longitud}`,
+    });
   }
 
   private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Algo salió mal; por favor, inténtalo de nuevo más tarde.';
     if (error.error instanceof ErrorEvent) {
+      // Client-side error
       console.error('Ocurrió un error:', error.error.message);
+      errorMessage = `Error del cliente: ${error.error.message}`;
     } else {
+      // Backend error
       console.error(
         `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
+        `body was: ${JSON.stringify(error.error)}`);
+      errorMessage = `Error del servidor (${error.status}): ${JSON.stringify(error.error)}`;
     }
-    return throwError(
-      'Algo salió mal; por favor, inténtalo de nuevo más tarde.');
+    this.snackBar.open(errorMessage, 'Cerrar', { duration: 5000 });
+    return throwError(() => new Error(errorMessage));
   }
 
   onSubmit() {
-    if (this.sensorForm.valid && this.sensorData) {
+    if (this.sensorForm.valid && this.sensorData && this.latitud !== null && this.longitud !== null) {
       const formData = this.sensorForm.value;
       const dataToSend = {
         NombreTipoSensor: this.sensorData.NombreTipoSensor,
         Descripcion: this.sensorData.Descripcion,
         Nombre: formData.nombre,
-        Ubicacion: formData.ubicacion,
+        Ubicacion: formData.ubicacion, // This will be the Lat/Long string
         Cultivo: formData.cultivo,
         FechaInstalacion: formData.fecha,
         Latitud: this.latitud,
@@ -150,15 +185,15 @@ export class RegistroSensorComponent implements OnInit {
           next: (response: any) => {
             console.log('Respuesta del API MID:', response);
             this.router.navigate(['/dashboard/sensor/gestion-sensores']);
-            alert('Sensor registrado exitosamente.');
+            this.snackBar.open('Sensor registrado exitosamente.', 'Cerrar', { duration: 3000 });
           },
           error: (error: any) => {
             console.error('Error al enviar datos al API MID:', error);
-            alert('Error al registrar el sensor. Por favor, inténtalo de nuevo.');
+            this.snackBar.open('Error al registrar el sensor. Por favor, inténtalo de nuevo.', 'Cerrar', { duration: 5000 });
           },
         });
     } else {
-      alert('Por favor, completa todos los campos del formulario correctamente.');
+      this.snackBar.open('Por favor, completa todos los campos del formulario correctamente y selecciona una ubicación en el mapa.', 'Cerrar', { duration: 5000 });
     }
   }
 
@@ -168,7 +203,8 @@ export class RegistroSensorComponent implements OnInit {
   }
 
   onExit() {
-    this.location.back();
+    // Navega de regreso al componente anterior, pasando sensorData en el estado
+    // Asumiendo que el componente anterior es el que selecciona el tipo de sensor
+    this.location.back(); // Esto es más directo para volver al estado anterior
   }
 }
-

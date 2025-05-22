@@ -14,7 +14,7 @@
     </mat-button-toggle>
     <mat-button-toggle value="tarjeta">
       <mat-icon>view_module</mat-icon>
-      Tarjeta
+      Tarjetas
     </mat-button-toggle>
   </mat-button-toggle-group>
 
@@ -122,23 +122,11 @@
   </div>
 
   <div *ngIf="!loading && dataSource.filteredData.length > 0 && vistaActual === 'tarjeta'" class="cards-view animate__animated animate__fadeIn">
-    <div *ngFor="let sensor of dataSource.filteredData" class="sensor-card">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>{{ sensor.nombre }}</mat-card-title>
-          <mat-card-subtitle>{{ sensor.ubicacion }}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <p><strong>Tipo:</strong> {{ sensor.TipoSensor }}</p>
-          <p><strong>Fecha Instalación:</strong> {{ sensor.FechaInstalacion }}</p>
-          <p><strong>Estado:</strong> {{ sensor.Estado }}</p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-button color="primary" (click)="verSensor(sensor)">VER</button>
-          <button mat-button color="primary" (click)="editarSensor(sensor)">EDITAR</button>
-          <button mat-button color="warn" (click)="eliminarSensor(sensor)">ELIMINAR</button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
+    <app-card-sensor
+      [sensores]="dataSource.filteredData"
+      (verSensor)="onVerSensor($event)"
+      (editarSensor)="onEditarSensor($event)"
+      (eliminarSensor)="onEliminarSensor($event)">
+    </app-card-sensor>
   </div>
 </div>

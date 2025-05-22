@@ -21,7 +21,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { CardSensorComponent } from '../card-sensor/card-sensor.component';
+import { CardSensorComponent } from '../card-sensor/card-sensor.component'; // Importa CardSensorComponent
 import { VersensorComponent } from '../versensor/versensor.component';
 
 interface SensorData {
@@ -60,6 +60,7 @@ interface SensorData {
     MatRippleModule,
     MatButtonToggleModule,
     MatDialogModule,
+    CardSensorComponent, // Añade CardSensorComponent aquí
   ],
   templateUrl: './gestion-sensores.component.html',
   styleUrl: './gestion-sensores.component.css',
@@ -71,7 +72,6 @@ interface SensorData {
     ]),
   ],
 })
-
 export class GestionSensoresComponent implements OnInit, AfterViewInit {
   // Referencias para paginación y ordenamiento
   @ViewChild(MatSort) sort!: MatSort;
@@ -85,7 +85,7 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
     { id: 2, nombre: 'Sensor Humedad Sur', ubicacion: 'Campo Abierto A', latitud: 9.876, longitud: -75.987, cultivo: 'Maíz', fechaRegistro: '2024-05-05', TipoSensor: 'Humedad', Estado: 'Inactivo', FechaInstalacion: '2024-04-25', ID: 102 },
     { id: 3, nombre: 'Sensor Temp Este', ubicacion: 'Invernadero 2', latitud: 10.567, longitud: -75.123, cultivo: 'Pimentón', fechaRegistro: '2024-05-10', TipoSensor: 'Temperatura', Estado: 'Activo', FechaInstalacion: '2024-05-01', ID: 103 },
     { id: 4, nombre: 'Sensor PH Oeste', ubicacion: 'Campo Abierto B', latitud: 9.543, longitud: -76.234, cultivo: 'Yuca', fechaRegistro: '2024-05-15', TipoSensor: 'PH', Estado: 'Activo', FechaInstalacion: '2024-05-05', ID: 104 },
-    { id: 5, nombre: 'Sensor Luz Central', ubicacion: 'Invernadero 1', latitud: 10.345, longitud: -75.678, cultivo: 'Tomate', fechaRegistro: '2024-05-20', TipoSensor: 'Luz', Estado: 'Inactivo', FechaInstalacion: '2024-05-10', ID: 105 },
+    { id: 5, nombre: 'Sensor Luz Central', ubicacion: 'Invernadero 1', latitud: 10.345, longitud: -75.678, cultivo: 'Tomate', fechaRegistro: '2024-05-20', TipoSensor: 'Luz', Estado: 'resuelto', FechaInstalacion: '2024-05-10', ID: 105 },
     { id: 6, nombre: 'Sensor Humedad Norte', ubicacion: 'Campo Abierto A', latitud: 9.765, longitud: -76.012, cultivo: 'Maíz', fechaRegistro: '2024-05-25', TipoSensor: 'Humedad', Estado: 'Activo', FechaInstalacion: '2024-05-15', ID: 106 },
   ];
   dataSource = new MatTableDataSource<SensorData>(this.sensores);
@@ -93,8 +93,11 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
   // Filtros
   searchText: string = '';
   filterTSensor: string = '';
+
+
   // Opciones para filtros
   tipoSensorOptions: string[] = [];
+
   // Estado
   loading: boolean = false;
 
@@ -183,6 +186,19 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
 
   registrarSensor() {
     this.router.navigate(['/dashboard/sensor/registro-t-sensor']);
+  }
+
+  // Métodos para manejar eventos emitidos por CardSensorComponent
+  onVerSensor(sensor: SensorData): void {
+    this.verSensor(sensor); // Llama al método existente
+  }
+
+  onEditarSensor(sensor: SensorData): void {
+    this.editarSensor(sensor); // Llama al método existente
+  }
+
+  onEliminarSensor(sensor: SensorData): void {
+    this.eliminarSensor(sensor); // Llama al método existente
   }
 
   editarSensor(sensores: SensorData) {
