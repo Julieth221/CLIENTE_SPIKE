@@ -85,7 +85,7 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
     { id: 2, nombre: 'Sensor Humedad Sur', ubicacion: 'Campo Abierto A', latitud: 9.876, longitud: -75.987, cultivo: 'Maíz', fechaRegistro: '2024-05-05', TipoSensor: 'Humedad', Estado: 'Inactivo', FechaInstalacion: '2024-04-25', ID: 102 },
     { id: 3, nombre: 'Sensor Temp Este', ubicacion: 'Invernadero 2', latitud: 10.567, longitud: -75.123, cultivo: 'Pimentón', fechaRegistro: '2024-05-10', TipoSensor: 'Temperatura', Estado: 'Activo', FechaInstalacion: '2024-05-01', ID: 103 },
     { id: 4, nombre: 'Sensor PH Oeste', ubicacion: 'Campo Abierto B', latitud: 9.543, longitud: -76.234, cultivo: 'Yuca', fechaRegistro: '2024-05-15', TipoSensor: 'PH', Estado: 'Activo', FechaInstalacion: '2024-05-05', ID: 104 },
-    { id: 5, nombre: 'Sensor Luz Central', ubicacion: 'Invernadero 1', latitud: 10.345, longitud: -75.678, cultivo: 'Tomate', fechaRegistro: '2024-05-20', TipoSensor: 'Luz', Estado: 'resuelto', FechaInstalacion: '2024-05-10', ID: 105 },
+    { id: 5, nombre: 'Sensor Luz Central', ubicacion: 'Invernadero 1', latitud: 10.345, longitud: -75.678, cultivo: 'Tomate', fechaRegistro: '2024-05-20', TipoSensor: 'Luz', Estado: 'Resuelto', FechaInstalacion: '2024-05-10', ID: 105 },
     { id: 6, nombre: 'Sensor Humedad Norte', ubicacion: 'Campo Abierto A', latitud: 9.765, longitud: -76.012, cultivo: 'Maíz', fechaRegistro: '2024-05-25', TipoSensor: 'Humedad', Estado: 'Activo', FechaInstalacion: '2024-05-15', ID: 106 },
   ];
   dataSource = new MatTableDataSource<SensorData>(this.sensores);
@@ -126,7 +126,7 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // Establecer vista inicial basada en el tamaño de la pantalla
     this.vistaActual = this.isMobileView() ? 'tarjeta' : 'tabla';
-    // this.obtenerSensores(); // Comentamos la llamada a la API
+    this.obtenerSensores(); // Aseguramos que se llama para inicializar el dataSource y el filtro
     this.obtenerTipoSensorOptions();
   }
 
@@ -160,8 +160,9 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
     // });
     // Usamos los datos quemados directamente
     this.dataSource.data = this.sensores;
-    this.dataSource.filterPredicate = this.createFilterPredicate();
+    this.dataSource.filterPredicate = this.createFilterPredicate(); // Configura el predicado de filtro
     this.loading = false;
+    this.applyFilter(); // Aplicar filtro inicial para asegurar que se muestren los datos correctamente
   }
 
   createFilterPredicate() {
@@ -169,7 +170,11 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
       const searchTerms = JSON.parse(filter);
       const nombreMatch = data.nombre.toLowerCase().includes(searchTerms.searchText.toLowerCase());
       const sensorMatch = !searchTerms.filterTSensor || data.TipoSensor === searchTerms.filterTSensor;
-      return nombreMatch && sensorMatch;
+      // También podemos añadir el filtro por ubicación y cultivo si es necesario
+      const ubicacionMatch = data.ubicacion.toLowerCase().includes(searchTerms.searchText.toLowerCase());
+      const cultivoMatch = data.cultivo.toLowerCase().includes(searchTerms.searchText.toLowerCase());
+
+      return (nombreMatch || ubicacionMatch || cultivoMatch) && sensorMatch;
     };
   }
 
@@ -221,7 +226,7 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
   eliminarSensor(sensores: SensorData) {
     if (confirm(`¿Está seguro de eliminar el sensor "${sensores.nombre}"?`)) {
       // this.apiService.delete(`${API_URLS.MID.API_MID_SPIKE}/sensores/${sensores.ID}`).subscribe({
-      //  next: () => {
+      //  next: (response) => { // Added response parameter
       //  this.obtenerSensores();
       //  },
       //  error: (error) => {
@@ -231,6 +236,7 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
       // Simulación de eliminación con datos quemados
       this.sensores = this.sensores.filter(s => s.ID !== sensores.ID);
       this.dataSource.data = this.sensores;
+      this.applyFilter(); // Vuelve a aplicar el filtro después de eliminar
     }
   }
 }
