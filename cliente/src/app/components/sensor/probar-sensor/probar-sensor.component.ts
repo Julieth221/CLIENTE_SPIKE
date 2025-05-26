@@ -6,7 +6,12 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-probar-sensor',
-  imports: [],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+  ],
   templateUrl: './probar-sensor.component.html',
   styleUrl: './probar-sensor.component.css'
 })

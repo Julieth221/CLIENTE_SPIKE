@@ -33,6 +33,7 @@ import { VersensorComponent } from './app/components/sensor/versensor/versensor.
 import { GestionAlertComponent } from './app/components/sensor/gestion-alert/gestion-alert.component';
 import { EditarFincaComponent } from './app/components/finca/editar-finca/editar-finca.component';
 import { MapsSensorComponent } from './app/components/sensor/maps-sensor/maps-sensor.component';
+import { HistorialAlertComponent } from './app/components/sensor/historial-alert/historial-alert.component';
 
 
 
@@ -75,6 +76,7 @@ bootstrapApplication(AppComponent,{
                   { path: 'sensor/verSensor', component: VersensorComponent},
                   { path: 'sensor/gestion-alert', component: GestionAlertComponent},
                 // { path: 'finca/verArrendamiento', component: VerArrendamientosComponent},
+                  { path: 'sensor/historial-alert', component: HistorialAlertComponent},
                   
               ],
             },

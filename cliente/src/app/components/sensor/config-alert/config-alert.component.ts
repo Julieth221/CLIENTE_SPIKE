@@ -243,6 +243,7 @@ export class ConfigAlertComponent implements OnInit {
 
       const alertConfig = {
         alertName: this.alertName.trim(), // Include alert name
+        message: this.alertDescription.trim(), // Include alert description
         sensor: selectedSensor ? { id: selectedSensor.id, nombre: selectedSensor.nombre, tipo: selectedSensor.tipo, cultivo: selectedSensor.cultivo } : null,
         // If no specific sensor is selected but filters are applied, capture the filter criteria
         filterCriteria: !selectedSensor && (this.selectedCultivo || this.filterSensorType) ? {

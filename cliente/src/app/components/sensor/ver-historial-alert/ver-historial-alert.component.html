@@ -1,0 +1,37 @@
+<mat-card class="dialog-card">
+    <mat-card-header class="dialog-header">
+        <mat-card-title>Detalles de la Alerta Histórica</mat-card-title>
+        <button mat-icon-button class="close-button" (click)="onClose()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-card-header>
+
+    <mat-card-content class="dialog-content">
+        <div class="detail-section">
+            <h3><mat-icon>info</mat-icon> Información de la Alerta</h3>
+            <p><strong>ID Historial:</strong> {{ data.Id }}</p>
+            <p><strong>Nombre de Alerta:</strong> {{ data.IdAlerta.Nombre }}</p>
+            <p><strong>Tipo de Sensor:</strong> {{ data.IdAlerta.TipoSensor }}</p>
+            <p><strong>Cultivo:</strong> {{ data.IdAlerta.Cultivo }}</p>
+            <p><strong>Fecha y Hora:</strong> {{ data.FechaAlerta | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+            <p><strong>Descripción:</strong> {{ data.Descripcion }}</p>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="detail-section">
+            <h3><mat-icon>settings</mat-icon> Estado y Trazabilidad</h3>
+            <p>
+                <strong>Estado:</strong>
+                <span class="status-chip" [style.background-color]="getStatusColor(data.Estado)">
+                <mat-icon>{{ data.Estado ? 'check_circle' : 'warning' }}</mat-icon>
+                {{ getStatusText(data.Estado) }}
+                </span>
+            </p>
+        </div>
+    </mat-card-content>
+
+    <mat-card-actions class="dialog-actions">
+        <button mat-raised-button color="primary" (click)="onClose()">Cerrar</button>
+    </mat-card-actions>
+</mat-card>
