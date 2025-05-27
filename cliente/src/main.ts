@@ -25,6 +25,8 @@ import { TablaArrendamientosComponent } from './app/components/finca/tabla-arren
 import { GestionSensoresComponent } from './app/components/sensor/gestion-sensores/gestion-sensores.component';
 import { VerArrendamientosComponent } from './app/components/finca/ver-arrendamientos/ver-arrendamientos.component';
 import { EditarFincaComponent } from './app/components/finca/editar-finca/editar-finca.component';
+import { EditarArrendamientosComponent } from './app/components/finca/editar-arrendamientos/editar-arrendamientos.component';
+import { HistorialParcelaComponent } from './app/components/finca/historial-parcela/historial-parcela.component';
 
 
 
@@ -55,13 +57,13 @@ bootstrapApplication(AppComponent,{
                   { path: 'finca/verCardFincas', component: CardFincasComponent },
                   { path: 'finca/datosFinca', component: RegisterTipoSueloComponent },
                   { path: 'finca/datosArrendamiento', component: TablaArrendamientosComponent},
-                  { path: 'finca/verArrendamiento', component: VerArrendamientosComponent},
+                  { path: 'finca/arrendamientodetalle', component: VerArrendamientosComponent},
                   { path: 'finca/editarFinca', component: EditarFincaComponent},
                   { path: 'sensor/gestion-sensores', component: GestionSensoresComponent },
-                //   { path: 'finca/verArrendamiento', component: VerArrendamientosComponent}
+                  { path: 'finca/editararrendamiento', component: EditarArrendamientosComponent},
+                  { path: 'finca/historialParcela', component: HistorialParcelaComponent}
               ],
             },
-
           ]),
           
         provideAnimations(),

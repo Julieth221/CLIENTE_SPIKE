@@ -38,6 +38,8 @@ import { forkJoin } from 'rxjs';
 })
 export class CardArrendamientosComponent implements OnInit {
   @Input() arrendamientos: any[] = [];
+  @Input() parcelas: any[] = [];
+  @Input() fincaId: number | null = null;
   
   // Estado
   loading: boolean = false;
@@ -55,6 +57,9 @@ export class CardArrendamientosComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    if (this.fincaId && this.parcelas.length === 0) {
+      this.cargarParcelas();
+    }
     // Si no recibimos arrendamientos como input, los cargamos directamente
     if (this.arrendamientos.length === 0) {
       // this.userId = this.authService.getIdFromToken();
@@ -254,15 +259,51 @@ export class CardArrendamientosComponent implements OnInit {
     return arrendamiento.activo;
   }
 
-  getEstadoColor(arrendamiento: any): string {
-    return this.estaActivo(arrendamiento) ? '#28C76F' : '#EA5455';
+  getEstadoColor(estado: string): string {
+    return estado === 'Arrendada' ? '#28C76F' : '#EA5455';
   }
 
-  getEstadoTexto(arrendamiento: any): string {
-    return this.estaActivo(arrendamiento) ? 'Activo' : 'Inactivo';
+  getEstadoIcon(estado: string): string {
+    return estado === 'Arrendada' ? 'check_circle' : 'cancel';
+  }
+
+  getEstadoTexto(estado: string): string {
+    return estado;
   }
   
   reintentar() {
     this.obtenerFincasUsuario();
+  }
+
+  cargarParcelas() {
+    if (!this.fincaId) return;
+
+    this.loading = true;
+    this.errorMessage = '';
+    
+    this.apiService.get(`${API_URLS.MID.API_MID_SPIKE}/arrendamiento/parcelas/porfinca/${this.fincaId}`).subscribe({
+      next: (response: any) => {
+        if (Array.isArray(response)) {
+          this.parcelas = response;
+        } else {
+          this.errorMessage = 'Formato de respuesta inválido';
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        this.errorMessage = 'Error al cargar las parcelas';
+        console.error('Error:', error);
+        this.loading = false;
+      }
+    });
+  }
+
+  formatCurrency(value: string): string {
+    if (!value) return '';
+    return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(Number(value));
+  }
+
+  registrarArrendamiento() {
+    this.router.navigate(['/dashboard/finca/arrendamiento']);
   }
 }

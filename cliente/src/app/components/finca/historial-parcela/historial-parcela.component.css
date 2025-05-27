@@ -1,0 +1,387 @@
+.container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  min-height: calc(100vh - 64px);
+  color: #667085;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+  position: relative;
+}
+
+/* Loading overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loading-overlay p {
+  margin-top: 16px;
+  color: #1976d2;
+  font-weight: 500;
+}
+
+/* Mensajes de error y no datos */
+.error-message,
+.no-data-message {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  margin: 16px 0;
+  border-radius: 8px;
+  background: #fff3e0;
+}
+
+.error-message {
+  background: #ffebee;
+  color: #d32f2f;
+}
+
+.no-data-message {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.error-message mat-icon,
+.no-data-message mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.error-message p,
+.no-data-message p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Estado sin arrendamiento */
+.estado-sin-arrendamiento {
+  background-color: #f5f5f5;
+  color: #757575;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Estilos para la tarjeta de información */
+.info-card {
+  margin-bottom: 30px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+}
+
+.info-icon {
+  color: #1976d2;
+  margin-right: 8px;
+}
+
+.info-content {
+  padding: 16px;
+}
+
+.info-description {
+  color: #495057;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.info-features, .info-tips {
+  background: #e3f2fd;
+  padding: 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.info-features h4, .info-tips h4 {
+  color: #1976d2;
+  margin: 0 0 12px 0;
+}
+
+.info-features ul, .info-tips ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.info-features li, .info-tips li {
+  color: #495057;
+  margin-bottom: 8px;
+}
+
+.finca-selector,
+.parcela-selector {
+  margin-bottom: 20px;
+  max-width: 400px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.search-field {
+  width: 400px;
+  margin-bottom: 0;
+  margin-top: 1.3rem;
+  margin-left: 0;
+}
+
+.filter-field {
+  width: 220px;
+  margin-top: 1.3rem;
+}
+
+.export-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 1.3rem;
+}
+
+.btn-exportar {
+  background-color: #28C76F;
+  color: white;
+  transition: all 0.25s ease;
+  font-weight: 600;
+  height: 48px;
+  width: 180px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(40, 199, 111, 0.25);
+  letter-spacing: 0.5px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-exportar-pdf {
+  background-color: #dc3545;
+  color: white;
+  transition: all 0.25s ease;
+  font-weight: 600;
+  height: 48px;
+  width: 180px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.25);
+  letter-spacing: 0.5px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-exportar:hover {
+  background-color: #22b35c;
+  box-shadow: 0 6px 15px rgba(40, 199, 111, 0.35);
+  transform: translateY(-2px);
+}
+
+.btn-exportar-pdf:hover {
+  background-color: #c82333;
+  box-shadow: 0 6px 15px rgba(220, 53, 69, 0.35);
+  transform: translateY(-2px);
+}
+
+.btn-exportar:active, .btn-exportar-pdf:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-exportar mat-icon, .btn-exportar-pdf mat-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+}
+
+.table-wrapper {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.tabla-fincas {
+  width: 100%;
+  background-color: white;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.mat-mdc-header-cell {
+  background-color: #FCFCFD;
+  color: #344054;
+  font-weight: 600;
+  padding: 16px;
+}
+
+.mat-mdc-cell {
+  padding: 12px 16px;
+  border-bottom: 1px solid #EAECF0;
+}
+
+.mat-mdc-row:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.estado-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.estado-activo {
+  background-color: #e3f2fd;
+  color: #2e7d32;
+}
+
+.estado-inactivo {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #F44336;
+}
+
+.mat-paginator {
+  background: transparent;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Estilos para la vista Timeline */
+.timeline-view {
+  padding: 20px;
+}
+
+.timeline-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+.timeline-header h2 {
+  margin: 0;
+  color: #1976d2;
+  font-size: 24px;
+}
+
+.timeline-header button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Estilos para los campos de formulario */
+:host ::ng-deep .mat-mdc-form-field-outline {
+  color: #D0D5DD !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field-outline-thick {
+  color: #D0D5DD !important;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .actions {
+    flex-wrap: wrap;
+  }
+  
+  .search-field {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+  
+  .actions {
+    flex-direction: column;
+    padding: 0.5rem;
+  }
+  
+  .filter-field,
+  .search-field,
+  .export-buttons {
+    width: 100%;
+    max-width: none;
+  }
+  
+  .btn-exportar,
+  .btn-exportar-pdf {
+    width: 100%;
+  }
+  
+  .table-wrapper {
+    overflow-x: auto;
+  }
+  
+  .mat-mdc-cell {
+    padding: 8px;
+  }
+
+  .timeline-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+  .timeline-header h2 {
+    font-size: 20px;
+}
+}
+
+/* Estilos para impresión */
+@media print {
+  .actions,
+  .finca-selector,
+  .parcela-selector,
+  .export-buttons {
+    display: none;
+  }
+
+  .container {
+    padding: 0;
+  }
+
+  .table-wrapper {
+    box-shadow: none;
+  }
+
+  .tabla-fincas {
+    border-collapse: collapse;
+  }
+
+  .mat-mdc-header-cell,
+  .mat-mdc-cell {
+    border: 1px solid #ddd;
+  }
+}

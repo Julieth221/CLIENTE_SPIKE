@@ -15,12 +15,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { ApiService } from '../../../../services/api.service';
 import { AuthService } from '../../../../services/auth.service';
 import { API_URLS } from '../../../../config/api_config';
 import { forkJoin } from 'rxjs';
+import { Router } from '@angular/router';
 
-// Interfaces para manejar la estructura de datos
+// Interfaces actualizadas
 interface Finca {
   Id: number;
   Nombre: string;
@@ -30,36 +33,43 @@ interface Finca {
 interface Arrendatario {
   Id: number;
   Nombre: string;
-  Contacto: string;
+  Contacto?: string;
 }
 
 interface Parcela {
   Id: number;
   NombreParcela: string;
-  TamañoParcela: number;
+  TamanoParcela: number;
   FkFincaParcela: {
     Id: number;
   };
   arrendada?: boolean;
+  historial?: ArrendamientoHistorial[];
 }
 
-interface ArrendamientoRequest {
-  FkArrendamientoFinca: { Id: number };
-  IdUserUserArrendatario: { Id: number };
-  FkArrendatamientoParcela: {
-    Id: number;
-  };
+interface ArrendamientoHistorial {
+  Id: number;
   FechaInicio: string;
   FechaFin: string;
   Valor: string;
+  Arrendatario: {
+    Id: number;
+    Nombre: string;
+  };
+  Activo: boolean;
 }
 
-interface ArrendamientoActivo {
-  Id: number;
-  Parcelas: string[];
+interface ParcelaArrendamiento {
+  IdParcela: number;
+  Valor: string;
+}
+
+interface ArrendamientoRequest {
+  IdUserUserArrendatario: { Id: number };
+  FkArrendamientoFinca: { Id: number };
+  Parcelas: ParcelaArrendamiento[];
   FechaInicio: string;
   FechaFin: string;
-  Activo: boolean;
 }
 
 @Component({
@@ -82,7 +92,9 @@ interface ArrendamientoActivo {
     MatTooltipModule,
     MatDividerModule,
     MatStepperModule,
-    MatChipsModule
+    MatChipsModule,
+    MatCheckboxModule,
+    MatExpansionModule
   ],
   templateUrl: './arrendamiento-register.component.html',
   styleUrl: './arrendamiento-register.component.css'
@@ -90,14 +102,18 @@ interface ArrendamientoActivo {
 export class ArrendamientoRegisterComponent implements OnInit {
   arrendamientoForm: FormGroup;
   user_id: number | null = null;
-  fincas: any[] = [];
-  arrendatarios: any[] = [];
-  parcelas: any[] = [];
-  filteredParcelas: any[] = [];
+  fincas: Finca[] = [];
+  arrendatarios: Arrendatario[] = [];
+  parcelas: Parcela[] = [];
+  filteredParcelas: Parcela[] = [];
+  historialArrendamientos: ArrendamientoHistorial[] = [];
+  ultimoArrendatario: Arrendatario | null = null;
+  usarUltimoArrendatario: boolean = false;
   
   loading: boolean = false;
   submitting: boolean = false;
   exito: boolean = false;
+  errorMessage: string = '';
   
   get parcelasArray(): FormArray {
     return this.arrendamientoForm.get('parcelas') as FormArray;
@@ -110,17 +126,22 @@ export class ArrendamientoRegisterComponent implements OnInit {
     private fb: FormBuilder,
     private apiService: ApiService,
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {
     this.arrendamientoForm = this.fb.group({
       finca: ['', Validators.required],
       arrendatario: ['', Validators.required],
+      numParcelas: [1, [Validators.required, Validators.min(1)]],
+      parcelas: this.fb.array([]),
+      usarUltimoArrendatario: [false],
       fechaInicio: ['', Validators.required],
       fechaFin: ['', Validators.required],
-      valor: ['', [Validators.required, Validators.min(1)]],
-      numParcelas: [1, [Validators.required, Validators.min(1)]],
-      parcelas: this.fb.array([])
+      confirmacion: [false, Validators.requiredTrue]
     });
+
+    // Inicializar el array de parcelas con al menos un control
+    this.actualizarParcelasFormArray(1);
     
     // Escuchar cambios en la finca seleccionada
     this.arrendamientoForm.get('finca')?.valueChanges.subscribe(fincaId => {
@@ -131,17 +152,22 @@ export class ArrendamientoRegisterComponent implements OnInit {
     
     // Escuchar cambios en número de parcelas
     this.arrendamientoForm.get('numParcelas')?.valueChanges.subscribe(num => {
-      this.actualizarParcelasFormArray(num);
+      if (num) {
+        this.actualizarParcelasFormArray(num);
+      }
+    });
+
+    // Escuchar cambios en usarUltimoArrendatario
+    this.arrendamientoForm.get('usarUltimoArrendatario')?.valueChanges.subscribe(usar => {
+      this.onUsarUltimoArrendatarioChange(usar);
     });
   }
 
   ngOnInit(): void {
-    // Obtenemos el ID del usuario del token JWT
     this.user_id = this.authService.getUserId();
     
     if (!this.user_id) {
       this.snackBar.open('No se pudo obtener la información del usuario. Por favor, inicie sesión nuevamente.', 'Cerrar', { duration: 5000 });
-      console.log('No se encontró información del usuario');
       return;
     }
     
@@ -153,18 +179,14 @@ export class ArrendamientoRegisterComponent implements OnInit {
     
     this.loading = true;
     
-    // Realizamos múltiples solicitudes en paralelo
     forkJoin({
-      fincas: this.apiService.get(`${API_URLS.CRUD.API_CRUD_FINCA}/Finca?query=Id_Usuario:${this.user_id}`),
-      arrendatarios: this.apiService.get(`${API_URLS.CRUD.API_CRUD_FINCA}/User_Arrendatario?query=Id_Usuario:${this.user_id}`)
+      fincas: this.apiService.get<{Data: Finca[]}>(`${API_URLS.CRUD.API_CRUD_FINCA}/Finca?query=Id_Usuario:${this.user_id}`),
+      arrendatarios: this.apiService.get<Arrendatario[]>(`${API_URLS.CRUD.API_CRUD_FINCA}/User_Arrendatario?query=Id_Usuario:${this.user_id}`)
     }).subscribe({
-      next: (response: any) => {
-        this.fincas = response.fincas.Data || []
-        this.arrendatarios = response.arrendatarios
+      next: (response) => {
+        this.fincas = response.fincas.Data || [];
+        this.arrendatarios = response.arrendatarios;
         this.loading = false;
-        
-        console.log('Fincas cargadas:', this.fincas);
-        console.log('Arrendatarios cargados:', this.arrendatarios);
       },
       error: (error) => {
         console.error('Error al cargar datos iniciales:', error);
@@ -175,7 +197,6 @@ export class ArrendamientoRegisterComponent implements OnInit {
   }
   
   onFincaChange(fincaId: number): void {
-    // Reiniciamos el array de parcelas del formulario
     while (this.parcelasArray.length) {
       this.parcelasArray.removeAt(0);
     }
@@ -184,163 +205,94 @@ export class ArrendamientoRegisterComponent implements OnInit {
     
     if (fincaSeleccionada) {
       this.maxParcelas = fincaSeleccionada.TotalParcelas;
-      this.cargarParcelasDeFinca(fincaId);
+      this.cargarParcelasDisponibles(fincaId);
       
-      // Reiniciar el número de parcelas a 1
       this.arrendamientoForm.get('numParcelas')?.setValue(1);
       this.actualizarParcelasFormArray(1);
     }
   }
   
-  cargarParcelasDeFinca(fincaId: number): void {
+  cargarParcelasDisponibles(fincaId: number): void {
     this.loading = true;
     
-    this.apiService.get(`${API_URLS.CRUD.API_CRUD_FINCA}/Parcela?query=FkFincaParcela.Id:${fincaId}`).subscribe({
-      next: (response: any) => {
-        this.parcelas = response.Data || [];
-        this.filteredParcelas = [...this.parcelas];
-        
-        if (this.parcelas.length === 0) {
-          console.log('No se encontraron parcelas para esta finca');
+    this.apiService.get<Parcela[]>(`${API_URLS.MID.API_MID_SPIKE}/arrendamiento/disponibles/${fincaId}/`).subscribe({
+      next: (response) => {
+        if (Array.isArray(response)) {
+          this.parcelas = response;
+          this.filteredParcelas = [...this.parcelas];
+          this.parcelasDisponibles = this.parcelas.length;
+        } else {
+          this.parcelas = [];
+          this.filteredParcelas = [];
           this.parcelasDisponibles = 0;
-          this.loading = false;
-          return;
         }
-        
-        this.verificarParcelasArrendadas(fincaId);
-        
         this.loading = false;
       },
       error: (error) => {
-        console.error('Error al cargar parcelas:', error);
-        this.snackBar.open('Error al cargar las parcelas de la finca', 'Cerrar', { duration: 3000 });
+        console.error('Error al cargar parcelas disponibles:', error);
+        this.snackBar.open('Error al cargar las parcelas disponibles', 'Cerrar', { duration: 3000 });
         this.loading = false;
+        this.parcelas = [];
+        this.filteredParcelas = [];
+        this.parcelasDisponibles = 0;
       }
     });
   }
   
-  verificarParcelasArrendadas(fincaId: number): void {
-    this.apiService.get(`${API_URLS.MID.API_MID_SPIKE}/arrendamiento/activos/${fincaId}/`)
-      .subscribe({
-        next: (response: any) => {
-          console.log("Respuesta de arrendamientos activos:", response);
+  cargarHistorialParcela(parcelaId: number): void {
+    this.apiService.get<{Data: any[]}>(`${API_URLS.CRUD.API_CRUD_FINCA}/Arrendamiento_Parcela?query=FkParcela.Id:${parcelaId}&sortby=FechaFin&order=desc`).subscribe({
+      next: (response) => {
+        if (response && response.Data) {
+          this.historialArrendamientos = response.Data.map((item: any) => ({
+            Id: item.Id,
+            FechaInicio: item.FechaInicio,
+            FechaFin: item.FechaFin,
+            Valor: item.Valor,
+            TamanoParcela: item.TamanoParcela,
+            Arrendatario: item.FkArrendamiento.IdUserUserArrendatario,
+            Activo: item.Activo
+          }));
           
-          let arrendamientosActivos: ArrendamientoActivo[] = [];
-          
-          if (response === null) {
-            console.log("La respuesta de arrendamientos activos es null, se usará un array vacío");
-          } else if (Array.isArray(response)) {
-            arrendamientosActivos = response;
-          } else if (response.Data && Array.isArray(response.Data)) {
-            arrendamientosActivos = response.Data;
-          } else {
-            console.log("La respuesta de arrendamientos activos no tiene un formato válido:", response);
+          // Si hay historial, establecer el último arrendatario
+          if (this.historialArrendamientos.length > 0) {
+            this.ultimoArrendatario = this.historialArrendamientos[0].Arrendatario;
           }
-          
-          this.procesarParcelasDisponibles(arrendamientosActivos);
-        },
-        error: (error) => {
-          console.error('Error al verificar parcelas arrendadas:', error);
-          this.procesarParcelasDisponibles([]);
         }
-      });
-  }
-  
-  procesarParcelasDisponibles(arrendamientosActivos: ArrendamientoActivo[]): void {
-    if (!this.parcelas || !Array.isArray(this.parcelas)) {
-      console.error("No hay parcelas disponibles para procesar");
-      this.parcelasDisponibles = 0;
-      return;
-    }
-    
-    // Obtener todas las parcelas que están en arrendamientos activos
-    const parcelasArrendadas = new Set<string>();
-    arrendamientosActivos.forEach(arrendamiento => {
-      if (arrendamiento.Parcelas && Array.isArray(arrendamiento.Parcelas)) {
-        arrendamiento.Parcelas.forEach(nombreParcela => {
-          parcelasArrendadas.add(nombreParcela);
-        });
+      },
+      error: (error) => {
+        console.error('Error al cargar historial:', error);
       }
     });
-    
-    // Marcar las parcelas como arrendadas o disponibles
-    this.parcelas = this.parcelas.map(parcela => {
-      if (!parcela) return parcela;
-      
-      const estaArrendada = parcelasArrendadas.has(parcela.NombreParcela);
-      return { ...parcela, arrendada: estaArrendada };
-    });
-    
-    // Filtrar solo las parcelas disponibles
-    this.filteredParcelas = this.parcelas.filter(p => !p.arrendada);
-    this.parcelasDisponibles = this.filteredParcelas.length;
-    
-    console.log(`Parcelas disponibles: ${this.parcelasDisponibles} de ${this.parcelas.length} total`);
-    console.log('Parcelas arrendadas:', Array.from(parcelasArrendadas));
-    
-    // Actualizar validadores del control numParcelas
-    const numParcelasControl = this.arrendamientoForm.get('numParcelas');
-    if (numParcelasControl) {
-      numParcelasControl.setValidators([
-        Validators.required,
-        Validators.min(1),
-        Validators.max(this.parcelasDisponibles || 1)
-      ]);
-      numParcelasControl.updateValueAndValidity();
-      
-      // Ajustar el valor actual si es necesario
-      const valorActual = numParcelasControl.value;
-      if (valorActual > this.parcelasDisponibles) {
-        numParcelasControl.setValue(Math.max(1, this.parcelasDisponibles));
-        this.actualizarParcelasFormArray(Math.max(1, this.parcelasDisponibles));
-      }
-    }
   }
   
-  actualizarParcelasFormArray(cantidad: number): void {
-    const parcelasArray = this.arrendamientoForm.get('parcelas') as FormArray;
-    
-    const cantidadAjustada = Math.min(cantidad, this.parcelasDisponibles);
-    
-    while (parcelasArray.length) {
-      parcelasArray.removeAt(0);
+  onUsarUltimoArrendatarioChange(usar: boolean): void {
+    if (usar && this.ultimoArrendatario) {
+      this.arrendamientoForm.get('arrendatario')?.setValue(this.ultimoArrendatario.Id);
+    } else {
+      this.arrendamientoForm.get('arrendatario')?.setValue('');
     }
-    
-    for (let i = 0; i < cantidadAjustada; i++) {
-      parcelasArray.push(
-        this.fb.group({
-          parcela: ['', Validators.required],
-          TamanoParcela: [{value: '', disabled: true}]
-        })
-      );
-    }
-    
-    console.log(`Se crearon ${cantidadAjustada} controles de parcela de ${cantidad} solicitados`);
   }
   
   onParcelaChange(index: number, parcelaId: number): void {
     const parcelaSeleccionada = this.parcelas.find(p => p.Id === parcelaId);
     
     if (parcelaSeleccionada) {
-      // Establece el tamaño de la parcela seleccionada
       (this.parcelasArray.at(index) as FormGroup).get('TamanoParcela')?.setValue(
         parcelaSeleccionada.TamanoParcela
       );
       
-      // Eliminar esta parcela de las opciones disponibles para otros selects
+      this.cargarHistorialParcela(parcelaId);
       this.actualizarParcelasDisponibles();
     }
   }
   
   actualizarParcelasDisponibles(): void {
-    // Obtener IDs de parcelas ya seleccionadas
     const parcelasSeleccionadas = this.parcelasArray.controls
       .map(control => (control as FormGroup).get('parcela')?.value)
       .filter(id => id);
     
-    // Filtrar parcelas disponibles excluyendo las ya seleccionadas y las arrendadas
     this.filteredParcelas = this.parcelas.filter(
-      parcela => !parcelasSeleccionadas.includes(parcela.Id) && !parcela.arrendada
+      parcela => !parcelasSeleccionadas.includes(parcela.Id)
     );
   }
   
@@ -354,43 +306,42 @@ export class ArrendamientoRegisterComponent implements OnInit {
     this.submitting = true;
     
     const formValues = this.arrendamientoForm.value;
-    const fechaInicio = this.formatDate(formValues.fechaInicio);
-    const fechaFin = this.formatDate(formValues.fechaFin);
     
-    const solicitudes = formValues.parcelas.map((parcelaForm: any) => {
-      const arrendamientoRequest: ArrendamientoRequest = {
-        FkArrendamientoFinca: { Id: formValues.finca },
-        IdUserUserArrendatario: { Id: formValues.arrendatario },
-        FkArrendatamientoParcela: { Id: parcelaForm.parcela },
-        FechaInicio: fechaInicio,
-        FechaFin: fechaFin,
-        Valor: formValues.valor.toString()
-      };
-      console.log(arrendamientoRequest)
-      return this.apiService.post(`${API_URLS.MID.API_MID_SPIKE}/arrendamiento/arrendamiento/`, arrendamientoRequest);
-    });
+    const arrendamientoRequest: ArrendamientoRequest = {
+      IdUserUserArrendatario: { Id: formValues.arrendatario },
+      FkArrendamientoFinca: { Id: formValues.finca },
+      FechaInicio: this.formatDate(formValues.fechaInicio),
+      FechaFin: this.formatDate(formValues.fechaFin),
+      Parcelas: formValues.parcelas.map((parcelaForm: any) => ({
+        IdParcela: parcelaForm.parcela,
+        Valor: parcelaForm.valor.toString()
+      }))
+    };
     
-    forkJoin(solicitudes).subscribe({
-      next: (responses) => {
-        console.log('Arrendamientos registrados correctamente:', responses);
-        this.snackBar.open('Arrendamientos registrados con éxito', 'Cerrar', { duration: 3000 });
-        this.submitting = false;
-        this.exito = true;
-        this.resetForm();
-      },
-      error: (error) => {
-        console.error('Error al registrar arrendamientos:', error);
-        this.snackBar.open('Error al registrar los arrendamientos', 'Cerrar', { duration: 3000 });
-        this.submitting = false;
-      }
-    });
+    this.apiService.post(`${API_URLS.MID.API_MID_SPIKE}/arrendamiento/arrendamiento/`, arrendamientoRequest)
+      .subscribe({
+        next: (response) => {
+          this.snackBar.open('Arrendamientos registrados con éxito', 'Cerrar', { duration: 3000 });
+          this.submitting = false;
+          this.exito = true;
+          this.resetForm();
+        },
+        error: (error) => {
+          console.error('Error al registrar arrendamientos:', error);
+          this.snackBar.open('Error al registrar los arrendamientos', 'Cerrar', { duration: 3000 });
+          this.submitting = false;
+        }
+      });
   }
   
   resetForm(): void {
     this.arrendamientoForm.reset({
-      numParcelas: 1
+      numParcelas: 1,
+      usarUltimoArrendatario: false
     });
     this.actualizarParcelasFormArray(1);
+    this.historialArrendamientos = [];
+    this.ultimoArrendatario = null;
   }
   
   formatDate(date: Date): string {
@@ -405,21 +356,84 @@ export class ArrendamientoRegisterComponent implements OnInit {
     this.arrendamientoForm.get('valor')?.setValue(value);
   }
   
-  estaParcelaSeleccionada(parcelaId: number): boolean {
-    return this.parcelasArray.controls.some(
-      control => (control as FormGroup).get('parcela')?.value === parcelaId
-    );
-  }
-  
   getParcelasDisponiblesParaSelect(index: number): Parcela[] {
-    // Obtener IDs de parcelas ya seleccionadas en otros controles
     const parcelasSeleccionadas = this.parcelasArray.controls
       .map((control, i) => i !== index ? (control as FormGroup).get('parcela')?.value : null)
       .filter(id => id);
     
-    // Devolver parcelas no seleccionadas en otros controles y no arrendadas
     return this.parcelas.filter(
-      parcela => !parcelasSeleccionadas.includes(parcela.Id) && !parcela.arrendada
+      parcela => !parcelasSeleccionadas.includes(parcela.Id)
     );
+  }
+
+  actualizarParcelasFormArray(cantidad: number): void {
+    const parcelasArray = this.arrendamientoForm.get('parcelas') as FormArray;
+    
+    // Limpiar el array actual
+    while (parcelasArray.length) {
+      parcelasArray.removeAt(0);
+    }
+    
+    // Ajustar la cantidad al número de parcelas disponibles
+    const cantidadAjustada = Math.min(cantidad, this.parcelasDisponibles);
+    
+    // Agregar los nuevos controles
+    for (let i = 0; i < cantidadAjustada; i++) {
+      parcelasArray.push(
+        this.fb.group({
+          parcela: ['', Validators.required],
+          TamanoParcela: [{value: '', disabled: true}],
+          valor: ['', [Validators.required, Validators.min(1)]]
+        })
+      );
+    }
+  }
+
+  getFincaNombre(): string {
+    const fincaId = this.arrendamientoForm.get('finca')?.value;
+    const finca = this.fincas.find(f => f.Id === fincaId);
+    return finca ? finca.Nombre : 'No seleccionada';
+  }
+
+  getArrendatarioNombre(): string {
+    const arrendatarioId = this.arrendamientoForm.get('arrendatario')?.value;
+    const arrendatario = this.arrendatarios.find(a => a.Id === arrendatarioId);
+    return arrendatario ? arrendatario.Nombre : 'No seleccionado';
+  }
+
+  getParcelaNombre(index: number): string {
+    const parcelaId = this.parcelasArray.at(index).get('parcela')?.value;
+    const parcela = this.parcelas.find(p => p.Id === parcelaId);
+    return parcela ? parcela.NombreParcela : 'No seleccionada';
+  }
+
+  getParcelaTamano(index: number): number {
+    return this.parcelasArray.at(index).get('TamanoParcela')?.value || 0;
+  }
+
+  getParcelaFechaInicio(index: number): Date | null {
+    const fecha = this.parcelasArray.at(index).get('fechaInicio')?.value;
+    return fecha ? new Date(fecha) : null;
+  }
+
+  getParcelaFechaFin(index: number): Date | null {
+    const fecha = this.parcelasArray.at(index).get('fechaFin')?.value;
+    return fecha ? new Date(fecha) : null;
+  }
+
+  getParcelaValor(index: number): number {
+    return this.parcelasArray.at(index).get('valor')?.value || 0;
+  }
+
+  onCancel(): void {
+    this.router.navigate(['/dashboard/finca/datosArrendamiento']);
+  }
+
+  calcularValorTotal(): number {
+    const parcelas = this.parcelasArray.controls;
+    return parcelas.reduce((total, parcela) => {
+      const valor = parcela.get('valor')?.value || 0;
+      return total + Number(valor);
+    }, 0);
   }
 }

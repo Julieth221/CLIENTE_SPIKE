@@ -1,10 +1,57 @@
-<div class="dialog-container">
-  <h2 mat-dialog-title class="dialog-title">
-    <mat-icon class="title-icon">edit</mat-icon>
-    Editar Arrendamiento
-  </h2>
-  
-  <mat-dialog-content class="dialog-content">
+<div class="container">
+  <div class="header">
+    <button mat-button class="btn-back" (click)="onCancel()">
+      <mat-icon>arrow_back</mat-icon>
+      Volver
+    </button>
+    <h2 class="title">
+      <mat-icon class="title-icon">history</mat-icon>
+      Crear Nueva Versión de Arrendamiento
+    </h2>
+  </div>
+
+  <!-- Política de continuidad -->
+  <mat-card class="policy-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon class="policy-icon">security</mat-icon>
+        Política de Continuidad y Trazabilidad
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="policy-content">
+        <p class="policy-description">
+          Por trazabilidad y control del cultivo, cuando se crea una nueva versión de un arrendamiento, 
+          <strong>no se permite cambiar el arrendatario</strong>. Esto garantiza la continuidad del seguimiento 
+          del cultivo, ya que el historial, los datos de monitoreo y los procesos asociados pertenecen al 
+          arrendatario original.
+        </p>
+        
+        <div class="policy-benefits">
+          <h4>Beneficios para el propietario:</h4>
+          <ul>
+            <li>Evita confusión o pérdida de datos entre arrendatarios</li>
+            <li>Protege la integridad del seguimiento técnico del cultivo</li>
+            <li>Da claridad en auditorías, reportes y certificaciones</li>
+          </ul>
+        </div>
+
+        <div class="policy-action">
+          <p>
+            <strong>¿Necesita asignar un nuevo arrendatario?</strong><br>
+            Debe crear un arrendamiento completamente nuevo, independiente del anterior. 
+            Así se inicia una nueva trazabilidad con el nuevo responsable.
+          </p>
+          <button mat-raised-button color="primary" (click)="crearNuevoArrendamiento()">
+            <mat-icon>add</mat-icon>
+            Crear Nuevo Arrendamiento
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="content">
     <!-- Spinner de carga -->
     <div *ngIf="loading" class="spinner-container">
       <mat-spinner diameter="40"></mat-spinner>
@@ -17,110 +64,211 @@
       <span>{{ errorMessage }}</span>
     </div>
     
-    <!-- Formulario -->
-    <form [formGroup]="arrendamientoForm" (ngSubmit)="onSubmit()" *ngIf="!loading && !errorMessage">
-      <div class="form-header">
-        <div class="header-info">
-          <div class="info-item">
-            <mat-icon class="info-icon">location_on</mat-icon>
-            <span class="info-label">Finca:</span>
-            <span class="info-value">{{ data.nombreFinca }}</span>
+    <!-- Stepper -->
+    <mat-stepper [linear]="true" *ngIf="!loading && !errorMessage" class="custom-stepper" [formGroup]="arrendamientoForm">
+      <!-- Paso 1: Información del arrendamiento anterior -->
+      <mat-step>
+        <ng-template matStepLabel>
+          <div class="step-label">
+            <mat-icon>info</mat-icon>
+            <span>Información Actual</span>
           </div>
-          <div class="info-item" *ngIf="arrendatario">
-            <mat-icon class="info-icon">person</mat-icon>
-            <span class="info-label">Arrendatario:</span>
-            <span class="info-value">{{ arrendatario.Nombre }}</span>
+        </ng-template>
+        
+        <div class="step-content">
+          <div class="info-card">
+            <div class="info-header">
+              <h3>Detalles del Arrendamiento Actual</h3>
+              <mat-icon *ngIf="tieneSeguimientoActivo" 
+                       matTooltip="Este arrendamiento tiene seguimiento activo"
+                       class="warning-icon">warning</mat-icon>
+            </div>
+            
+            <div class="info-section">
+              <div class="info-row">
+                <mat-icon class="info-icon">person</mat-icon>
+                <span class="info-label">Arrendatario:</span>
+                <span class="info-value">{{ detalleArrendamiento?.NombreArrendatario }}</span>
+              </div>
+              
+              <div class="info-row">
+                <mat-icon class="info-icon">contact_mail</mat-icon>
+                <span class="info-label">Contacto:</span>
+                <span class="info-value">{{ detalleArrendamiento?.ContactoArrendatario }}</span>
+              </div>
+              
+              <div class="info-row">
+                <mat-icon class="info-icon">event</mat-icon>
+                <span class="info-label">Fecha inicio:</span>
+                <span class="info-value">{{ detalleArrendamiento?.FechaInicio }}</span>
+              </div>
+              
+              <div class="info-row">
+                <mat-icon class="info-icon">event_busy</mat-icon>
+                <span class="info-label">Fecha fin:</span>
+                <span class="info-value">{{ detalleArrendamiento?.FechaFin }}</span>
+              </div>
+              
+              <div class="info-row">
+                <mat-icon class="info-icon">attach_money</mat-icon>
+                <span class="info-label">Valor total:</span>
+                <span class="info-value">{{ formatCurrency(detalleArrendamiento?.ValorTotal) }}</span>
+              </div>
+            </div>
+            
+            <mat-divider class="section-divider"></mat-divider>
+            
+            <div class="parcelas-section">
+              <h4>Parcelas Arrendadas</h4>
+              <div class="parcelas-grid">
+                <div *ngFor="let parcela of detalleArrendamiento?.Parcelas" class="parcela-item">
+                  <mat-icon class="parcela-icon">grid_view</mat-icon>
+                  <div class="parcela-info">
+                    <span class="parcela-nombre">{{ parcela.NombreParcela }}</span>
+                    <span class="parcela-detalle">{{ parcela.TamanoParcela }} m²</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+        <div class="step-actions">
+          <button mat-button matStepperNext>
+            Siguiente
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </mat-step>
       
-      <mat-divider></mat-divider>
-      
-      <!-- Selección de parcela -->
-      <h3 class="section-title">Parcela Asignada</h3>
-      
-      <div class="form-row">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Seleccionar Parcela</mat-label>
-          <mat-select formControlName="parcela" [disabled]="parcelasDisponibles.length === 0">
-            <mat-option *ngFor="let parcela of parcelasDisponibles" [value]="parcela.Id">
-              {{ parcela.NombreParcela }}
-            </mat-option>
-          </mat-select>
-          <mat-hint *ngIf="parcelasDisponibles.length === 0">No hay parcelas disponibles para asignar</mat-hint>
-          <mat-error *ngIf="arrendamientoForm.get('parcela')?.hasError('required')">
-            Debe seleccionar una parcela
-          </mat-error>
-        </mat-form-field>
-      </div>
-      
-      <div class="form-row">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Tamaño de la parcela (m²)</mat-label>
-          <input matInput formControlName="tamanoParcela" readonly>
-          <mat-icon matSuffix>straighten</mat-icon>
-        </mat-form-field>
-      </div>
-      
-      <mat-divider></mat-divider>
-      
-      <!-- Fechas y valor -->
-      <h3 class="section-title">Términos del Arrendamiento</h3>
-      
-      <div class="form-row dates-container">
-        <mat-form-field appearance="outline">
-          <mat-label>Fecha de inicio</mat-label>
-          <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio">
-          <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
-          <mat-datepicker #pickerInicio></mat-datepicker>
-          <mat-error *ngIf="arrendamientoForm.get('fechaInicio')?.hasError('required')">
-            La fecha de inicio es requerida
-          </mat-error>
-        </mat-form-field>
+      <!-- Paso 2: Edición de fechas y valor -->
+      <mat-step [stepControl]="arrendamientoForm">
+        <ng-template matStepLabel>
+          <div class="step-label">
+            <mat-icon>edit</mat-icon>
+            <span>Nuevos Términos</span>
+          </div>
+        </ng-template>
         
-        <mat-form-field appearance="outline">
-          <mat-label>Fecha de finalización</mat-label>
-          <input matInput [matDatepicker]="pickerFin" formControlName="fechaFin">
-          <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
-          <mat-datepicker #pickerFin></mat-datepicker>
-          <mat-error *ngIf="arrendamientoForm.get('fechaFin')?.hasError('required')">
-            La fecha de finalización es requerida
-          </mat-error>
-        </mat-form-field>
-      </div>
+        <div class="step-content">
+          <form [formGroup]="arrendamientoForm" class="edit-form">
+            <div class="form-row dates-container">
+              <mat-form-field appearance="outline">
+                <mat-label>Fecha de inicio</mat-label>
+                <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio">
+                <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+                <mat-datepicker #pickerInicio></mat-datepicker>
+                <mat-error *ngIf="arrendamientoForm.get('fechaInicio')?.hasError('required')">
+                  La fecha de inicio es requerida
+                </mat-error>
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline">
+                <mat-label>Fecha de finalización</mat-label>
+                <input matInput [matDatepicker]="pickerFin" formControlName="fechaFin">
+                <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
+                <mat-datepicker #pickerFin></mat-datepicker>
+                <mat-error *ngIf="arrendamientoForm.get('fechaFin')?.hasError('required')">
+                  La fecha de finalización es requerida
+                </mat-error>
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Valor del arrendamiento</mat-label>
+                <input matInput type="number" formControlName="valor" min="1">
+                <span matTextPrefix>$&nbsp;</span>
+                <mat-error *ngIf="arrendamientoForm.get('valor')?.hasError('required')">
+                  El valor del arrendamiento es requerido
+                </mat-error>
+                <mat-error *ngIf="arrendamientoForm.get('valor')?.hasError('min')">
+                  El valor debe ser mayor a cero
+                </mat-error>
+              </mat-form-field>
+            </div>
+            
+            <div *ngIf="arrendamientoForm.errors?.['fechasInvalidas'] && arrendamientoForm.touched" class="validation-error">
+              <mat-icon>warning</mat-icon>
+              <span>La fecha de finalización debe ser posterior a la fecha de inicio</span>
+            </div>
+          </form>
+        </div>
+        <div class="step-actions">
+          <button mat-button matStepperPrevious>
+            <mat-icon>arrow_back</mat-icon>
+            Anterior
+          </button>
+          <button mat-button matStepperNext [disabled]="!arrendamientoForm.valid">
+            Siguiente
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </mat-step>
       
-      <div class="form-row">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Valor del arrendamiento</mat-label>
-          <input matInput type="number" formControlName="valor" min="1" (input)="formatCurrency($event)">
-          <span matTextPrefix>$&nbsp;</span>
-          <mat-error *ngIf="arrendamientoForm.get('valor')?.hasError('required')">
-            El valor del arrendamiento es requerido
-          </mat-error>
-          <mat-error *ngIf="arrendamientoForm.get('valor')?.hasError('min')">
-            El valor debe ser mayor a cero
-          </mat-error>
-        </mat-form-field>
-      </div>
-      
-      <!-- Mensaje de validación de fechas -->
-      <div *ngIf="arrendamientoForm.errors?.['fechasInvalidas'] && arrendamientoForm.touched" class="validation-error">
-        <mat-icon>warning</mat-icon>
-        <span>La fecha de finalización debe ser posterior a la fecha de inicio</span>
-      </div>
-    </form>
-    
-    <!-- Mensaje de éxito -->
-    <div *ngIf="exito" class="success-message">
-      <mat-icon color="primary">check_circle</mat-icon>
-      <span>¡Arrendamiento actualizado con éxito!</span>
-    </div>
-  </mat-dialog-content>
+      <!-- Paso 3: Confirmación -->
+      <mat-step>
+        <ng-template matStepLabel>
+          <div class="step-label">
+            <mat-icon>check_circle</mat-icon>
+            <span>Confirmar</span>
+          </div>
+        </ng-template>
+        
+        <div class="step-content">
+          <div class="confirmation-card">
+            <mat-icon class="confirmation-icon">info</mat-icon>
+            <h3>Confirmar Nueva Versión</h3>
+            <p>Al confirmar, se creará una nueva versión del arrendamiento con los siguientes cambios:</p>
+            
+            <div class="changes-list">
+              <div class="change-item">
+                <mat-icon class="change-icon">event</mat-icon>
+                <div class="change-details">
+                  <span class="change-label">Nuevo período:</span>
+                  <span class="change-value">
+                    {{ formatDate(arrendamientoForm.get('fechaInicio')?.value) }} - 
+                    {{ formatDate(arrendamientoForm.get('fechaFin')?.value) }}
+                  </span>
+                </div>
+              </div>
+              
+              <div class="change-item">
+                <mat-icon class="change-icon">attach_money</mat-icon>
+                <div class="change-details">
+                  <span class="change-label">Nuevo valor:</span>
+                  <span class="change-value">{{ formatCurrency(arrendamientoForm.get('valor')?.value) }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="warning-message">
+              <mat-icon>warning</mat-icon>
+              <p>El arrendamiento actual se marcará como inactivo. Esta operación es irreversible.</p>
+            </div>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button mat-button matStepperPrevious>
+            <mat-icon>arrow_back</mat-icon>
+            Anterior
+          </button>
+          <button 
+            mat-raised-button 
+            color="primary" 
+            [disabled]="arrendamientoForm.invalid || submitting || loading" 
+            (click)="onSubmit()">
+            <mat-icon *ngIf="!submitting">save</mat-icon>
+            <mat-spinner *ngIf="submitting" diameter="20" class="button-spinner"></mat-spinner>
+            <span>{{ submitting ? 'Creando versión...' : 'Crear Nueva Versión' }}</span>
+          </button>
+        </div>
+      </mat-step>
+    </mat-stepper>
+  </div>
   
-  <mat-dialog-actions align="end">
+  <!-- <div class="actions">
     <button 
       mat-button 
-      [mat-dialog-close]="false" 
       (click)="onCancel()"
       [disabled]="submitting">
       Cancelar
@@ -132,7 +280,7 @@
       (click)="onSubmit()">
       <mat-icon *ngIf="!submitting">save</mat-icon>
       <mat-spinner *ngIf="submitting" diameter="20" class="button-spinner"></mat-spinner>
-      <span>{{ submitting ? 'Guardando...' : 'Guardar cambios' }}</span>
+      <span>{{ submitting ? 'Creando versión...' : 'Crear Nueva Versión' }}</span>
     </button>
-  </mat-dialog-actions>
+  </div> -->
 </div>

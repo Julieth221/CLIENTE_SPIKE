@@ -1,56 +1,110 @@
 <div class="container">
-  <h2 class="title">REGISTRO DE ARRENDAMIENTO</h2>
-  
-  <div *ngIf="loading" class="loader">
-    <mat-spinner diameter="50"></mat-spinner>
-    <span>Cargando datos...</span>
+  <div class="header">
+    <button mat-button class="btn-back" (click)="onCancel()">
+      <mat-icon>arrow_back</mat-icon>
+      Volver
+    </button>
+    <h2 class="title">
+      <mat-icon class="title-icon">add_circle</mat-icon>
+      Nuevo Arrendamiento
+    </h2>
   </div>
-  
-  <div *ngIf="!loading">
-    <mat-card class="form-card">
-      <mat-card-header>
-        <mat-card-title>Nuevo Arrendamiento</mat-card-title>
-        <mat-card-subtitle>Complete el formulario para registrar el arrendamiento de parcelas</mat-card-subtitle>
-      </mat-card-header>
-      
-      <mat-card-content>
-        <form [formGroup]="arrendamientoForm" (ngSubmit)="onSubmit()">
-          <!-- Sección de selección de finca y arrendatario -->
-          <div class="form-section">
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Seleccionar Finca</mat-label>
-                <mat-select formControlName="finca">
-                  <mat-option *ngFor="let finca of fincas" [value]="finca.Id">
-                    {{ finca.Nombre }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="arrendamientoForm.get('finca')?.hasError('required')">
-                  Debe seleccionar una finca
-                </mat-error>
-              </mat-form-field>
-            </div>
-            
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Seleccionar Arrendatario</mat-label>
-                <mat-select formControlName="arrendatario">
-                  <mat-option *ngFor="let arrendatario of arrendatarios" [value]="arrendatario.Id">
-                    {{ arrendatario.Nombre }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="arrendamientoForm.get('arrendatario')?.hasError('required')">
-                  Debe seleccionar un arrendatario
-                </mat-error>
-              </mat-form-field>
-            </div>
+
+  <!-- Política de continuidad -->
+  <mat-card class="policy-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon class="policy-icon">info</mat-icon>
+        Guía para el Propietario
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="policy-content">
+        <div class="policy-section">
+          <h4>¿Por qué crear un nuevo arrendamiento?</h4>
+          <p>Cuando se requiere cambiar el arrendatario o iniciar un nuevo ciclo de arrendamiento con parcelas diferentes, debe registrarse un nuevo arrendamiento independiente.</p>
+          <p>Esto asegura que cada arrendatario tenga su propio historial, datos de seguimiento y responsabilidades claras.</p>
+        </div>
+
+        <mat-divider class="section-divider"></mat-divider>
+
+        <div class="policy-section">
+          <h4>🔒 Política de trazabilidad y responsabilidad</h4>
+          <p>Por integridad operativa y trazabilidad del cultivo:</p>
+          <p class="policy-quote">"Cada arrendamiento está vinculado de forma única a un arrendatario. No se comparte historial ni monitoreo entre arrendamientos distintos."</p>
+        </div>
+
+        <mat-divider class="section-divider"></mat-divider>
+
+        <div class="policy-section ">
+          <h4>📌 ¿Qué debe hacer si desea continuar con el mismo arrendatario?</h4>
+          <p>Si las condiciones cambian (fechas o valor), pero el arrendatario sigue siendo el mismo, puede optar por crear una nueva versión del arrendamiento existente desde la vista principal.</p>
+          <p>👉 Use el botón "Crear nueva versión" en la tabla de arrendamientos para conservar el historial.</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="content">
+    <!-- Spinner de carga -->
+    <div *ngIf="loading" class="spinner-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span class="spinner-text">Cargando información...</span>
+    </div>
+    
+    <!-- Mensaje de error -->
+    <div *ngIf="errorMessage && !loading" class="error-message">
+      <mat-icon color="warn">error_outline</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+    
+    <!-- Stepper -->
+    <mat-stepper [linear]="true" *ngIf="!loading && !errorMessage" class="custom-stepper" [formGroup]="arrendamientoForm">
+      <!-- Paso 1: Selección de Finca -->
+      <mat-step [stepControl]="arrendamientoForm.get('finca')!">
+        <ng-template matStepLabel>
+          <div class="step-label">
+            <mat-icon>business</mat-icon>
+            <span>Selección de Finca</span>
           </div>
-          
-          <mat-divider></mat-divider>
-          
-          <!-- Sección de parcelas a arrendar -->
-          <div class="form-section" *ngIf="arrendamientoForm.get('finca')?.value">
-            <h3 class="section-title">Parcelas a Arrendar</h3>
+        </ng-template>
+        
+        <div class="step-content">
+          <div class="info-card">
+            <h3>Seleccione la finca</h3>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Seleccionar Finca</mat-label>
+              <mat-select formControlName="finca">
+                <mat-option *ngFor="let finca of fincas" [value]="finca.Id">
+                  {{ finca.Nombre }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="arrendamientoForm.get('finca')?.hasError('required')">
+                Debe seleccionar una finca
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button mat-button matStepperNext [disabled]="!arrendamientoForm.get('finca')?.valid">
+            Siguiente
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </mat-step>
+
+      <!-- Paso 2: Selección de Parcelas -->
+      <mat-step [stepControl]="parcelasArray">
+        <ng-template matStepLabel>
+          <div class="step-label">
+            <mat-icon>grid_view</mat-icon>
+            <span>Selección de Parcelas</span>
+          </div>
+        </ng-template>
+        
+        <div class="step-content">
+          <div class="info-card">
+            <h3>Seleccione las parcelas a arrendar</h3>
             
             <div class="form-row finca-info">
               <div class="info-chip">
@@ -100,18 +154,100 @@
                   
                   <mat-form-field appearance="outline">
                     <mat-label>Tamaño de parcela (m²)</mat-label>
-                    <input matInput formControlName="TamanoParcela" readonly>
+                    <div>
+                      {{ parcelasArray.controls[i].get('TamanoParcela')?.value }}
+                    </div>
+                    <input matInput formControlName="TamanoParcela" readonly >
+                    
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Valor del arrendamiento</mat-label>
+                    <input matInput type="number" formControlName="valor" min="1" placeholder="Ej: 1000000">
+                    <span matTextPrefix>$&nbsp;</span>
+                    <mat-error *ngIf="parcelasArray.controls[i].get('valor')?.hasError('required')">
+                      El valor del arrendamiento es requerido
+                    </mat-error>
+                    <mat-error *ngIf="parcelasArray.controls[i].get('valor')?.hasError('min')">
+                      El valor debe ser mayor a cero
+                    </mat-error>
                   </mat-form-field>
                 </div>
               </div>
             </div>
           </div>
-          
-          <mat-divider></mat-divider>
-          
-          <!-- Sección de términos del arrendamiento -->
-          <div class="form-section">
-            <h3 class="section-title">Términos del Arrendamiento</h3>
+        </div>
+        <div class="step-actions">
+          <button mat-button matStepperPrevious>
+            <mat-icon>arrow_back</mat-icon>
+            Anterior
+          </button>
+          <button mat-button matStepperNext [disabled]="!parcelasArray.valid">
+            Siguiente
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </mat-step>
+
+      <!-- Paso 3: Selección de Arrendatario -->
+      <mat-step [stepControl]="arrendamientoForm.get('arrendatario')!">
+        <ng-template matStepLabel>
+          <div class="step-label">
+            <mat-icon>person</mat-icon>
+            <span>Selección de Arrendatario</span>
+          </div>
+        </ng-template>
+        
+        <div class="step-content">
+          <div class="info-card">
+            <h3>Seleccione el arrendatario</h3>
+            
+            <!-- Opción de usar último arrendatario -->
+            <div class="form-row" *ngIf="ultimoArrendatario">
+              <mat-checkbox formControlName="usarUltimoArrendatario">
+                ¿Desea continuar con el último arrendatario ({{ ultimoArrendatario.Nombre }})?
+              </mat-checkbox>
+            </div>
+            
+            <div class="form-row" *ngIf="!arrendamientoForm.get('usarUltimoArrendatario')?.value">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Seleccionar Arrendatario</mat-label>
+                <mat-select formControlName="arrendatario">
+                  <mat-option *ngFor="let arrendatario of arrendatarios" [value]="arrendatario.Id">
+                    {{ arrendatario.Nombre }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="arrendamientoForm.get('arrendatario')?.hasError('required')">
+                  Debe seleccionar un arrendatario
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button mat-button matStepperPrevious>
+            <mat-icon>arrow_back</mat-icon>
+            Anterior
+          </button>
+          <button mat-button matStepperNext [disabled]="!arrendamientoForm.get('arrendatario')?.valid">
+            Siguiente
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </mat-step>
+
+      <!-- Paso 4: Términos y Condiciones -->
+      <mat-step [stepControl]="arrendamientoForm.get('fechaInicio')!">
+        <ng-template matStepLabel>
+          <div class="step-label">
+            <mat-icon>event</mat-icon>
+            <span>Términos y Condiciones</span>
+          </div>
+        </ng-template>
+        
+        <div class="step-content">
+          <div class="info-card">
+            <h3>Defina los términos del arrendamiento</h3>
             
             <div class="form-row dates-container">
               <mat-form-field appearance="outline">
@@ -134,49 +270,115 @@
                 </mat-error>
               </mat-form-field>
             </div>
-            
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Valor del arrendamiento</mat-label>
-                <input matInput type="number" formControlName="valor" min="1" placeholder="Ej: 1000000">
-                <span matTextPrefix>$&nbsp;</span>
-                <mat-error *ngIf="arrendamientoForm.get('valor')?.hasError('required')">
-                  El valor del arrendamiento es requerido
-                </mat-error>
-                <mat-error *ngIf="arrendamientoForm.get('valor')?.hasError('min')">
-                  El valor debe ser mayor a cero
-                </mat-error>
-              </mat-form-field>
+
+            <div class="valor-total-section">
+              <h4>Valor Total del Arrendamiento</h4>
+              <div class="valor-total">
+                {{ calcularValorTotal() | currency:'COP' }}
+              </div>
             </div>
           </div>
-          
-          <!-- Botones de acción -->
-          <div class="form-actions">
-            <button type="button" mat-button (click)="resetForm()">
-              <mat-icon>restart_alt</mat-icon>
-              Limpiar
-            </button>
-            <button type="submit" mat-raised-button color="primary" [disabled]="arrendamientoForm.invalid || submitting">
-              <mat-icon>save</mat-icon>
-              Registrar Arrendamiento
-            </button>
-          </div>
-        </form>
-      </mat-card-content>
-    </mat-card>
-    
-    <!-- Mensaje de éxito -->
-    <mat-card *ngIf="exito" class="success-card">
-      <mat-card-content>
-        <div class="success-message">
-          <mat-icon>check_circle</mat-icon>
-          <h3>¡Arrendamiento registrado con éxito!</h3>
-          <p>El arrendamiento ha sido registrado correctamente en el sistema.</p>
         </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button (click)="exito = false">Cerrar</button>
-      </mat-card-actions>
-    </mat-card>
+        <div class="step-actions">
+          <button mat-button matStepperPrevious>
+            <mat-icon>arrow_back</mat-icon>
+            Anterior
+          </button>
+          <button mat-button matStepperNext [disabled]="!arrendamientoForm.get('fechaInicio')?.valid || !arrendamientoForm.get('fechaFin')?.valid">
+            Siguiente
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </mat-step>
+
+      <!-- Paso 5: Confirmación -->
+      <mat-step>
+        <ng-template matStepLabel>
+          <div class="step-label">
+            <mat-icon>check_circle</mat-icon>
+            <span>Confirmación</span>
+          </div>
+        </ng-template>
+        
+        <div class="step-content">
+          <div class="confirmation-card">
+            <h3>Confirme los detalles del arrendamiento</h3>
+            
+            <div class="confirmation-details">
+              <div class="detail-item">
+                <strong>Finca:</strong>
+                <span>{{ getFincaNombre() }}</span>
+              </div>
+              
+              <div class="detail-item">
+                <strong>Arrendatario:</strong>
+                <span>{{ getArrendatarioNombre() }}</span>
+              </div>
+              
+              <div class="detail-item">
+                <strong>Período:</strong>
+                <span>
+                  {{ formatDate(arrendamientoForm.get('fechaInicio')?.value) }} - 
+                  {{ formatDate(arrendamientoForm.get('fechaFin')?.value) }}
+                </span>
+              </div>
+              
+              <div class="detail-item">
+                <strong>Parcelas:</strong>
+                <ul>
+                  <li *ngFor="let parcela of parcelasArray.controls; let i = index">
+                    {{ getParcelaNombre(i) }} ({{ getParcelaTamano(i) }} m²)
+                    <br>
+                    <small>Valor: {{ getParcelaValor(i) | currency:'COP' }}</small>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="detail-item total">
+                <strong>Valor Total:</strong>
+                <span>{{ calcularValorTotal() | currency:'COP' }}</span>
+              </div>
+            </div>
+
+            <mat-checkbox formControlName="confirmacion" class="confirmation-checkbox">
+              Confirmo que los datos son correctos y acepto las condiciones del arrendamiento.
+            </mat-checkbox>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button mat-button matStepperPrevious>
+            <mat-icon>arrow_back</mat-icon>
+            Anterior
+          </button>
+          <button 
+            mat-raised-button 
+            color="primary" 
+            [disabled]="arrendamientoForm.invalid || submitting || loading" 
+            (click)="onSubmit()">
+            <mat-icon *ngIf="!submitting">save</mat-icon>
+            <mat-spinner *ngIf="submitting" diameter="20" class="button-spinner"></mat-spinner>
+            <span>{{ submitting ? 'Registrando...' : 'Crear Arrendamiento' }}</span>
+          </button>
+        </div>
+      </mat-step>
+    </mat-stepper>
   </div>
+  
+  <!-- <div class="actions">
+    <button 
+      mat-button 
+      (click)="onCancel()"
+      [disabled]="submitting">
+      Cancelar
+    </button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      [disabled]="arrendamientoForm.invalid || submitting || loading" 
+      (click)="onSubmit()">
+      <mat-icon *ngIf="!submitting">save</mat-icon>
+      <mat-spinner *ngIf="submitting" diameter="20" class="button-spinner"></mat-spinner>
+      <span>{{ submitting ? 'Registrando...' : 'Crear Arrendamiento' }}</span>
+    </button>
+  </div> -->
 </div>

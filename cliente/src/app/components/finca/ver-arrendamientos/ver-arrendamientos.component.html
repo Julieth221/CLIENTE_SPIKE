@@ -3,17 +3,25 @@
   <div class="dialog-header">
     <h2 mat-dialog-title class="dialog-title">
       <mat-icon class="title-icon">agriculture</mat-icon>
-      Parcelas del Arrendamiento
+      Detalle del Arrendamiento
     </h2>
-    <h3 class="dialog-subtitle">{{ data.nombreFinca }}</h3>
   </div>
 
-  <!-- Contenido del diálogo -->
-  <mat-dialog-content class="dialog-content">
+  <!-- Contenedor principal -->
+  <div class="detalle-container">
+    <!-- Botón de regreso -->
+    <div class="header-actions">
+      <button mat-button class="btn-back" (click)="volverAtras()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver
+      </button>
+      <h2 class="finca-title">{{ nombreFinca }}</h2>
+    </div>
+
     <!-- Spinner de carga -->
     <div *ngIf="loading" class="spinner-container">
       <mat-spinner diameter="40"></mat-spinner>
-      <span class="spinner-text">Cargando parcelas...</span>
+      <span class="spinner-text">Cargando información...</span>
     </div>
 
     <!-- Mensaje de error -->
@@ -22,58 +30,123 @@
       <span>{{ error }}</span>
     </div>
 
-    <!-- Lista de parcelas -->
-    <div *ngIf="!loading && !error && parcelas.length > 0" class="parcelas-container">
-      <div class="parcelas-grid">
-        <mat-card *ngFor="let parcela of parcelas" class="parcela-card">
+    <!-- Contenido principal -->
+    <div *ngIf="!loading && !error && detalleArrendamiento" class="detalle-content">
+      <div class="cards-grid">
+        <!-- Card Arrendatario -->
+        <mat-card class="detalle-card arrendatario-card">
           <mat-card-header>
             <mat-card-title>
-              <mat-icon class="card-icon">grid_view</mat-icon>
-              {{ parcela.nombre }}
+              <mat-icon class="card-icon">person</mat-icon>
+              Información del Arrendatario
             </mat-card-title>
           </mat-card-header>
           
           <mat-card-content>
-            <div class="parcela-info">
+            <div class="info-section">
               <div class="info-row">
-                <mat-icon class="info-icon">straighten</mat-icon>
-                <span class="info-label">Tamaño:</span>
-                <span class="info-value">{{ parcela.tamano | number:'1.2-2' }} ha</span>
+                <mat-icon class="info-icon">badge</mat-icon>
+                <span class="info-label">Nombre:</span>
+                <span class="info-value">{{ detalleArrendamiento.NombreArrendatario }}</span>
               </div>
+              
               <div class="info-row">
-                <mat-icon class="info-icon">location_on</mat-icon>
-                <span class="info-label">ID Parcela:</span>
-                <span class="info-value">{{ parcela.id }}</span>
+                <mat-icon class="info-icon">assignment_ind</mat-icon>
+                <span class="info-label">Rol:</span>
+                <span class="info-value">Arrendatario</span>
+              </div>
+              
+              <div class="info-row">
+                <mat-icon class="info-icon">email</mat-icon>
+                <span class="info-label">Contacto:</span>
+                <span class="info-value">{{ detalleArrendamiento.ContactoArrendatario }}</span>
               </div>
             </div>
-            
-            <mat-divider class="card-divider"></mat-divider>
-            
-            <div class="mapa-container">
-              <app-ver-mapa
-                [coordenadas]="parcela.coordenadas"
-                [nombreParcela]="parcela.nombre"
-                [tamanoParcela]="parcela.tamano"
-                [mostrarDetalles]="true">
-              </app-ver-mapa>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Card Términos del Arrendamiento -->
+        <mat-card class="detalle-card terminos-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon class="card-icon">description</mat-icon>
+              Términos del Arrendamiento
+            </mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="info-section">
+              <div class="info-row">
+                <mat-icon class="info-icon">event</mat-icon>
+                <span class="info-label">Fecha inicio:</span>
+                <span class="info-value">{{ formatDate(detalleArrendamiento.FechaInicio) }}</span>
+              </div>
+              
+              <div class="info-row">
+                <mat-icon class="info-icon">event_busy</mat-icon>
+                <span class="info-label">Fecha fin:</span>
+                <span class="info-value">{{ formatDate(detalleArrendamiento.FechaFin) }}</span>
+              </div>
+              
+              <div class="info-row">
+                <mat-icon class="info-icon">attach_money</mat-icon>
+                <span class="info-label">Valor total:</span>
+                <span class="info-value">{{ formatCurrency(detalleArrendamiento.ValorTotal) }}</span>
+              </div>
             </div>
           </mat-card-content>
         </mat-card>
       </div>
-    </div>
 
-    <!-- Estado vacío -->
-    <div *ngIf="!loading && !error && parcelas.length === 0" class="empty-state">
-      <mat-icon class="empty-icon">nature</mat-icon>
-      <h3>No hay parcelas disponibles</h3>
-      <p>No hay parcelas registradas para este arrendamiento</p>
-    </div>
-  </mat-dialog-content>
+      <!-- Sección de Parcelas -->
+      <div class="parcelas-section">
+        <h3 class="section-title">
+          <mat-icon class="section-icon">grid_view</mat-icon>
+          Parcelas Arrendadas
+        </h3>
+        
+        <div class="parcelas-grid">
+          <mat-card *ngFor="let parcela of detalleArrendamiento.Parcelas" class="parcela-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon class="card-icon">grid_view</mat-icon>
+                {{ parcela.NombreParcela }}
+              </mat-card-title>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <div class="info-section">
+                <div class="info-row">
+                  <mat-icon class="info-icon">straighten</mat-icon>
+                  <span class="info-label">Tamaño:</span>
+                  <span class="info-value">{{ parcela.TamanoParcela }} m²</span>
+                </div>
+                
+                <div class="info-row">
+                  <mat-icon class="info-icon">attach_money</mat-icon>
+                  <span class="info-label">Valor:</span>
+                  <span class="info-value">{{ formatCurrency(Number(parcela.Valor)) }}</span>
+                </div>
 
-  <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>
-      <mat-icon>close</mat-icon>
-      Cerrar
-    </button>
-  </mat-dialog-actions>
+                <mat-divider class="section-divider"></mat-divider>
+
+                <div class="mapa-container">
+                  <app-ver-mapa
+                    [coordenadas]="{
+                      latitudInicial: parseFloat(parcela.Geolocalizacion.LatitudInicial),
+                      longitudInicial: parseFloat(parcela.Geolocalizacion.LongitudInicial),
+                      latitudFinal: parseFloat(parcela.Geolocalizacion.LatitudFinal),
+                      longitudFinal: parseFloat(parcela.Geolocalizacion.LongitudFinal)
+                    }"
+                    [nombreParcela]="parcela.NombreParcela"
+                    [mostrarDetalles]="true">
+                  </app-ver-mapa>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -65,6 +65,24 @@ export class VerMapaComponent implements AfterViewInit, OnChanges {
       coords1.longitudFinal === coords2.longitudFinal
     );
   }
+
+  private ajustarZoom(vertices: google.maps.LatLngLiteral[]) {
+    const mapaInstancia = this.mapa?.googleMap;
+    if (!mapaInstancia) return;
+
+    const bounds = new google.maps.LatLngBounds();
+    vertices.forEach(vertex => bounds.extend(vertex));
+    
+    mapaInstancia.fitBounds(bounds);
+    
+    const MAX_ZOOM = 16;
+    google.maps.event.addListenerOnce(mapaInstancia, 'idle', () => {
+      const currentZoom = mapaInstancia.getZoom();
+      if (currentZoom !== undefined && currentZoom > MAX_ZOOM) {
+        mapaInstancia.setZoom(MAX_ZOOM);
+      }
+    });
+  }
   
   inicializarMapa() {
     if (!this.mapa || !this.mapa.googleMap) {
@@ -113,6 +131,7 @@ export class VerMapaComponent implements AfterViewInit, OnChanges {
     
     // Dibujar el polígono
     this.dibujarPoligono(vertices);
+    this.ajustarZoom(vertices);
   }
   
   calcularVertices(): google.maps.LatLngLiteral[] {
