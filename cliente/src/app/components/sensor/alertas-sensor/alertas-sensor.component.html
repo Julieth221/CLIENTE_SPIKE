@@ -29,7 +29,21 @@
                         <mat-card-actions>
                             <button mat-button (click)="goToComponent('sensor/gestion-alert')">
                                 Editar
-                            <mat-icon>edit</mat-icon>
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </mat-card-actions>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card class="historial-card">
+                    <mat-card-header class="historial-header">
+                        <mat-card-title>HISTORIAL DE ALERTAS</mat-card-title>
+                        <mat-card-subtitle>ver historial de tus alertas</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content class="historial-content">
+                        <mat-card-actions>
+                            <button mat-button (click)="goToComponent('sensor/historial-alert')">
+                                Historial
+                                <mat-icon>history</mat-icon>
                             </button>
                         </mat-card-actions>
                     </mat-card-content>

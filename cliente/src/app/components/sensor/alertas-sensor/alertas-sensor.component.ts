@@ -33,7 +33,5 @@ export class AlertasSensorComponent {
     this.router.navigate(['/dashboard',  ...segments]);
   }
 
-  onExit() {
-    this.location.back();
-  }
+  
 }
