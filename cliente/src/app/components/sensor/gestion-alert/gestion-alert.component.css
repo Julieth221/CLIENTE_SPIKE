@@ -294,10 +294,10 @@
 }
 
 @media (max-width: 480px) {
-  .alert-cards-list {
+  /* .alert-cards-list { */
     /* Aquí se ajusta el grid para una sola columna en pantallas muy pequeñas */
     /* El flexbox en .alerts-in-cultivo-grid ya maneja el envolvimiento */
-  }
+  /* } */
   .alert-item-card {
     width: 100%; /* Las tarjetas ocupan todo el ancho en pantallas muy pequeñas */
   }

@@ -1,0 +1,256 @@
+.main-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: 'Roboto', sans-serif;
+}
+
+.page-title {
+  margin-bottom: 25px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #2E7D32; /* Verde oscuro para el título */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  text-align: center;
+}
+
+.back-icon {
+  font-size: 30px;
+  color: #4CAF50;
+  transition: transform 0.2s ease-in-out;
+}
+
+.back-icon:hover {
+  transform: translateX(-5px);
+}
+
+.content-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center; /* Centra las tarjetas */
+}
+
+.sensor-control-card,
+.sensor-status-card,
+.sensor-highlight-data-card { /* Añadido el nuevo card */
+  flex: 1;
+  min-width: 350px;
+  max-width: 45%; /* Limita el ancho para que quepan dos por fila */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ajuste para que el tercer card se coloque debajo de los dos primeros en pantallas grandes */
+.sensor-highlight-data-card {
+  flex-basis: 100%; /* Ocupa todo el ancho disponible para ir debajo */
+  max-width: unset; /* Elimina la restricción de max-width para que ocupe todo el ancho */
+}
+
+
+.sensor-control-card mat-card-title,
+.sensor-status-card mat-card-title,
+.sensor-highlight-data-card mat-card-title { /* Añadido el nuevo card */
+  color: #2E7D32; /* Verde oscuro para los títulos de las tarjetas */
+  font-size: 1.4em;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.full-width-field {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.control-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.control-buttons button {
+  padding: 10px 20px;
+  font-size: 1em;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  font-weight: 600;
+}
+
+/* Estilos específicos para los botones */
+.control-buttons button[color="primary"] {
+  background-color: #4CAF50; /* Verde primario */
+  color: white;
+}
+
+.control-buttons button[color="primary"]:hover {
+  background-color: #388E3C; /* Verde más oscuro al hover */
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.control-buttons button[color="warn"] {
+  background-color: #F44336; /* Rojo de advertencia */
+  color: white;
+}
+
+.control-buttons button[color="warn"]:hover {
+  background-color: #D32F2F; /* Rojo más oscuro al hover */
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+mat-divider {
+  margin: 20px 0;
+}
+
+/* Estado del sensor */
+.status-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  text-align: center;
+  padding: 15px;
+}
+
+.status-icon {
+  font-size: 70px; /* Icono grande */
+  width: 70px;
+  height: 70px;
+  margin-bottom: 10px;
+  transition: color 0.5s ease-in-out;
+}
+
+.icon-ok { color: #4CAF50; /* Verde */ }
+.icon-anomalo { color: #FFC107; /* Amarillo */ }
+.icon-sin-datos { color: #F44336; /* Rojo */ }
+.icon-detenido { color: #9E9E9E; /* Gris */ }
+
+.status-message {
+  font-size: 1.2em;
+  font-weight: 500;
+  margin-bottom: 8px;
+  transition: color 0.5s ease-in-out;
+}
+
+.message-ok { color: #4CAF50; }
+.message-anomalo { color: #FF9800; /* Naranja oscuro para mensaje de anomalia */ }
+.message-sin-datos { color: #D32F2F; /* Rojo oscuro para mensaje de sin datos */ }
+.message-detenido { color: #757575; }
+
+.current-reading {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.reading-value {
+  color: #007bff; /* Azul para el valor */
+}
+
+.reading-unit {
+  font-size: 0.8em;
+  color: #666;
+}
+
+.sensor-info {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+/* Estilos para la nueva tarjeta de datos destacados */
+.sensor-highlight-data-card {
+  background-color: #e8f5e9; /* Fondo verde claro */
+  border: 1px solid #C8E6C9; /* Borde verde un poco más oscuro */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.sensor-highlight-data-card mat-card-title {
+  color: #2E7D32; /* Verde oscuro */
+  border-bottom: 2px solid #A5D6A7; /* Línea divisoria verde */
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.data-row {
+  display: flex;
+  align-items: flex-start; /* Alinea al inicio si el texto es largo */
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 0.95em;
+  color: #333;
+}
+
+.data-icon {
+  font-size: 22px;
+  height: 22px;
+  width: 22px;
+  color: #4CAF50; /* Iconos verdes */
+  flex-shrink: 0;
+}
+
+.data-label {
+  font-weight: 600;
+  color: #1B5E20; /* Verde muy oscuro */
+  min-width: 100px; /* Para alinear las etiquetas */
+}
+
+.data-value {
+  flex-grow: 1;
+}
+
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .sensor-control-card,
+  .sensor-status-card,
+  .sensor-highlight-data-card {
+    max-width: 90%; /* Ocupa más ancho en pantallas pequeñas */
+    min-width: unset; /* Elimina el min-width */
+    width: 100%; /* Asegura que tome el ancho completo disponible */
+  }
+
+  .page-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 20px;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .back-icon {
+    font-size: 26px;
+  }
+  .sensor-control-card,
+  .sensor-status-card,
+  .sensor-highlight-data-card {
+    padding: 15px;
+  }
+  .control-buttons {
+    flex-direction: column; /* Apila los botones verticalmente */
+  }
+  .control-buttons button {
+    width: 100%; /* Que los botones tomen todo el ancho */
+  }
+}

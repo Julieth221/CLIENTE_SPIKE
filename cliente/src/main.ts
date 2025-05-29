@@ -34,6 +34,8 @@ import { GestionAlertComponent } from './app/components/sensor/gestion-alert/ges
 import { EditarFincaComponent } from './app/components/finca/editar-finca/editar-finca.component';
 import { MapsSensorComponent } from './app/components/sensor/maps-sensor/maps-sensor.component';
 import { HistorialAlertComponent } from './app/components/sensor/historial-alert/historial-alert.component';
+import { EditarArrendamientosComponent } from './app/components/finca/editar-arrendamientos/editar-arrendamientos.component';
+import { HistorialParcelaComponent } from './app/components/finca/historial-parcela/historial-parcela.component';
 
 
 
@@ -64,7 +66,7 @@ bootstrapApplication(AppComponent,{
                   { path: 'finca/verCardFincas', component: CardFincasComponent },
                   { path: 'finca/datosFinca', component: RegisterTipoSueloComponent },
                   { path: 'finca/datosArrendamiento', component: TablaArrendamientosComponent},
-                  { path: 'finca/verArrendamiento', component: VerArrendamientosComponent},
+                  { path: 'finca/arrendamientodetalle', component: VerArrendamientosComponent},
                   { path: 'finca/editarFinca', component: EditarFincaComponent},
                   { path: 'sensor/gestion-sensores', component: GestionSensoresComponent },
                   { path: 'finca/verArrendamiento', component: VerArrendamientosComponent},
@@ -77,10 +79,10 @@ bootstrapApplication(AppComponent,{
                   { path: 'sensor/gestion-alert', component: GestionAlertComponent},
                 // { path: 'finca/verArrendamiento', component: VerArrendamientosComponent},
                   { path: 'sensor/historial-alert', component: HistorialAlertComponent},
-                  
+                  { path: 'finca/editararrendamiento', component: EditarArrendamientosComponent},
+                  { path: 'finca/historialParcela', component: HistorialParcelaComponent}
               ],
             },
-
           ]),
           
         provideAnimations(),

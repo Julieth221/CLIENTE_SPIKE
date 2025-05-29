@@ -21,7 +21,7 @@
 
 /* Encabezado del diálogo */
 .dialog-container {
-  max-width: 1000px;
+  max-width: 1200px;
   width: 100%;
   margin: 0 auto;
   padding: 0;
@@ -36,7 +36,7 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
-.dialog-header .dialog-title {
+.dialog-title {
   display: flex;
   align-items: center;
   margin: 0;
@@ -45,7 +45,7 @@
   color: #333;
 }
 
-.dialog-header .dialog-title .title-icon {
+.title-icon {
   margin-right: 8px;
   color: #4caf50;
 }
@@ -202,4 +202,216 @@
   .parcelas-container .parcelas-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.detalle-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: calc(100vh - 64px);
+}
+
+.detalle-content {
+  margin-top: 24px;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.detalle-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.detalle-card:hover {
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.detalle-card mat-card-header {
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
+  border-radius: 12px 12px 0 0;
+}
+
+.detalle-card mat-card-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.card-icon {
+  margin-right: 8px;
+  color: #4caf50;
+}
+
+.detalle-card mat-card-content {
+  padding: 24px;
+}
+
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.info-icon {
+  color: #666;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.info-label {
+  min-width: 120px;
+  color: #666;
+  font-weight: 500;
+}
+
+.info-value {
+  color: #333;
+  font-weight: 500;
+}
+
+.section-divider {
+  margin: 24px 0;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 24px;
+}
+
+.section-icon {
+  margin-right: 12px;
+  color: #4caf50;
+}
+
+.terms-section,
+.geolocation-section {
+  margin-top: 24px;
+}
+
+.mapa-container {
+  margin-top: 24px;
+  height: 250px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.spinner-text {
+  margin-top: 16px;
+  color: #666;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background-color: #ffebee;
+  border-radius: 8px;
+  color: #c62828;
+  margin: 24px 0;
+}
+
+.error-message mat-icon {
+  margin-right: 8px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .detalle-container {
+    padding: 16px;
+  }
+
+  .detalle-card mat-card-content,
+  .parcela-card mat-card-content {
+    padding: 16px;
+  }
+
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .info-label {
+    min-width: auto;
+  }
+
+  .mapa-container {
+    height: 200px;
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.btn-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-back:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.btn-back mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.finca-title {
+  margin: 0 0 0 24px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
 }

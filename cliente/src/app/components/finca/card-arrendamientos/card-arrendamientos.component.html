@@ -7,30 +7,30 @@
 <div *ngIf="errorMessage" class="error-message animate__animated animate__fadeIn">
   <mat-icon class="error-icon">error</mat-icon>
   <p>{{ errorMessage }}</p>
-  <button mat-raised-button color="primary" (click)="reintentar()">
+  <button mat-raised-button color="primary" (click)="cargarParcelas()">
     <mat-icon>refresh</mat-icon> Reintentar
   </button>
 </div>
 
-<!-- TARJETAS DE ARRENDAMIENTOS -->
+<!-- TARJETAS DE PARCELAS -->
 <div class="cards-grid animate__animated animate__fadeIn" *ngIf="!loading && !errorMessage">
-  <div class="arrendamiento-card" *ngFor="let arrendamiento of arrendamientos.length > 0 ? arrendamientos : arrendamientosData" [attr.data-id]="arrendamiento.id">
+  <div class="parcela-card" *ngFor="let parcela of parcelas">
     <div class="card-header">
       <div class="card-title-area">
-        <h3 class="card-title">{{ arrendamiento.Finca || 'Finca no disponible' }}</h3>
-        <div class="arrendatario">
-          <mat-icon class="person-icon">person</mat-icon>
-          <span>{{ arrendamiento.Arrendatario || 'Arrendatario no disponible' }}</span>
+        <h3 class="card-title">{{ parcela.NombreParcela }}</h3>
+        <div class="estado-chip" [style.background]="getEstadoColor(parcela.Estado)">
+          <mat-icon>{{ getEstadoIcon(parcela.Estado) }}</mat-icon>
+          <span>{{ parcela.Estado }}</span>
         </div>
       </div>
       <div class="card-actions">
-        <button mat-icon-button color="primary" matTooltip="Ver detalles" (click)="verArrendamiento(arrendamiento)" class="btn-view">
+        <button mat-icon-button color="primary" matTooltip="Ver detalles" (click)="verArrendamiento(parcela)" class="btn-view">
           <mat-icon>visibility</mat-icon>
         </button>
-        <button mat-icon-button color="primary" matTooltip="Editar arrendamiento" (click)="editarArrendamiento(arrendamiento)" class="btn-edit">
+        <button mat-icon-button color="primary" matTooltip="Editar arrendamiento" (click)="editarArrendamiento(parcela)" class="btn-edit">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button color="warn" matTooltip="Eliminar arrendamiento" (click)="eliminarArrendamiento(arrendamiento)" class="btn-delete">
+        <button mat-icon-button color="warn" matTooltip="Eliminar arrendamiento" (click)="eliminarArrendamiento(parcela)" class="btn-delete">
           <mat-icon>delete</mat-icon>
         </button>
       </div>
@@ -42,33 +42,33 @@
       <div class="info-section">
         <div class="info-group">
           <div class="info-item">
-            <div class="info-icon-bg parcelas-bg">
-              <mat-icon>grid_view</mat-icon>
+            <div class="info-icon-bg tamano-bg">
+              <mat-icon>square_foot</mat-icon>
             </div>
             <div class="info-details">
-              <span class="info-label">Parcelas</span>
-              <span class="info-value">{{ arrendamiento.CantidadParcelas }}</span>
+              <span class="info-label">Tamaño</span>
+              <span class="info-value">{{ parcela.TamanoParcela }}</span>
             </div>
           </div>
           
-          <div class="info-item">
-            <div class="info-icon-bg valor-bg">
-              <mat-icon>attach_money</mat-icon>
+          <div class="info-item" *ngIf="parcela.Arrendatario">
+            <div class="info-icon-bg arrendatario-bg">
+              <mat-icon>person</mat-icon>
             </div>
             <div class="info-details">
-              <span class="info-label">Valor</span>
-              <span class="info-value">{{ arrendamiento.Valor || 'No especificado' }}</span>
+              <span class="info-label">Arrendatario</span>
+              <span class="info-value">{{ parcela.Arrendatario }}</span>
             </div>
           </div>
         </div>
       </div>
       
-      <div class="dates-section">
+      <div class="dates-section" *ngIf="parcela.Estado === 'Arrendada'">
         <div class="date-item">
           <mat-icon class="date-icon">event</mat-icon>
           <div class="date-details">
             <span class="date-label">Fecha inicio</span>
-            <span class="date-value">{{ formatDate(arrendamiento.FechaInicio) }}</span>
+            <span class="date-value">{{ formatDate(parcela.FechaInicio) }}</span>
           </div>
         </div>
         
@@ -76,15 +76,18 @@
           <mat-icon class="date-icon">event_busy</mat-icon>
           <div class="date-details">
             <span class="date-label">Fecha fin</span>
-            <span class="date-value">{{ formatDate(arrendamiento.FechaFin) }}</span>
+            <span class="date-value">{{ formatDate(parcela.FechaFin) }}</span>
           </div>
         </div>
       </div>
       
-      <div class="estado-section">
-        <div class="estado-chip" [style.background]="getEstadoColor(arrendamiento)">
-          <mat-icon>{{ estaActivo(arrendamiento) ? 'check_circle' : 'cancel' }}</mat-icon>
-          <span class="estado-label">{{ getEstadoTexto(arrendamiento) }}</span>
+      <div class="valor-section" *ngIf="parcela.Estado === 'Arrendada'">
+        <div class="valor-item">
+          <mat-icon class="valor-icon">attach_money</mat-icon>
+          <div class="valor-details">
+            <span class="valor-label">Valor del arrendamiento</span>
+            <span class="valor-value">{{ formatCurrency(parcela.Valor) }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -92,8 +95,11 @@
 </div>
 
 <!-- Estado vacío -->
-<div *ngIf="!loading && !errorMessage && (arrendamientos.length === 0 && arrendamientosData.length === 0)" class="empty-state">
+<div *ngIf="!loading && !errorMessage && parcelas.length === 0" class="empty-state">
   <mat-icon class="empty-icon">assignment</mat-icon>
-  <h3>No hay arrendamientos disponibles</h3>
-  <p>Aún no se han registrado arrendamientos para tus fincas</p>
+  <h3>No hay parcelas disponibles</h3>
+  <p>Aún no se han registrado parcelas para esta finca</p>
+  <button mat-raised-button color="primary" (click)="registrarArrendamiento()">
+    <mat-icon>add</mat-icon> Registrar Nuevo Arrendamiento
+  </button>
 </div>
