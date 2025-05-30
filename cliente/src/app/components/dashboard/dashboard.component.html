@@ -33,7 +33,7 @@
             <li><button type="button"  routerLink="/dashboard/finca/datosArrendamiento">
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Ver Arrendamientos</button></li>
             <li><button type="button"  routerLink="/dashboard/finca/historialParcela">
-              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Ver historial y evolución de la parcela</button></li>
+              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Ver historial de la parcela</button></li>
           </ul>
         </div>
       </li>
@@ -45,6 +45,8 @@
         </button>
         <div class="sub-menu" *ngIf="activeSubMenu === 'cultivo'">
           <ul>
+            <li><button type="button" routerLink="/dashboard/cultivo/datosCultivo">
+              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Datos Cultivo</button></li>
             <li><button type="button" >
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Gestión de Cultivos</button></li>
             <li><button type="button" >

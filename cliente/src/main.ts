@@ -27,6 +27,8 @@ import { VerArrendamientosComponent } from './app/components/finca/ver-arrendami
 import { EditarFincaComponent } from './app/components/finca/editar-finca/editar-finca.component';
 import { EditarArrendamientosComponent } from './app/components/finca/editar-arrendamientos/editar-arrendamientos.component';
 import { HistorialParcelaComponent } from './app/components/finca/historial-parcela/historial-parcela.component';
+import { DatosCultivoComponent } from './app/components/cultivo/datos-cultivo/datos-cultivo.component';
+
 
 
 
@@ -61,7 +63,8 @@ bootstrapApplication(AppComponent,{
                   { path: 'finca/editarFinca', component: EditarFincaComponent},
                   { path: 'sensor/gestion-sensores', component: GestionSensoresComponent },
                   { path: 'finca/editararrendamiento', component: EditarArrendamientosComponent},
-                  { path: 'finca/historialParcela', component: HistorialParcelaComponent}
+                  { path: 'finca/historialParcela', component: HistorialParcelaComponent},
+                  { path: 'cultivo/datosCultivo', component: DatosCultivoComponent}
               ],
             },
           ]),
