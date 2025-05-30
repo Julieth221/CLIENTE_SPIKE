@@ -1,0 +1,494 @@
+.main-container {
+  padding: 20px; /* Reduced padding for better responsiveness */
+  max-width: 1200px; /* Added max-width for better layout on very large screens */
+  margin: 0 auto;
+}
+
+.page-title {
+  margin-bottom: 20px;
+  font-size: 28px; /* Slightly adjusted font size */
+  font-weight: bold;
+  color: #5e5858;
+  cursor: pointer;
+  display: flex; /* Make it a flex container */
+  align-items: center; /* Vertically align items */
+  gap: 10px; /* Space between text and icon */
+  justify-content: center; /* Center the title and icon */
+}
+
+.back-icon {
+  cursor: pointer;
+  margin-right: 5px;
+  color: #4CAF50; /* Color verde para el icono de retorno */
+  font-size: 28px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.back-icon:hover {
+  transform: translateX(-5px);
+}
+
+.loading-indicator,
+.error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: #666;
+}
+
+.loading-indicator mat-progress-spinner {
+  margin-bottom: 10px;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #d32f2f;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.error-message mat-icon {
+  margin-right: 8px;
+}
+
+.content-wrapper {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap; /* Allow wrapping for responsiveness */
+}
+
+.left-section {
+  flex: 1;
+  min-width: 300px; /* Ensure left section doesn't get too small */
+}
+
+.right-section {
+  width: 380px; /* Increased width for detail card */
+  flex-shrink: 0; /* Prevent shrinking on smaller screens */
+  /* For mobile, it will take full width via media query */
+}
+
+/* Por defecto, la vista de tarjetas debe ser visible y la de tabla oculta */
+.left-section.table-view {
+  display: none; /* Ocultar la tabla por defecto */
+}
+
+.left-section.card-view {
+  display: block; /* Mostrar las tarjetas por defecto */
+}
+
+
+.alert-table-card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden; /* Ensures border-radius is applied to table content */
+}
+
+.alert-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.alert-table th, .alert-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+}
+
+.alert-table th {
+  background-color: #f5f5f5;
+  font-weight: 500;
+  color: #333;
+}
+
+.alert-table tbody tr:hover {
+  background-color: #f0f4c3;
+  cursor: pointer;
+}
+
+/* Alert Detail Card Styles */
+.alert-details-card {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* Sombra más suave y extendida */
+  border-radius: 12px; /* Bordes más redondeados */
+  padding: 20px; /* Aumenta el padding */
+  background-color: #ffffff; /* Fondo blanco */
+}
+
+.alert-details-header {
+  background-color: #f8f8f8; /* Fondo muy claro para el header */
+  border-bottom: 1px solid #f0f0f0; /* Borde más sutil */
+  padding: 15px 20px; /* Ajusta el padding */
+  margin: -20px -20px 20px -20px; /* Ajusta los márgenes para expandir el header */
+  border-radius: 12px 12px 0 0; /* Bordes redondeados en la parte superior */
+}
+
+.alert-details-card mat-card-title {
+  font-size: 1.4em; /* Tamaño de fuente ligeramente más grande */
+  font-weight: 600;
+  color: #333;
+}
+
+.alert-details-card mat-card-subtitle {
+  color: #666;
+  font-size: 0.9em;
+}
+
+/* Nuevos estilos para la visualización de la información */
+.detail-info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Espacio entre cada fila de información */
+  padding-top: 10px;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start; /* Alinea los ítems al inicio de la línea */
+  gap: 10px; /* Espacio entre icono y texto */
+  font-size: 0.95em;
+  color: #444;
+}
+
+.info-icon {
+  font-size: 20px; /* Tamaño del icono */
+  height: 20px;
+  width: 20px;
+  color: #666; /* Color del icono */
+  flex-shrink: 0; /* Evita que el icono se encoja */
+  margin-top: 2px; /* Pequeño ajuste para alinear con el texto */
+}
+
+.info-label {
+  font-weight: 600; /* Hace la etiqueta más negrita */
+  color: #333;
+  min-width: 100px; /* Ancho mínimo para las etiquetas, ajusta según necesidad */
+}
+
+.info-value {
+  flex-grow: 1; /* Permite que el valor ocupe el espacio restante */
+}
+
+
+.card-actions-detail {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  padding-top: 20px; /* Aumenta el padding superior */
+  gap: 10px; /* Aumenta el espacio entre botones */
+  flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+}
+
+.card-actions-detail button {
+  font-size: 0.9em; /* Tamaño de fuente ligeramente más grande */
+  padding: 10px 18px; /* Aumenta el padding */
+  border-radius: 8px; /* Bordes redondeados para los botones */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil para los botones */
+  transition: all 0.2s ease-in-out;
+}
+
+.card-actions-detail button:hover {
+  transform: translateY(-2px); /* Efecto hover sutil */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* State Specific Styling */
+.estado-activa {
+  color: #28a745; /* Green */
+  font-weight: bold;
+}
+.estado-inactiva {
+  color: #6c757d; /* Grey */
+  font-weight: bold;
+}
+.estado-resuelta {
+  color: #007bff; /* Blue */
+  font-weight: bold;
+}
+
+/* Card View for Small Screens */
+.alert-cards-list {
+  padding: 10px 0;
+}
+
+.alert-item-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  width: 280px; /* Ajustado para que se vean horizontalmente */
+  flex-shrink: 0; /* Evita que las tarjetas se encojan */
+  flex-grow: 0; /* Evita que las tarjetas crezcan */
+}
+
+.alert-item-card:hover {
+  transform: translateY(-5px);
+}
+
+.alert-item-card mat-card-header {
+  background-color: #e8f5e9; /* Light green header for cards */
+  color: #333;
+  padding: 12px;
+  border-radius: 8px 8px 0 0;
+}
+
+.alert-item-card mat-card-title {
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.alert-item-card mat-card-subtitle {
+  font-size: 0.8em;
+  color: #555;
+}
+
+.alert-item-card mat-card-content {
+  padding: 15px;
+  flex-grow: 1; /* Allow content to grow */
+}
+
+.card-simple-detail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.card-simple-detail mat-icon {
+  font-size: 18px;
+  color: #777;
+}
+
+.card-actions-simple {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 15px 15px 15px;
+  margin-top: auto; /* Push button to bottom */
+}
+
+
+/* Media Queries for Responsiveness */
+@media (max-width: 900px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+  .right-section {
+    width: 100%; /* Detail card takes full width */
+  }
+  .left-section.table-view {
+    display: none; /* Hide table on smaller screens */
+  }
+  .left-section.card-view {
+    display: block; /* Show cards on smaller screens */
+  }
+  .page-title {
+    font-size: 24px; /* Smaller title on mobile */
+  }
+  .main-container {
+    padding: 15px; /* Smaller padding on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  /* .alert-cards-list { */
+    /* Aquí se ajusta el grid para una sola columna en pantallas muy pequeñas */
+    /* El flexbox en .alerts-in-cultivo-grid ya maneja el envolvimiento */
+  /* } */
+  .alert-item-card {
+    width: 100%; /* Las tarjetas ocupan todo el ancho en pantallas muy pequeñas */
+  }
+}
+
+/* Filtros */
+.filter-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 15px;
+}
+
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: flex-end;
+}
+
+.filter-field {
+  flex: 1;
+  min-width: 180px;
+}
+
+.filter-button, .clear-filter-button {
+  height: 56px; /* Match mat-form-field height */
+  padding: 0 20px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.filter-button {
+  background-color: #4CAF50; /* Verde */
+  color: white;
+}
+
+.filter-button:hover {
+  background-color: #388E3C;
+}
+
+.clear-filter-button {
+  border: 1px solid #B0B0B0;
+  color: #666;
+}
+
+.clear-filter-button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Agrupación por cultivo */
+.cultivo-group {
+  margin-bottom: 30px;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  background-color: #fdfdfd;
+}
+
+.cultivo-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2E7D32; /* Verde oscuro */
+  margin-bottom: 10px;
+}
+
+.cultivo-divider {
+  margin-bottom: 20px;
+  border-color: #e8f5e9; /* Verde muy claro */
+}
+
+.alerts-in-cultivo-grid {
+  display: flex; /* Cambiado de grid a flex */
+  flex-wrap: wrap; /* Permite que las tarjetas se envuelvan */
+  gap: 20px; /* Espaciado entre tarjetas */
+  justify-content: flex-start; /* Alinea las tarjetas al inicio de la fila */
+}
+
+/* Iconos de estado en las tarjetas de alerta */
+.alert-card-title mat-icon {
+  margin-right: 8px;
+  font-size: 24px;
+}
+
+.icon-active {
+  color: #FFC107; /* Amarillo para activa/pendiente */
+}
+
+.icon-inactive {
+  color: #607D8B; /* Gris para inactiva */
+}
+
+.icon-resolved {
+  color: #4CAF50; /* Verde para resuelta */
+}
+
+/* Subtítulo de la tarjeta de alerta con iconos pequeños */
+.alert-card-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85em;
+  color: #757575;
+}
+
+.alert-card-subtitle .small-icon {
+  font-size: 16px;
+  height: 16px;
+  width: 16px;
+  color: #9E9E9E;
+}
+
+/* Filas de detalle en el contenido de la tarjeta */
+.card-detail-row {
+  display: flex;
+  align-items: flex-start; /* Alinea el icono y el texto al inicio */
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.card-detail-row mat-icon {
+  font-size: 18px;
+  color: #777;
+  flex-shrink: 0; /* Evita que el icono se encoja */
+}
+
+/* Estado vacío */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 20px;
+  text-align: center;
+  color: #667085;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.empty-icon {
+  font-size: 64px;
+  height: 64px;
+  width: 64px;
+  color: #D0D5DD;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #344054;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  font-size: 0.95rem;
+  max-width: 380px;
+}
+
+/* Media Queries para Responsividad de filtros */
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+  .right-section {
+    width: 100%; /* Detail card takes full width */
+  }
+  .left-section.table-view {
+    display: none; /* Hide table on smaller screens */
+  }
+  .left-section.card-view {
+    display: block; /* Show cards on smaller screens */
+  }
+  .page-title {
+    font-size: 24px; /* Smaller title on mobile */
+  }
+  .main-container {
+    padding: 15px; /* Smaller padding on mobile */
+  }
+  .alerts-in-cultivo-grid {
+    flex-direction: column; /* Asegura que se apilen verticalmente en móvil */
+  }
+}
+@media (max-width: 480px) {
+  .alert-item-card {
+    width: 100%; /* Las tarjetas ocupan todo el ancho en pantallas muy pequeñas */
+  }
+}

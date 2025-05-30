@@ -1,0 +1,343 @@
+/* Estilos generales para la tarjeta del diálogo */
+.dialog-card {
+  padding: 0; /* Elimina el padding interno de la tarjeta */
+  border-radius: 12px; /* Bordes redondeados para la tarjeta */
+  overflow: hidden; /* Oculta cualquier contenido que se desborde de los bordes redondeados */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad a la tarjeta */
+  max-width: 700px; /* Ancho máximo de la tarjeta en pantallas grandes */
+  width: 95%; /* La tarjeta ocupará el 95% del ancho disponible */
+  height: fit-content; /* La altura se ajustará al contenido */
+  max-height: 90vh; /* Altura máxima del 90% del viewport height para permitir el scroll */
+  overflow-y: auto; /* Habilita el scroll vertical si el contenido excede la altura máxima */
+  margin: 20px auto; /* Margen superior e inferior de 20px y centrado horizontalmente */
+}
+
+/* Colores de fondo de la tarjeta según el estado de la alerta */
+.card-resolved {
+  background-color: #e8f5e9; /* Verde claro para alertas resueltas */
+}
+
+.card-pending {
+  background-color: #fffde7; /* Amarillo claro para alertas pendientes */
+}
+
+/* Estilos para el encabezado del diálogo */
+.dialog-header {
+  background-color: #4CAF50; /* Verde primario */
+  color: white; /* Color de texto blanco */
+  padding: 20px; /* Espaciado interno del encabezado */
+  display: flex; /* Usa flexbox para alinear elementos */
+  justify-content: space-between; /* Distribuye el título y el botón de cierre */
+  align-items: center; /* Centra verticalmente los elementos */
+  border-radius: 12px 12px 0 0; /* Bordes redondeados solo en la parte superior */
+  position: sticky; /* Hace que el encabezado se mantenga visible al hacer scroll */
+  top: 0; /* Lo fija en la parte superior del contenedor con scroll */
+  z-index: 10; /* Asegura que el encabezado esté por encima del contenido al hacer scroll */
+}
+
+/* Estilos para el título del encabezado */
+.dialog-header mat-card-title {
+  font-size: 1.5rem; /* Tamaño de fuente del título */
+  font-weight: bold; /* Texto en negrita */
+}
+
+/* Estilos para el botón de cierre */
+.close-button {
+  color: white; /* Color de texto blanco */
+}
+
+/* Estilos para el contenido principal del diálogo */
+.dialog-content {
+  padding: 20px; /* Espaciado interno del contenido */
+  display: flex; /* Usa flexbox */
+  flex-direction: column; /* Organiza los elementos en una columna */
+  gap: 20px; /* Espacio entre los elementos de la columna */
+}
+
+/* Contenedor para la información y el gráfico */
+.info-and-chart-container {
+  display: flex; /* Usa flexbox */
+  flex-direction: column; /* Apila la información y el gráfico verticalmente */
+  gap: 20px; /* Espacio entre las secciones */
+}
+
+/* Estilos para la sección de información */
+.info-section {
+  flex: none; /* No permite que la sección crezca o se encoja */
+  min-width: unset; /* Elimina la restricción de ancho mínimo */
+}
+
+/* Estilos para la sección del gráfico */
+.chart-section {
+  flex: none; /* No permite que la sección crezca o se encoja */
+  min-width: unset; /* Elimina la restricción de ancho mínimo */
+}
+
+/* Estilos para los títulos de las secciones de detalle */
+.detail-section h3 {
+  display: flex; /* Usa flexbox para alinear el icono y el texto */
+  align-items: center; /* Centra verticalmente el icono y el texto */
+  gap: 8px; /* Espacio entre el icono y el texto */
+  font-size: 1.1rem; /* Tamaño de fuente */
+  font-weight: 600; /* Grosor de fuente */
+  color: #344054; /* Color de texto */
+  margin-bottom: 15px; /* Margen inferior */
+  border-bottom: 1px solid #eee; /* Línea divisoria inferior */
+  padding-bottom: 5px; /* Espaciado debajo de la línea divisoria */
+}
+
+/* Estilos para los iconos en los títulos de las secciones de detalle */
+.detail-section h3 mat-icon {
+  color: #4CAF50; /* Icono verde */
+  font-size: 22px; /* Tamaño del icono */
+}
+
+/* Estilos para los párrafos de detalle */
+.detail-section p {
+  margin: 8px 0; /* Margen superior e inferior */
+  font-size: 0.95rem; /* Tamaño de fuente */
+  color: #475467; /* Color de texto */
+}
+
+/* Estilos para el texto en negrita dentro de los párrafos de detalle */
+.detail-section p strong {
+  color: #344054; /* Color de texto más oscuro */
+}
+
+/* Estilos para el chip del tipo de sensor */
+.sensor-type-chip {
+  display: inline-flex; /* Usa flexbox para alinear el icono y el texto */
+  align-items: center; /* Centra verticalmente los elementos */
+  gap: 4px; /* Espacio entre el icono y el texto */
+  padding: 4px 8px; /* Espaciado interno */
+  border-radius: 12px; /* Bordes redondeados */
+  background-color: #e8f5e9; /* Fondo verde claro */
+  color: #388E3C; /* Texto verde más oscuro */
+  font-size: 0.8rem; /* Tamaño de fuente */
+  font-weight: 500; /* Grosor de fuente */
+  margin-left: 10px; /* Margen izquierdo */
+}
+
+/* Estilos para el icono dentro del chip del tipo de sensor */
+.sensor-type-chip mat-icon {
+  font-size: 16px; /* Tamaño del icono */
+  height: 16px; /* Altura del icono */
+  width: 16px; /* Ancho del icono */
+  color: #388E3C; /* Color del icono */
+}
+
+/* Estilos para el chip de estado */
+.status-chip {
+  display: inline-flex; /* Usa flexbox para alinear el icono y el texto */
+  align-items: center; /* Centra verticalmente los elementos */
+  gap: 6px; /* Espacio entre el icono y el texto */
+  padding: 5px 10px; /* Espaciado interno */
+  border-radius: 16px; /* Bordes redondeados */
+  font-size: 0.85rem; /* Tamaño de fuente */
+  font-weight: 500; /* Grosor de fuente */
+  color: white; /* Color de texto blanco */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Sombra de texto */
+  margin-left: 10px; /* Margen izquierdo */
+}
+
+/* Estilos para el icono dentro del chip de estado */
+.status-chip mat-icon {
+  font-size: 16px; /* Tamaño del icono */
+  height: 16px; /* Altura del icono */
+  width: 16px; /* Ancho del icono */
+}
+
+/* Estilos para el divisor de Material Design */
+mat-divider {
+  margin: 15px 0; /* Margen superior e inferior */
+  border-color: #e0e0e0; /* Color del borde */
+}
+
+/* Estilos para las acciones del diálogo (botones) */
+.dialog-actions {
+  display: flex; /* Usa flexbox */
+  justify-content: flex-end; /* Alinea los botones a la derecha */
+  padding: 15px 20px; /* Espaciado interno */
+  border-top: 1px solid #eee; /* Línea divisoria superior */
+  position: sticky; /* Hace que las acciones se mantengan visibles al hacer scroll */
+  bottom: 0; /* Lo fija en la parte inferior del contenedor con scroll */
+  background-color: white; /* Asegura un fondo blanco para las acciones */
+  z-index: 10; /* Asegura que las acciones estén por encima del contenido al hacer scroll */
+}
+
+/* Estilos para los botones de acción */
+.dialog-actions button {
+  background-color: #4CAF50; /* Fondo verde */
+  color: white; /* Texto blanco */
+  padding: 10px 20px; /* Espaciado interno */
+  font-size: 1rem; /* Tamaño de fuente */
+  border-radius: 8px; /* Bordes redondeados */
+  transition: all 0.3s ease; /* Transición suave para efectos hover */
+}
+
+/* Estilos para los botones de acción al pasar el ratón por encima */
+.dialog-actions button:hover {
+  background-color: #388E3C; /* Verde más oscuro al hacer hover */
+}
+
+/* Estilos específicos para los controles del gráfico (aunque ahora no se usan para selección de tipo) */
+.chart-controls {
+  display: flex; /* Usa flexbox */
+  justify-content: center; /* Centra los botones de control del gráfico */
+  margin-bottom: 15px; /* Margen inferior */
+}
+
+/* Estilos para el grupo de botones de alternancia del gráfico */
+.chart-toggle-group .mat-button-toggle-group {
+  border-radius: 8px; /* Bordes redondeados */
+  overflow: hidden; /* Oculta el desbordamiento */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* Sombra */
+}
+
+/* Estilos para los botones de alternancia del gráfico */
+.chart-toggle-group .mat-button-toggle {
+  background-color: white; /* Fondo blanco */
+  color: #667085; /* Color de texto */
+  font-weight: 500; /* Grosor de fuente */
+  height: 40px; /* Altura */
+  padding: 0 16px; /* Espaciado interno */
+}
+
+/* Estilos para los botones de alternancia del gráfico cuando están seleccionados */
+.chart-toggle-group .mat-button-toggle-checked {
+  background-color: #e8f5e9; /* Fondo verde claro */
+  color: #4CAF50; /* Texto verde */
+}
+
+/* Estilos para los iconos dentro de los botones de alternancia del gráfico */
+.chart-toggle-group mat-icon {
+  margin-right: 6px; /* Margen derecho */
+}
+
+/* Estilos para el contenedor del gráfico */
+.chart-container {
+  display: flex; /* Usa flexbox */
+  flex-direction: column; /* Apila los elementos en una columna */
+  align-items: center; /* Centra horizontalmente los elementos */
+  background-color: #f9f9f9; /* Fondo gris claro */
+  border: 1px solid #e0e0e0; /* Borde */
+  border-radius: 8px; /* Bordes redondeados */
+  padding: 15px; /* Espaciado interno */
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Sombra interna */
+  width: 100%; /* Ocupa todo el ancho disponible */
+}
+
+/* Estilos para el elemento canvas (donde se dibuja el gráfico) */
+canvas {
+  background-color: white; /* Fondo blanco */
+  border: 1px solid #ddd; /* Borde */
+  border-radius: 4px; /* Bordes redondeados */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Sombra */
+  width: 100%; /* Hace que el canvas sea responsive dentro de su contenedor */
+  height: auto; /* Mantiene la relación de aspecto */
+  max-width: 600px; /* Ancho máximo para el gráfico en escritorio */
+  max-height: 300px; /* Altura máxima para el gráfico en escritorio */
+}
+
+/* Estilos para la leyenda del gráfico */
+.chart-caption {
+  font-size: 0.85rem; /* Tamaño de fuente */
+  color: #666; /* Color de texto */
+  margin-top: 10px; /* Margen superior */
+  text-align: center; /* Texto centrado */
+}
+
+/* Estilos para los puntos de la leyenda (círculos de color) */
+.legend-dot {
+  display: inline-block; /* Permite que el span tenga ancho y alto */
+  width: 10px; /* Ancho del círculo */
+  height: 10px; /* Altura del círculo */
+  border-radius: 50%; /* Hace que el elemento sea un círculo */
+  margin: 0 5px; /* Espacio alrededor del círculo */
+}
+
+/* Colores específicos para los puntos de la leyenda */
+.red-dot {
+  background-color: #FF0000; /* Rojo para alertas pendientes */
+}
+
+.green-dot {
+  background-color: #4CAF50; /* Verde para alertas resueltas */
+}
+
+/* Estilos para el mensaje cuando no hay datos de gráfico */
+.no-chart-message {
+  font-style: italic; /* Texto en cursiva */
+  color: #888; /* Color de texto gris */
+  text-align: center; /* Texto centrado */
+  padding: 20px; /* Espaciado interno */
+  background-color: #f0f0f0; /* Fondo gris claro */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+  /* Ajustes para la tarjeta del diálogo en pantallas pequeñas */
+  .dialog-card {
+    margin: 10px; /* Mantiene un margen para que no toque los bordes de la pantalla */
+    max-width: 95%; /* Ajusta el ancho máximo para pantallas más pequeñas */
+  }
+
+  /* Ajustes para el encabezado del diálogo en pantallas pequeñas */
+  .dialog-header {
+    padding: 15px; /* Reduce el padding */
+  }
+
+  /* Ajustes para el título del encabezado en pantallas pequeñas */
+  .dialog-header mat-card-title {
+    font-size: 1.3rem; /* Reduce el tamaño de fuente */
+  }
+
+  /* Ajustes para el contenido del diálogo en pantallas pequeñas */
+  .dialog-content {
+    padding: 15px; /* Reduce el padding */
+  }
+
+  /* Ajustes para el contenedor de información y gráfico en pantallas pequeñas */
+  .info-and-chart-container {
+    flex-direction: column; /* Apila verticalmente en móvil */
+  }
+
+  /* Ajustes para el canvas del gráfico en pantallas pequeñas */
+  canvas {
+    width: 100%; /* Ocupa todo el ancho en móvil */
+    height: 200px; /* Altura fija para gráficos en móvil para evitar excesos */
+    max-width: none; /* Elimina la restricción de ancho máximo */
+    max-height: none; /* Elimina la restricción de altura máxima */
+  }
+
+  /* Ajustes para los títulos de sección en pantallas pequeñas */
+  .detail-section h3 {
+    font-size: 1rem; /* Reduce el tamaño de fuente */
+  }
+
+  /* Ajustes para los párrafos de detalle en pantallas pequeñas */
+  .detail-section p {
+    font-size: 0.9rem; /* Reduce el tamaño de fuente */
+  }
+
+  /* Ajustes para el chip del tipo de sensor en pantallas pequeñas */
+  .sensor-type-chip {
+    margin-left: 0; /* Elimina el margen izquierdo */
+    margin-top: 5px; /* Añade un pequeño margen superior */
+    display: flex; /* Usa flexbox */
+    justify-content: center; /* Centra el chip */
+  }
+
+  /* Ajustes para el contenedor del gráfico en pantallas pequeñas */
+  .chart-container {
+    padding: 10px; /* Reduce el padding */
+  }
+
+  /* Ajustes para las acciones del diálogo en pantallas pequeñas */
+  .dialog-actions {
+    flex-direction: column; /* Apila los botones verticalmente */
+    gap: 10px; /* Espacio entre los botones */
+    padding: 15px; /* Reduce el padding */
+  }
+}

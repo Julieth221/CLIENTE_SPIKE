@@ -1,0 +1,113 @@
+<div class="main-container">
+  <div class="page-title">
+    <span>Prueba de Funcionalidad del Sensor</span>
+  </div>
+
+  <div class="content-wrapper">
+    <mat-card class="sensor-control-card">
+      <mat-card-title>Seleccionar Sensor</mat-card-title>
+      <mat-card-content>
+        <mat-form-field appearance="outline" class="full-width-field">
+          <mat-label>Cultivo</mat-label>
+          <mat-select [(ngModel)]="selectedCultivo" (selectionChange)="onCultivoSelected()">
+            <mat-option value="">Todos los Cultivos</mat-option>
+            <mat-option *ngFor="let cultivo of cultivoOptions" [value]="cultivo">
+              {{ cultivo }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matSuffix>grass</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width-field">
+          <mat-label>Sensor a Probar</mat-label>
+          <mat-select [(ngModel)]="selectedSensorId" (selectionChange)="onSensorSelected()" [disabled]="availableSensors.length === 0">
+            <mat-option *ngFor="let sensor of availableSensors" [value]="sensor.id">
+              {{ sensor.nombre }} ({{ sensor.ubicacion }})
+            </mat-option>
+          </mat-select>
+          <mat-icon matSuffix>sensors</mat-icon>
+        </mat-form-field>
+
+        <mat-divider></mat-divider>
+
+        <div class="control-buttons">
+          <button mat-raised-button color="primary" (click)="startTest()" [disabled]="!selectedSensorId || sensorStatus === 'ok' || sensorStatus === 'anomalo' || sensorStatus === 'sin_datos'" matTooltip="Inicia la simulación de datos del sensor">
+            <mat-icon>play_arrow</mat-icon> Iniciar Prueba
+          </button>
+          <button mat-raised-button color="warn" (click)="stopTest()" [disabled]="sensorStatus === 'detenido'" matTooltip="Detiene la simulación de datos del sensor">
+            <mat-icon>stop</mat-icon> Detener Prueba
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="sensor-status-card">
+      <mat-card-title>Estado del Sensor</mat-card-title>
+      <mat-card-content>
+        <div class="status-display">
+          <mat-icon class="status-icon" [ngClass]="{
+            'icon-ok': sensorStatus === 'ok',
+            'icon-anomalo': sensorStatus === 'anomalo',
+            'icon-sin-datos': sensorStatus === 'sin_datos',
+            'icon-detenido': sensorStatus === 'detenido'
+          }">
+            {{
+              sensorStatus === 'ok' ? 'check_circle' :
+              (sensorStatus === 'anomalo' ? 'warning' :
+              (sensorStatus === 'sin_datos' ? 'cloud_off' : 'pause_circle_filled'))
+            }}
+          </mat-icon>
+          <div class="status-text-container">
+            <p class="status-message" [ngClass]="{
+              'message-ok': sensorStatus === 'ok',
+              'message-anomalo': sensorStatus === 'anomalo',
+              'message-sin-datos': sensorStatus === 'sin_datos',
+              'message-detenido': sensorStatus === 'detenido'
+            }">
+              {{ statusMessage }}
+            </p>
+            <p class="current-reading" *ngIf="currentReading !== null">
+              Valor Actual: <span class="reading-value">{{ currentReading }}</span>
+              <span class="reading-unit">{{ selectedSensor?.unidad_medida }}</span>
+            </p>
+            <p class="sensor-info" *ngIf="selectedSensor">
+              Sensor: {{ selectedSensor.nombre }} ({{ selectedSensor.tipo_sensor }})<br>
+              Rango Esperado: {{ selectedSensor.valor_min }} - {{ selectedSensor.valor_max }} {{ selectedSensor.unidad_medida }}
+            </p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="sensor-highlight-data-card" *ngIf="selectedSensor">
+      <mat-card-title>Datos Destacados del Sensor</mat-card-title>
+      <mat-card-content>
+        <div class="data-row">
+          <mat-icon class="data-icon">label</mat-icon>
+          <span class="data-label">Nombre:</span>
+          <span class="data-value">{{ selectedSensor.nombre }}</span>
+        </div>
+        <div class="data-row">
+          <mat-icon class="data-icon">grass</mat-icon>
+          <span class="data-label">Cultivo:</span>
+          <span class="data-value">{{ selectedSensor.cultivo }}</span>
+        </div>
+        <div class="data-row">
+          <mat-icon class="data-icon">place</mat-icon>
+          <span class="data-label">Ubicación:</span>
+          <span class="data-value">{{ selectedSensor.ubicacion }}</span>
+        </div>
+        <div class="data-row">
+          <mat-icon class="data-icon">{{ getSensorTypeIcon(selectedSensor.tipo_sensor) }}</mat-icon>
+          <span class="data-label">Tipo de Sensor:</span>
+          <span class="data-value">{{ selectedSensor.tipo_sensor }}</span>
+        </div>
+        <div class="data-row">
+          <mat-icon class="data-icon">straighten</mat-icon>
+          <span class="data-label">Rango Óptimo:</span>
+          <span class="data-value">{{ selectedSensor.valor_min }} - {{ selectedSensor.valor_max }} {{ selectedSensor.unidad_medida }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+<mat-card class="dialog-card" [ngClass]="{'card-resolved': data.Estado, 'card-pending': !data.Estado}">
+  <mat-card-header class="dialog-header">
+    <mat-card-title>Detalles de la Alerta Histórica</mat-card-title>
+    <button mat-icon-button class="close-button" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card-header>
+
+  <mat-card-content class="dialog-content">
+    <div class="info-and-chart-container">
+      <div class="detail-section info-section">
+        <h3><mat-icon>info</mat-icon> Información de la Alerta</h3>
+        <p><strong>ID Historial:</strong> {{ data.Id }}</p>
+        <p>
+          <strong>Nombre de Alerta:</strong> {{ data.IdAlerta.Nombre }}
+          <span class="sensor-type-chip">
+            <mat-icon>{{ getSensorTypeIcon(data.IdAlerta.TipoSensor) }}</mat-icon>
+            {{ data.IdAlerta.TipoSensor }}
+          </span>
+        </p>
+        <p><strong>Sensor:</strong> {{ data.IdAlerta.Nombre }}</p>
+        <p><strong>Cultivo:</strong> {{ data.IdAlerta.Cultivo }}</p>
+        <p><strong>Fecha y Hora:</strong> {{ data.FechaAlerta | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+        <p><strong>Descripción:</strong> {{ data.Descripcion }}</p>
+      </div>
+
+      <div class="detail-section chart-section">
+        <h3><mat-icon>insights</mat-icon> Historial de Lecturas del Sensor</h3>
+
+        <!-- El código comentado a continuación es el que se eliminó para simplificar la interfaz.
+             Si se desea reintroducir la selección de tipo de gráfico en el futuro, se puede descomentar.
+        <div class="chart-controls">
+          <mat-button-toggle-group
+            name="chartType"
+            [(ngModel)]="selectedChartType"
+            (change)="onChartTypeChange($event.value)"
+            class="chart-toggle-group"
+            appearance="standard"
+          >
+            <mat-button-toggle value="line" matTooltip="Gráfico de Línea">
+              <mat-icon>show_chart</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle value="bar" matTooltip="Gráfico de Barras">
+              <mat-icon>bar_chart</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle value="histogram" matTooltip="Histograma">
+              <mat-icon>analytics</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle value="pie" matTooltip="Gráfico Circular">
+              <mat-icon>pie_chart</mat-icon>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        -->
+
+        <div *ngIf="data.sensorReadings && data.sensorReadings.length > 0; else noChartData" class="chart-container">
+          <canvas #sensorChartCanvas width="600" height="300"></canvas>
+          <p class="chart-caption">
+            Este gráfico muestra cómo ha variado el valor del sensor ({{ getSensorUnit(data.IdAlerta.TipoSensor) }}) a lo largo del tiempo.
+            <br>
+            El punto <span class="legend-dot red-dot"></span> **rojo** indica el momento en que se activó la alerta y aún está **pendiente de resolución**.
+            <br>
+            El punto <span class="legend-dot green-dot"></span> **verde** indica el momento en que se activó la alerta y ya fue **resuelta**.
+            <br>
+            La línea discontinua roja aparece cuando la alerta está pendiente, señalando el valor que causó la anomalía.
+          </p>
+        </div>
+        <ng-template #noChartData>
+          <p class="no-chart-message">No hay datos de lectura del sensor disponibles para mostrar el historial gráfico.</p>
+        </ng-template>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="dialog-actions">
+    <button mat-raised-button color="primary" (click)="onClose()">Cerrar</button>
+  </mat-card-actions>
+</mat-card>

@@ -1,0 +1,174 @@
+<div class="main-container">
+  <div class="page-title" (click)="onExit()">
+    <mat-icon class="back-icon">arrow_back</mat-icon>
+    <span>Gestión de Alertas</span>
+  </div>
+
+  <div *ngIf="loading" class="loading-indicator">
+    <mat-spinner></mat-spinner>
+    <p>Cargando alertas...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div class="filter-card">
+    <mat-card-title>Filtros de Alertas</mat-card-title>
+    <mat-card-content class="filter-controls">
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Buscar por nombre/descripción</mat-label>
+        <input matInput [(ngModel)]="searchText" (input)="applyFilter()" placeholder="Ej. Alta Temperatura">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Cultivo</mat-label>
+        <mat-select [(ngModel)]="filterCultivo" (selectionChange)="applyFilter()">
+          <mat-option value="">Todos</mat-option>
+          <mat-option *ngFor="let cultivo of cultivoOptions" [value]="cultivo">{{ cultivo }}</mat-option>
+        </mat-select>
+        <mat-icon matSuffix>grass</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Tipo de Sensor</mat-label>
+        <mat-select [(ngModel)]="filterTSensor" (selectionChange)="applyFilter()">
+          <mat-option value="">Todos</mat-option>
+          <mat-option *ngFor="let tipo of tipoAlertaOptions" [value]="tipo">{{ tipo }}</mat-option>
+        </mat-select>
+        <mat-icon matSuffix>sensors</mat-icon>
+      </mat-form-field>
+
+      <button mat-raised-button color="warn" (click)="clearFilters()" class="clear-filter-button">
+        <mat-icon>close</mat-icon> Limpiar Filtros
+      </button>
+    </mat-card-content>
+  </div>
+
+  <div class="content-wrapper">
+    <div class="left-section card-view">
+      <div *ngIf="dataSource.filteredData.length === 0 && !loading && !error" class="empty-state">
+        <mat-icon class="empty-icon">sentiment_dissatisfied</mat-icon>
+        <h3>No se encontraron alertas</h3>
+        <p>Ajusta tus filtros o espera nuevas alertas.</p>
+      </div>
+
+      <div *ngFor="let cultivoName of (groupedAlertsByCultivo | keyvalue)" class="cultivo-group">
+        <h2 class="cultivo-title">
+          <mat-icon>eco</mat-icon>
+          Cultivo: {{ cultivoName.key }}
+        </h2>
+        <mat-divider class="cultivo-divider"></mat-divider>
+        <div class="alerts-in-cultivo-grid">
+          <mat-card *ngFor="let alerta of cultivoName.value" class="alert-item-card" (click)="verAlerta(alerta)">
+            <mat-card-header class="alert-card-header">
+              <mat-card-title class="alert-card-title">
+                <mat-icon [ngClass]="{
+                  'icon-active': alerta.estado === 'Activa',
+                  'icon-inactive': alerta.estado === 'Inactiva',
+                  'icon-resolved': alerta.estado === 'Resuelta'
+                }">
+                  {{ alerta.estado === 'Activa' ? 'notifications_active' :
+                     (alerta.estado === 'Inactiva' ? 'notifications_off' : 'check_circle') }}
+                </mat-icon>
+                {{ alerta.nombreAlerta }}
+              </mat-card-title>
+              <mat-card-subtitle class="alert-card-subtitle">
+                <mat-icon class="small-icon">priority_high</mat-icon>{{ alerta.prioridad }} |
+                <mat-icon class="small-icon">category</mat-icon>{{ alerta.tipoAlerta }}
+              </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="card-detail-row">
+                <mat-icon>description</mat-icon>
+                <span matTooltip="{{ alerta.descripcion }}">{{ alerta.descripcion | slice:0:70 }}{{ alerta.descripcion.length > 70 ? '...' : '' }}</span>
+              </div>
+              <div class="card-detail-row">
+                <mat-icon>sensors</mat-icon>
+                <span>{{ alerta.tipoSesnor }} ({{ alerta.sensorReferenciado }})</span>
+              </div>
+              <div class="card-detail-row">
+                <mat-icon>location_on</mat-icon>
+                <span>{{ alerta.ubicacion }}</span>
+              </div>
+            </mat-card-content>
+            <mat-card-actions class="card-actions-simple">
+              <button mat-button color="primary" (click)="verAlerta(alerta); $event.stopPropagation()">Ver Detalles</button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      </div>
+    </div>
+
+    <div class="right-section" *ngIf="alertaSeleccionada">
+      <mat-card class="alert-details-card">
+        <mat-card-header class="alert-details-header">
+          <mat-card-title>Detalles de la Alerta</mat-card-title>
+          <mat-card-subtitle>Información completa de la alerta seleccionada</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content class="detail-info-container">
+          <div class="info-row">
+            <mat-icon class="info-icon">label</mat-icon>
+            <span class="info-label">Nombre de Alerta:</span>
+            <span class="info-value">{{ alertaSeleccionada.nombreAlerta }}</span>
+          </div>
+          <div class="info-row">
+            <mat-icon class="info-icon">description</mat-icon>
+            <span class="info-label">Descripción:</span>
+            <span class="info-value">{{ alertaSeleccionada.descripcion }}</span>
+          </div>
+          <div class="info-row">
+            <mat-icon class="info-icon">category</mat-icon>
+            <span class="info-label">Tipo de Alerta:</span>
+            <span class="info-value">{{ alertaSeleccionada.tipoAlerta }}</span>
+          </div>
+          <div class="info-row">
+            <mat-icon class="info-icon">priority_high</mat-icon>
+            <span class="info-label">Prioridad:</span>
+            <span class="info-value">{{ alertaSeleccionada.prioridad }}</span>
+          </div>
+          <div class="info-row">
+            <mat-icon class="info-icon">info</mat-icon>
+            <span class="info-label">Estado:</span>
+            <span class="info-value" [ngClass]="{
+              'estado-activa': alertaSeleccionada.estado === 'Activa',
+              'estado-inactiva': alertaSeleccionada.estado === 'Inactiva',
+              'estado-resuelta': alertaSeleccionada.estado === 'Resuelta'
+            }">{{ alertaSeleccionada.estado }}</span>
+          </div>
+          <div class="info-row">
+            <mat-icon class="info-icon">grass</mat-icon>
+            <span class="info-label">Cultivo:</span>
+            <span class="info-value">{{ alertaSeleccionada.nombreCultivo }}</span>
+          </div>
+          <div class="info-row">
+            <mat-icon class="info-icon">sensors</mat-icon>
+            <span class="info-label">Tipo de Sensor:</span>
+            <span class="info-value">{{ alertaSeleccionada.tipoSesnor }}</span>
+          </div>
+          <div class="info-row">
+            <mat-icon class="info-icon">sensor_door</mat-icon>
+            <span class="info-label">Sensor Referenciado:</span>
+            <span class="info-value">{{ alertaSeleccionada.sensorReferenciado }}</span>
+          </div>
+          <div class="info-row">
+            <mat-icon class="info-icon">location_on</mat-icon>
+            <span class="info-label">Ubicación:</span>
+            <span class="info-value">{{ alertaSeleccionada.ubicacion }}</span>
+          </div>
+        </mat-card-content>
+        <mat-card-actions class="card-actions-detail">
+          <button mat-raised-button color="primary" (click)="editarAlerta()">
+            <mat-icon>edit</mat-icon> Editar
+          </button>
+          <button mat-raised-button color="warn" (click)="eliminarAlerta(alertaSeleccionada)">
+            <mat-icon>delete</mat-icon> Eliminar
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

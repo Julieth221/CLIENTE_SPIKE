@@ -12,10 +12,8 @@ import { VerifyCodeComponent } from './app/components/verify-code/verify-code.co
 import { PwdRecoveryComponent } from './app/components/pwd-recovery/pwd-recovery.component';
 import { PwdSuccessComponent } from './app/components/pwd-success/pwd-success.component';
 import { importProvidersFrom } from '@angular/core';
-import { RegisterSensorComponent } from './app/components/register-sensor/register-sensor.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FincaRegisterComponent } from './app/components/finca/finca-register/finca-register.component';
-import { RegistroTSensorComponent } from './app/components/registro-t-sensor/registro-t-sensor.component';
 import { ArrendatarioRegisterComponent } from './app/components/finca/arrendatario-register/arrendatario-register.component';
 import { ArrendamientoRegisterComponent } from './app/components/finca/arrendamiento-register/arrendamiento-register.component';
 import { TablaFincasComponent } from './app/components/finca/tablaFincas/tablaFincas.component';
@@ -24,7 +22,18 @@ import { RegisterTipoSueloComponent } from './app/components/finca/register-tipo
 import { TablaArrendamientosComponent } from './app/components/finca/tabla-arrendamientos/tabla-arrendamientos.component';
 import { GestionSensoresComponent } from './app/components/sensor/gestion-sensores/gestion-sensores.component';
 import { VerArrendamientosComponent } from './app/components/finca/ver-arrendamientos/ver-arrendamientos.component';
+import { AlertasSensorComponent } from './app/components/sensor/alertas-sensor/alertas-sensor.component';
+import { LocalizarSensorComponent } from './app/components/sensor/localizar-sensor/localizar-sensor.component';
+import { ProbarSensorComponent } from './app/components/sensor/probar-sensor/probar-sensor.component';
+import { RegistroTSensorComponent } from './app/components/sensor/registro-t-sensor/registro-t-sensor.component';
+import { RegistroSensorComponent } from './app/components/sensor/registro-sensor/registro-sensor.component';
+import { ConfigAlertComponent } from './app/components/sensor/config-alert/config-alert.component';
+import { EditAlertComponent } from './app/components/sensor/edit-alert/edit-alert.component';
+import { VersensorComponent } from './app/components/sensor/versensor/versensor.component';
+import { GestionAlertComponent } from './app/components/sensor/gestion-alert/gestion-alert.component';
 import { EditarFincaComponent } from './app/components/finca/editar-finca/editar-finca.component';
+import { MapsSensorComponent } from './app/components/sensor/maps-sensor/maps-sensor.component';
+import { HistorialAlertComponent } from './app/components/sensor/historial-alert/historial-alert.component';
 import { EditarArrendamientosComponent } from './app/components/finca/editar-arrendamientos/editar-arrendamientos.component';
 import { HistorialParcelaComponent } from './app/components/finca/historial-parcela/historial-parcela.component';
 import { DatosCultivoComponent } from './app/components/cultivo/datos-cultivo/datos-cultivo.component';
@@ -43,15 +52,15 @@ bootstrapApplication(AppComponent,{
             { path: 'verifyCode', component: VerifyCodeComponent },
             { path: 'pwdRecovery', component: PwdRecoveryComponent },
             { path: 'pwdSuccess', component: PwdSuccessComponent },
-            { path: 'registro-t-sensor', component: RegistroTSensorComponent},
             { path: 'register', component: RegisterComponent },
             { path: 'verArrendamiento', component: VerArrendamientosComponent},
+            { path: 'sensor/maps-sensor', component: MapsSensorComponent},
             {
               path: 'dashboard',
               component: DashboardComponent,
               children: [
-                  { path: 'register-sensor', component: RegisterSensorComponent },
-                  { path: 'registro-t-sensor', component: RegistroTSensorComponent},
+                  { path: 'sensor/registro-t-sensor', component: RegistroTSensorComponent},
+                  { path: 'sensor/registro-sensor', component: RegistroSensorComponent},
                   { path: 'finca/registrar', component: FincaRegisterComponent },
                   { path: 'finca/arrendatario', component: ArrendatarioRegisterComponent },
                   { path: 'finca/arrendamiento', component: ArrendamientoRegisterComponent },
@@ -62,6 +71,16 @@ bootstrapApplication(AppComponent,{
                   { path: 'finca/arrendamientodetalle', component: VerArrendamientosComponent},
                   { path: 'finca/editarFinca', component: EditarFincaComponent},
                   { path: 'sensor/gestion-sensores', component: GestionSensoresComponent },
+                  { path: 'finca/verArrendamiento', component: VerArrendamientosComponent},
+                  { path: 'sensor/alertas-sensor', component: AlertasSensorComponent},
+                  { path: 'sensor/localizar-sensor', component: LocalizarSensorComponent},
+                  { path: 'sensor/probar-sensor', component: ProbarSensorComponent},
+                  { path: 'sensor/config-alert', component: ConfigAlertComponent},
+                  { path: 'sensor/edit-alert', component: EditAlertComponent},
+                  { path: 'sensor/verSensor', component: VersensorComponent},
+                  { path: 'sensor/gestion-alert', component: GestionAlertComponent},
+                // { path: 'finca/verArrendamiento', component: VerArrendamientosComponent},
+                  { path: 'sensor/historial-alert', component: HistorialAlertComponent},
                   { path: 'finca/editararrendamiento', component: EditarArrendamientosComponent},
                   { path: 'finca/historialParcela', component: HistorialParcelaComponent},
                   { path: 'cultivo/datosCultivo', component: DatosCultivoComponent}

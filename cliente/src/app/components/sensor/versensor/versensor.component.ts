@@ -10,34 +10,21 @@ import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { ApiService } from '../../../../services/api.service';
 import { API_URLS } from '../../../../config/api_config';
-import { VerMapaComponent } from '../../finca/ver-mapa/ver-mapa.component';
+// import { VerMapaComponent } from '../ver-mapa/ver-mapa.component';
 
-// Interfaces para manejar la estructura de datos
-interface SensorGeolocalizacion {
-  Id: number;
-  FkSensor: Sensor;
-  FkGeolocalizacionSensor: Geolocalizacion;
-  Activo: boolean;
-  FechaCreacion: string;
-  FechaModificacion: string;
-}
-
+// Interfaces para manejar la estructura de datos (ajustadas para Sensor)
 interface Sensor {
   Id: number;
-  NombreSensor: string;
+  nombre: string;
+  ubicacion: string;
+  TipoSensor: string;
   FechaInstalacion: string;
-  Activo: boolean;
-  FkTipoSensor: any; // Ajustar el tipo si tienes una estructura para TipoSensor
-}
-
-interface Geolocalizacion {
-  Id: number;
-  Latitud: string;
-  Longitud: string;
+  // ... otras propiedades relevantes del sensor que podrías mostrar
 }
 
 @Component({
   selector: 'app-versensor',
+  standalone: true,
   imports: [
     CommonModule,
     MatCardModule,
@@ -48,23 +35,37 @@ interface Geolocalizacion {
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatDialogModule,
-    VerMapaComponent
+    // VerMapaComponent // Asegúrate de tener un componente de mapa si lo necesitas para la ubicación
   ],
   providers: [DatePipe],
   templateUrl: './versensor.component.html',
   styleUrl: './versensor.component.css'
 })
 export class VersensorComponent implements OnInit {
+  // Datos del sensor
   nombreSensor: string = '';
-  sensorGeolocalizaciones: SensorGeolocalizacion[] = [];
+  fechaInstalacion: string = '';
+  sensor: Sensor | undefined;
+
+  // Estado
   loading: boolean = true;
   errorMessage: string = '';
+
+  // Datos quemados de sensores (de tu componente GestionSensores)
+  sensoresQuemados: Sensor[] = [
+    { Id: 101, nombre: 'Sensor PH Norte', ubicacion: 'Invernadero 1', TipoSensor: 'PH', FechaInstalacion: '2024-04-20' },
+    { Id: 102, nombre: 'Sensor Humedad Sur', ubicacion: 'Campo Abierto A', TipoSensor: 'Humedad', FechaInstalacion: '2024-04-25' },
+    { Id: 103, nombre: 'Sensor Temp Este', ubicacion: 'Invernadero 2', TipoSensor: 'Temperatura', FechaInstalacion: '2024-05-01' },
+    { Id: 104, nombre: 'Sensor PH Oeste', ubicacion: 'Campo Abierto B', TipoSensor: 'PH', FechaInstalacion: '2024-05-05' },
+    { Id: 105, nombre: 'Sensor Luz Central', ubicacion: 'Invernadero 1', TipoSensor: 'Luz', FechaInstalacion: '2024-05-10' },
+    { Id: 106, nombre: 'Sensor Humedad Norte', ubicacion: 'Campo Abierto A', TipoSensor: 'Humedad', FechaInstalacion: '2024-05-15' },
+  ];
 
   constructor(
     private apiService: ApiService,
     private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<VersensorComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { sensorId: number, nombreSensor: string }
+    @Inject(MAT_DIALOG_DATA) public data: { sensorId: number, nombreSensor: string, FechaInstalacion: string }
   ) { }
 
   ngOnInit(): void {
@@ -76,40 +77,24 @@ export class VersensorComponent implements OnInit {
     }
 
     this.nombreSensor = this.data.nombreSensor;
-    this.cargarDatosSensorGeolocalizaciones();
+    this.fechaInstalacion = this.data.FechaInstalacion;
+    this.cargarDatosSensorQuemado();
   }
 
-  cargarDatosSensorGeolocalizaciones(): void {
+  cargarDatosSensorQuemado(): void {
     this.loading = true;
-    this.apiService.get(`${API_URLS.MID.API_MID_SPIKE}/SensorGeolocalizacion?query=FkSensor.Id:${this.data.sensorId}`)
-      .subscribe({
-        next: (response: any) => {
-          if (response && response.Data && Array.isArray(response.Data)) {
-            this.sensorGeolocalizaciones = response.Data;
-            this.loading = false;
-          } else {
-            this.errorMessage = 'No se encontraron datos de sensor geolocalización para este sensor.';
-            this.loading = false;
-            this.snackBar.open(this.errorMessage, 'Cerrar', { duration: 3000 });
-          }
-        },
-        error: (error) => {
-          console.error('Error al cargar datos de sensor geolocalización:', error);
-          this.errorMessage = 'Error al cargar los datos.';
-          this.snackBar.open(this.errorMessage, 'Cerrar', { duration: 3000 });
-          this.loading = false;
-        }
-      });
+    this.sensor = this.sensoresQuemados.find(sensor => sensor.Id === this.data.sensorId);
+
+    if (this.sensor) {
+      this.loading = false;
+    } else {
+      this.errorMessage = 'No se encontró el sensor con el ID proporcionado.';
+      this.loading = false;
+      this.snackBar.open(this.errorMessage, 'Cerrar', { duration: 3000 });
+    }
   }
 
   onClose(): void {
     this.dialogRef.close();
-  }
-
-  getCoordenadas(geolocalizacion: Geolocalizacion): any {
-    return {
-      latitud: parseFloat(geolocalizacion.Latitud),
-      longitud: parseFloat(geolocalizacion.Longitud),
-    };
   }
 }

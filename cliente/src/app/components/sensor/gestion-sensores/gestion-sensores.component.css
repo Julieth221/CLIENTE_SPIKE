@@ -6,7 +6,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
     border-radius: 12px;
   }
-  
+
   .title {
     font-size: 1.5rem;
     font-weight: 700;
@@ -15,11 +15,11 @@
     letter-spacing: 0.5px;
     text-align: center;
   }
-  
+
   mat-label{
     color: #667085
   }
-  
+
   .actions {
     display: flex;
     flex-direction: row;
@@ -29,26 +29,26 @@
     gap: 1rem;
     margin-left: auto;
   }
-  
+
   .filter-field {
-    margin-top: 1.3rem; 
+    margin-top: 1.3rem;
   }
-  
+
   .search-field {
     width: 400px;
     margin-bottom: 0;
     margin-top: 1.3rem;
     margin-left: 0;
   }
-  
+
   .search-field .mat-mdc-form-field-subscript-wrapper {
     display: none;
   }
-  
+
   .search-icon {
     color: #667085;
   }
-  
+
   .filters-group {
     display: flex;
     flex-direction: row;
@@ -56,18 +56,18 @@
     justify-content: center;
     gap: 1rem;
   }
-  
+
   .filter-field {
     width: 220px;
   }
-  
-  
+
+
   .mat-mdc-select-trigger {
     height: 40px;
     display: flex;
     align-items: center;
   }
-  
+
   .btn-registrar {
     background-color: #28C76F;
     color: white;
@@ -84,35 +84,35 @@
     gap: 8px;
     margin-left: 0.5rem;
   }
-  
+
   .btn-registrar:hover {
     background-color: #22b35c;
     box-shadow: 0 6px 15px rgba(40, 199, 111, 0.35);
     transform: translateY(-2px);
   }
-  
+
   .btn-registrar:active {
     transform: translateY(0);
     box-shadow: 0 2px 8px rgba(40, 199, 111, 0.2);
   }
-  
+
   .btn-registrar mat-icon {
     font-size: 20px;
     height: 20px;
     width: 20px;
   }
-  
+
   .loader {
     display: flex;
     justify-content: center;
     margin: 4rem 0;
   }
-  
+
   /* Contenedor para tabla y cards */
   .data-container {
     width: 100%;
   }
-  
+
   /* Estilo para la tabla */
   .table-wrapper {
     background-color: white;
@@ -120,7 +120,7 @@
     overflow: hidden;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
     margin: 1px rgba(102, 100, 100, 0.08);
-    
+
   }
   .table-wrapper table.tabla-fincas {
     width: 100%;
@@ -139,41 +139,41 @@
     color: #344054;
     font-weight: 600;
   }
-  
+
   .tabla-fincas {
     width: 100%;
   }
-  
+
   .mat-cell {
     padding: 1rem;
     font-size: 0.95rem;
     vertical-align: middle;
   }
-  
+
   .finca-nombre {
     font-weight: 600;
     color: #2c3e50;
   }
-  
+
   .finca-row {
     transition: background-color 0.2s ease;
     height: 60px;
   }
-  
+
   .finca-row:hover {
     background-color: rgba(0, 0, 0, 0.02);
   }
-  
+
   .highlight-row {
     background-color: rgba(0, 0, 0, 0.04);
   }
-  
+
   .ubicacion-cell {
     display: flex;
     align-items: center;
     gap: 8px;
   }
-  
+
   .parcelas-chip {
     display: inline-flex;
     align-items: center;
@@ -186,7 +186,7 @@
     border-radius: 14px;
     padding: 0 10px;
   }
-  
+
   .tipo-suelo-chip {
     display: inline-flex;
     padding: 4px 12px;
@@ -197,46 +197,46 @@
     background-color: #9e9e9e;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
-  
+
   .action-buttons {
     display: flex;
     gap: 6px;
   }
-  
+
   .btn-edit {
     color: #4caf50;
     transition: all 0.2s ease;
   }
-  
+
   .btn-delete {
     color: #f44336;
     transition: all 0.2s ease;
   }
-  
+
   .btn-edit:hover, .btn-delete:hover {
     transform: scale(1.15);
   }
-  
-  
-  
+
+
+
   .finca-card {
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.07);
     overflow: hidden;
     transition: all 0.3s ease;
   }
-  
+
   .finca-card:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.09);
     transform: translateY(-3px);
   }
-  
+
   mat-card-title {
     font-size: 1.2rem;
     font-weight: 600;
     color: #2c3e50;
   }
-  
+
   .card-subtitle {
     display: flex;
     align-items: center;
@@ -244,29 +244,29 @@
     margin-top: 6px;
     color: #607d8b;
   }
-  
+
   .mobile-actions {
     display: flex;
     gap: 8px;
     margin-left: auto;
   }
-  
+
   .card-info-row {
     display: flex;
     margin: 8px 0;
     align-items: center;
   }
-  
+
   .info-label {
     min-width: 100px;
     color: #78909c;
     font-weight: 500;
   }
-  
+
   .info-value {
     font-weight: 500;
   }
-  
+
   .no-results {
     background: white;
     padding: 3rem;
@@ -278,22 +278,22 @@
     align-items: center;
     gap: 1rem;
   }
-  
+
   .no-results-icon {
     font-size: 64px;
     width: 64px;
     height: 64px;
     color: #a39f9f;
   }
-  
+
   .animate__animated {
     animation-duration: 0.5s;
   }
-  
+
   .animate__fadeIn {
     animation-name: fadeIn;
   }
-  
+
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -304,46 +304,46 @@
       transform: translateY(0);
     }
   }
-  
+
   .mat-paginator {
     background: transparent;
     border-top: 1px solid #f0f0f0;
   }
-  
+
   /* RESPONSIVE */
   @media (max-width: 1200px) {
     .actions {
       flex-wrap: wrap;
     }
-    
+
     .search-field {
       width: 100%;
       margin-bottom: 1rem;
     }
   }
-  
+
   @media (max-width: 768px) {
     .fincas-container {
       padding: 1rem;
     }
-    
+
     .actions {
       flex-direction: column;
       padding: 0.5rem;
     }
-    
+
     .filters-group {
       flex-direction: column;
       width: 100%;
     }
-    
+
     .filter-field,
     .search-field,
     .btn-registrar {
       width: 100%;
       max-width: none;
     }
-    
+
     /* Ajustar el botón toggle en móvil */
     .toggle-vista {
       width: 100%;
@@ -351,104 +351,102 @@
       justify-content: center;
       margin-bottom: 20px;
     }
-    
+
     .toggle-vista .mat-button-toggle-group {
       width: 100%;
     }
-    
+
     .toggle-vista .mat-button-toggle {
       flex: 1;
       text-align: center;
     }
-    
+
     /* Ajustes para la vista de tarjetas en móvil */
     .cards-view {
       padding: 0;
     }
-    
+
     /* Cambio de visualización tabla/cards */
     .table-wrapper {
       display: none; /* Ocultar tabla */
     }
-    
-    
-  
+
+
+
   }
-  
+
   @media (min-width: 769px) and (max-width: 1200px) {
     .filters-group {
       justify-content: space-between;
     }
-    
+
     .filter-field {
       max-width: 220px;
     }
   }
-  
+
   /* Bordes grises para los campos de formulario */
   :host ::ng-deep .mat-mdc-text-field-wrapper {
     background-color: white;
     border: 1px solid #D0D5DD !important;
     border-radius: 8px !important;
   }
-  
+
   :host ::ng-deep .mat-mdc-form-field-outline {
     color: #D0D5DD !important;
   }
-  
+
   :host ::ng-deep .mat-mdc-form-field-outline-thick {
     color: #D0D5DD !important;
   }
-  
+
   .toggle-vista {
     margin-left: auto;
     margin-right: 1rem;
   }
-  
+
   .toggle-vista mat-button-toggle {
     font-weight: 500;
   }
-  
+
   .toggle-vista mat-button-toggle mat-icon {
     margin-right: 4px;
   }
-  
+
   /* Añadir estilos para la vista de tarjetas */
   .cards-view {
     margin-top: 24px;
   }
-  
+
   /* Estilo específico para el selector de vista */
   .toggle-vista {
     /* display: flex; */
     /* justify-content: flex-end; */
     margin-bottom: 16px;
   }
-  
+
   .toggle-vista .mat-button-toggle-group {
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   }
-  
+
   .toggle-vista .mat-button-toggle {
     background-color: white;
     color: #667085;
     font-weight: 500;
   }
-  
+
   .toggle-vista .mat-button-toggle-checked {
     background-color: #f0f6ff;
     color: #4285F4;
   }
-  
+
   .toggle-vista .mat-button-toggle-button {
     height: 40px;
     padding: 0 16px;
   }
-  
+
   .toggle-vista mat-icon {
     margin-right: 6px;
   }
-  
-  

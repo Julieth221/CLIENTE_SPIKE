@@ -1,1 +1,72 @@
-<p>card-sensor works!</p>
+<div class="cards-grid animate__animated animate__fadeIn">
+  <div class="sensor-card-item" *ngFor="let sensor of sensores" [attr.data-id]="sensor.ID">
+    <div class="card-header">
+      <div class="card-title-area">
+        <h3 class="card-title">{{ sensor.nombre }}</h3>
+        <div class="ubicacion">
+          <mat-icon class="location-icon">place</mat-icon>
+          <span>{{ sensor.ubicacion }}</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button mat-icon-button matTooltip="Ver Sensor" color="primary" (click)="onVerClick(sensor)" class="btn-view">
+          <mat-icon>visibility</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" matTooltip="Editar Sensor" (click)="onEditarClick(sensor)" class="btn-edit">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" matTooltip="Eliminar Sensor" (click)="onEliminarClick(sensor)" class="btn-delete">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="card-content">
+      <div class="info-section">
+        <div class="info-group">
+          <div class="info-item">
+            <div class="info-icon-bg cultivo-bg">
+              <mat-icon>grass</mat-icon>
+            </div>
+            <div class="info-details">
+              <span class="info-label">Cultivo</span>
+              <span class="info-value">{{ sensor.cultivo }}</span>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon-bg tipo-sensor-bg" [style.background-color]="getSensorTypeBgColor(sensor.TipoSensor)">
+              <mat-icon>{{ getSensorTypeIcon(sensor.TipoSensor) }}</mat-icon>
+            </div>
+            <div class="info-details">
+              <span class="info-label">Tipo Sensor</span>
+              <span class="info-value">{{ sensor.TipoSensor }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="status-section">
+        <div class="status-chip" [style.background-color]="getStatusColor(sensor.Estado)">
+          <mat-icon>{{ sensor.Estado === 'Activo' ? 'check_circle' : 'cancel' }}</mat-icon>
+          <span class="status-label">{{ sensor.Estado }}</span>
+        </div>
+
+        <div class="additional-info">
+          <div class="install-date">
+            <mat-icon class="small-icon">calendar_today</mat-icon>
+            <span>Instalación: {{ sensor.FechaInstalacion }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="sensores.length === 0" class="empty-state">
+  <mat-icon class="empty-icon">memory</mat-icon>
+  <h3>No hay sensores disponibles</h3>
+  <p>Prueba a ajustar los filtros o registra un nuevo sensor</p>
+</div>

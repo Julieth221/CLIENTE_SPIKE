@@ -1,0 +1,445 @@
+.historial-container {
+  padding: 2rem;
+  background: white;
+  min-height: calc(100vh - 64px);
+  color: #667085;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+}
+
+.header-with-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #375434;
+  letter-spacing: 0.5px;
+  text-align: center;
+  margin: 20px auto;
+  flex-grow: 1; /* Allow title to take available space */
+}
+
+.exit-button {
+  background-color: #66BB6A; /* Green for exit button */
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.exit-button:hover {
+  background-color: #4CAF50;
+  transform: translateY(-2px);
+}
+
+/* Estilo para la tarjeta de selección de cultivo inicial */
+.select-cultivo-card {
+  width: 100%;
+  max-width: 500px;
+  margin: 30px auto; /* Centra la tarjeta */
+  padding: 30px;
+  text-align: center;
+  background-color: #f8fbfd; /* Fondo ligeramente diferente */
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.select-cultivo-card mat-card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #33f321d8; /* Azul */
+  margin-bottom: 10px;
+}
+
+.select-cultivo-card mat-card-subtitle {
+  font-size: 0.95rem;
+  color: #66856a;
+  margin-bottom: 20px;
+}
+
+.select-cultivo-card .mat-form-field {
+  width: 80%; /* Ancho del selector dentro de la tarjeta */
+  max-width: 350px;
+}
+
+.toggle-vista {
+  margin-left: auto;
+  margin-right: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.toggle-vista .mat-button-toggle-group {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.toggle-vista .mat-button-toggle {
+  background-color: white;
+  color: #66856a;
+  font-weight: 500;
+  height: 40px;
+  padding: 0 16px;
+}
+
+.toggle-vista .mat-button-toggle-checked {
+  background-color: #e0f2f7; /* Un azul claro */
+  color: #21f33a; /* Azul primario */
+}
+
+.toggle-vista mat-icon {
+  margin-right: 6px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center; /* Centra los elementos */
+}
+
+.search-field {
+  flex-grow: 1; /* Permite que el campo de búsqueda crezca */
+  max-width: 400px; /* Ancho máximo para el campo de búsqueda */
+}
+
+.filter-field {
+  width: 200px; /* Ancho fijo para el campo de filtro */
+}
+
+/* Estilos para campos de formulario */
+.mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #D0D5DD !important;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-label {
+  color: #667085 !important;
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-label {
+  color: #2196F3 !important; /* Color al enfocar */
+}
+
+.mat-form-field-appearance-outline .mat-form-field-infix {
+  color: #344054;
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: #2196F3 !important;
+}
+
+.mat-form-field-appearance-outline .mat-icon {
+  color: #667085;
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-icon {
+  color: #2196F3;
+}
+
+.mat-select-value {
+  color: #344054 !important;
+}
+
+
+.loader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 4rem 0;
+  color: #667085;
+}
+
+.no-results {
+  background: white;
+  padding: 3rem;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.no-results-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #a39f9f;
+}
+
+/* Tabla */
+.table-wrapper {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.tabla-historial {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-historial th {
+  background-color: #F9FAFB;
+  color: #475467;
+  font-weight: 600;
+  text-align: left;
+  padding: 1rem;
+  border-bottom: 1px solid #EAECF0;
+}
+
+.tabla-historial td {
+  padding: 1rem;
+  border-bottom: 1px solid #EAECF0;
+  color: #344054;
+  font-size: 0.95rem;
+}
+
+/* Subtle row coloring based on status */
+.tabla-historial tr {
+  transition: background-color 0.3s ease; /* Smooth transition for color change */
+}
+
+/* This is handled by [style.background-color]="getTableRowBackgroundColor(row.Estado)" in HTML */
+/* .tabla-historial tr.resolved-row {
+  background-color: #e8f5e9; // Light green for resolved
+}
+
+.tabla-historial tr.pending-row {
+  background-color: #fffde7; // Light yellow for pending
+} */
+
+
+.tabla-historial tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla-historial tbody tr:hover {
+  background-color: #F0F4F8; /* Lighter hover effect */
+}
+
+.alerta-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.alerta-tipo-cultivo {
+  display: flex; /* Para alinear icono y texto */
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: #5b8c57;
+  margin-top: 4px;
+}
+
+.descripcion-cell {
+  max-width: 250px; /* Limita el ancho de la descripción en la tabla */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.status-chip mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+
+/* Botones de acción en tabla */
+.mat-mdc-icon-button {
+  color: #42f448; /* Azul para el botón de ver */
+}
+
+.mat-paginator {
+  background: transparent;
+  border-top: 1px solid #f0f0f0;
+  border-radius: 0 0 12px 12px;
+}
+
+/* Tarjetas */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  padding: 8px 0;
+}
+
+.historial-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.historial-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+}
+
+.historial-card .mat-card-header {
+  padding: 20px;
+  padding-bottom: 0;
+}
+
+.historial-card .card-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #385434;
+  margin-bottom: 8px;
+}
+
+.historial-card .mat-card-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #667085;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.historial-card .mat-card-content {
+  padding: 16px 20px;
+  flex-grow: 1; /* Permite que el contenido crezca */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.historial-card .card-info-row {
+  display: flex;
+  align-items: flex-start; /* Alinea los ítems al inicio */
+  gap: 8px;
+  font-size: 0.95rem;
+  color: #475467;
+}
+
+.historial-card .card-info-row mat-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  color: #66856c;
+  flex-shrink: 0; /* Evita que el icono se encoja */
+}
+
+.historial-card .card-actions-bottom {
+  padding: 16px 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.historial-card .card-actions-bottom button {
+  background-color: #42f44bcc;
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 8px 16px;
+}
+
+.historial-card .card-actions-bottom button:hover {
+  background-color: #33d643;
+}
+
+/* Animaciones */
+.animate__animated {
+  animation-duration: 0.5s;
+}
+
+.animate__fadeIn {
+  animation-name: fadeIn;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 1005px) {
+  .historial-container {
+    padding: 1rem;
+  }
+
+  .header-with-button {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .exit-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-field, .filter-field {
+    width: 100%;
+    max-width: none;
+  }
+
+  .toggle-vista {
+    display: none; /* Hide on mobile as per requirement */
+  }
+
+  .tabla-historial {
+    display: block; /* Oculta la tabla en móviles, se usará la vista de tarjetas */
+    overflow-x: auto;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr; /* Una columna en móviles */
+  }
+
+  .select-cultivo-card {
+    margin: 20px auto;
+    padding: 20px;
+  }
+
+  .select-cultivo-card .mat-form-field {
+    width: 100%;
+  }
+}

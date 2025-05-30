@@ -1,0 +1,210 @@
+/* Contenedor principal de la vista */
+.alertas-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px; /* Aumenta el padding general */
+  background-color: #F0F4F8; /* Fondo suave para el ambiente */
+  min-height: 100vh; /* Asegura que ocupe toda la altura de la vista */
+  box-sizing: border-box;
+}
+
+/* Tarjeta contenedora principal de las alertas */
+.alertas-card {
+  width: 100%;
+  max-width: 900px; /* Aumenta el ancho máximo de la tarjeta principal */
+  border-radius: 16px; /* Bordes más redondeados */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada pero suave */
+  overflow: hidden; /* Asegura que los bordes redondeados se apliquen */
+  height: fit-content; /* La altura se ajusta al contenido */
+}
+
+/* Encabezado de la tarjeta principal */
+.alertas-header {
+  background-color: #2E7D32; /* Verde oscuro primario */
+  color: white;
+  padding: 25px 30px; /* Padding generoso */
+  border-radius: 16px 16px 0 0;
+  text-align: center;
+}
+
+.alertas-header mat-card-title {
+  font-size: 2rem; /* Título más grande */
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.alertas-header mat-card-subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+/* Contenido de la tarjeta principal */
+.alertas-content {
+  padding: 30px;
+  flex: 1;
+  display: flex;
+  justify-content: center; /* Centra el contenedor de tarjetas internas */
+}
+
+/* Contenedor de las tarjetas de acción (Configurar, Editar, Historial) */
+.alertas-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Centra las tarjetas en el contenedor */
+  gap: 30px; /* Espacio entre las tarjetas */
+  width: 100%;
+}
+
+/* Estilos base para todas las tarjetas de acción */
+.config-card,
+.edit-card,
+.historial-card {
+  width: calc(33.33% - 20px); /* Aproximadamente un tercio del ancho con gap */
+  min-width: 280px; /* Ancho mínimo para evitar que se hagan muy pequeñas */
+  margin-bottom: 0; /* Elimina el margin-bottom duplicado */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px; /* Aumenta la altura mínima para mejor presentación */
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08); /* Sombra más suave */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative; /* Necesario para posicionar el botón absoluto si se usara */
+  background-color: #FFFFFF; /* Fondo blanco para las tarjetas */
+}
+
+.config-card:hover,
+.edit-card:hover,
+.historial-card:hover {
+  transform: translateY(-8px); /* Efecto de elevación al pasar el ratón */
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Encabezados de las tarjetas de acción */
+.config-header,
+.edit-header,
+.historial-header {
+  background-color: #4CAF50; /* Verde estándar para los encabezados de las tarjetas */
+  color: white;
+  padding: 18px 20px;
+  border-radius: 12px 12px 0 0;
+  text-align: center;
+  flex-shrink: 0; /* Evita que el header se encoja */
+}
+
+.config-header mat-card-title,
+.edit-header mat-card-title,
+.historial-header mat-card-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.config-header mat-card-subtitle,
+.edit-header mat-card-subtitle,
+.historial-header mat-card-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+}
+
+/* Contenido de las tarjetas de acción */
+.config-card mat-card-content,
+.edit-card mat-card-content,
+.historial-card mat-card-content {
+  flex-grow: 1; /* Permite que el contenido crezca y empuje las acciones hacia abajo */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centra el contenido verticalmente si hay espacio */
+  align-items: center;
+  padding: 20px;
+}
+
+/* Acciones (botones) de las tarjetas de acción */
+.config-card mat-card-actions,
+.edit-card mat-card-actions,
+.historial-card mat-card-actions {
+  display: flex;
+  justify-content: center; /* Centra el botón horizontalmente */
+  padding: 15px;
+  margin-top: auto; /* Empuja el botón hacia la parte inferior de la tarjeta */
+  flex-shrink: 0; /* Evita que las acciones se encojan */
+}
+
+/* Estilos de los botones */
+.config-card button,
+.edit-card button,
+.historial-card button {
+  background-color: #66BB6A; /* Verde más claro para los botones */
+  color: white;
+  padding: 12px 25px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 50px; /* Botones más redondeados (pill shape) */
+  transition: all 0.3s ease;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1); /* Sombra más sutil */
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espacio entre texto e icono */
+}
+
+.config-card button:hover,
+.edit-card button:hover,
+.historial-card button:hover {
+  background-color: #4CAF50; /* Verde más oscuro al pasar el ratón */
+  transform: translateY(-3px); /* Efecto de elevación sutil */
+  box-shadow: 0px 7px 20px rgba(0, 0, 0, 0.15);
+}
+
+.config-card button:active,
+.edit-card button:active,
+.historial-card button:active {
+  transform: translateY(-1px);
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 900px) {
+  .config-card,
+  .edit-card,
+  .historial-card {
+    width: calc(50% - 15px); /* Dos columnas en tablet */
+  }
+}
+
+@media (max-width: 600px) {
+  .alertas-container {
+    padding: 15px;
+  }
+
+  .alertas-header {
+    padding: 20px;
+  }
+
+  .alertas-header mat-card-title {
+    font-size: 1.5rem;
+  }
+
+  .alertas-header mat-card-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .alertas-content {
+    padding: 20px;
+  }
+
+  .config-card,
+  .edit-card,
+  .historial-card {
+    width: 100%; /* Una columna en móvil */
+    min-width: unset; /* Elimina el ancho mínimo fijo */
+    margin-bottom: 20px; /* Espacio entre tarjetas en móvil */
+  }
+
+  .alertas-cards-container {
+    flex-direction: column; /* Apila las tarjetas verticalmente */
+    gap: 20px; /* Espacio entre tarjetas apiladas */
+  }
+}
