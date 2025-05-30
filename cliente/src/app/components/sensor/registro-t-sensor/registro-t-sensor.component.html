@@ -1,80 +1,87 @@
-<div class="card-container">
-    <mat-card class="sensor-card">
-        <mat-card-header>
-            <mat-card-title class="white-title">Registrar Sensor de Temperatura</mat-card-title>
-            <!-- <mat-card-subtitle>Temperature Sensor</mat-card-subtitle> -->
-        </mat-card-header>
-        <img mat-card-image src="sensor-de-temperatura.jpg" alt="Sensor de Temperatura" class="sensor-image">
-        <mat-card-content>
-            <!-- <p>
-                Seleccione el tipo de sensor de temperatura que desea registrar.
-            </p> -->
-        </mat-card-content>
-        <mat-card-actions class="actions-container">
-            <button
-                mat-raised-button
-                (click)="goToComponent('temperatura')"
-                class="sensor-button"
-            >
-                Temperatura
-                <span class="hover-text">Registrar Sensor de Temperatura para medir la temperatura ambiente.</span>
-            </button>
-        </mat-card-actions>
+<div class="main-container">
+  <div class="page-title">
+    <span>Registro de Sensores</span>
+  </div>
+
+  <mat-card class="cultivo-selection-card">
+    <mat-card-title>Seleccionar Cultivo</mat-card-title>
+    <mat-card-content>
+      <mat-form-field appearance="outline" class="full-width-field">
+        <mat-label>Cultivo</mat-label>
+        <mat-select [(ngModel)]="selectedCultivo">
+          <mat-option value="">Selecciona un cultivo</mat-option>
+          <mat-option *ngFor="let cultivo of cultivoOptions" [value]="cultivo">
+            {{ cultivo }}
+          </mat-option>
+        </mat-select>
+        <mat-icon matSuffix>grass</mat-icon>
+        <mat-hint *ngIf="!selectedCultivo" class="required-hint">Debes seleccionar un cultivo para registrar un sensor.</mat-hint>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="card-container">
+    <mat-card class="sensor-card card-temperatura">
+      <mat-card-header class="sensor-card-header">
+        <mat-icon class="header-icon temperature-icon">thermostat</mat-icon>
+        <mat-card-title class="white-title">Temperatura</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="sensor-card-content">
+        <p>Mide la temperatura ambiental.</p>
+      </mat-card-content>
+      <mat-card-actions class="actions-container">
+        <button
+          mat-raised-button
+          (click)="goToComponent('temperatura')"
+          class="sensor-button temperature-button"
+          [disabled]="!selectedCultivo"
+          matTooltip="Registrar sensor de temperatura."
+        >
+          <mat-icon>add</mat-icon> Registrar
+        </button>
+      </mat-card-actions>
     </mat-card>
 
-    <mat-card class="sensor-card">
-        <mat-card-header>
-            <mat-card-title class="white-title">Registrar Sensor de Humedad</mat-card-title>
-            <!-- <mat-card-subtitle>Humidity Sensor</mat-card-subtitle> -->
-        </mat-card-header>
-        <img mat-card-image src="sensor-humedad.jpeg" alt="Sensor de Humedad" class="sensor-image">
-        <mat-card-content>
-            <!-- <p>
-                Seleccione el tipo de sensor de humedad que desea registrar.
-            </p> -->
-        </mat-card-content>
-        <mat-card-actions class="actions-container">
-            <button
-                mat-raised-button
-                (click)="goToComponent('humedad')"
-                class="sensor-button"
-            >
-                Humedad
-                <span class="hover-text">Registrar Sensor de Humedad para medir la humedad relativa.</span>
-            </button>
-        </mat-card-actions>
+    <mat-card class="sensor-card card-humedad">
+      <mat-card-header class="sensor-card-header">
+        <mat-icon class="header-icon humidity-icon">water_drop</mat-icon>
+        <mat-card-title class="white-title">Humedad</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="sensor-card-content">
+        <p>Mide la humedad del ambiente o del suelo.</p>
+      </mat-card-content>
+      <mat-card-actions class="actions-container">
+        <button
+          mat-raised-button
+          (click)="goToComponent('humedad')"
+          class="sensor-button humidity-button"
+          [disabled]="!selectedCultivo"
+          matTooltip="Registrar sensor de humedad."
+        >
+          <mat-icon>add</mat-icon> Registrar
+        </button>
+      </mat-card-actions>
     </mat-card>
 
-    <mat-card class="sensor-card">
-        <mat-card-header>
-            <mat-card-title class="white-title">Registrar Sensor de acidez (PH)</mat-card-title>
-            <!-- <mat-card-subtitle>pH Sensor</mat-card-subtitle> -->
-        </mat-card-header>
-        <img mat-card-image src="sensor-ph.jpeg" alt="Sensor de pH" class="sensor-image">
-        <!-- <mat-card-content> -->
-            <!-- <p>
-                Seleccione el tipo de sensor de pH que desea registrar.
-            </p> -->
-        <!-- </mat-card-content> -->
-        <mat-card-actions class="actions-container">
-            <button
-                mat-raised-button
-                (click)="goToComponent('ph')"
-                class="sensor-button ph-button"
-            >
-                PH
-                <span class="hover-text">Registrar Sensor de pH para medir la acidez o alcalinidad del suelo.</span>
-            </button>
-        </mat-card-actions>
+    <mat-card class="sensor-card card-ph">
+      <mat-card-header class="sensor-card-header">
+        <mat-icon class="header-icon ph-icon">science</mat-icon>
+        <mat-card-title class="white-title">Acidez (PH)</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="sensor-card-content">
+        <p>Mide la acidez o alcalinidad del suelo/agua.</p>
+      </mat-card-content>
+      <mat-card-actions class="actions-container">
+        <button
+          mat-raised-button
+          (click)="goToComponent('ph')"
+          class="sensor-button ph-button"
+          [disabled]="!selectedCultivo"
+          matTooltip="Registrar sensor de pH."
+        >
+          <mat-icon>add</mat-icon> Registrar
+        </button>
+      </mat-card-actions>
     </mat-card>
-
-    <button
-        mat-icon-button
-        color="warn"
-        (click)="onExit()"
-        *ngIf="showExitIcon"
-        class="exit-button"
-        matTooltip="Volver"
-    >
-    </button>
+  </div>
 </div>
