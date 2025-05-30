@@ -1,207 +1,305 @@
-main-container {
-  padding: 20px;
-  max-width: 1400px; /* Ancho máximo para el contenedor principal */
-  margin: 0 auto;
-}
-
-.header-section {
+.registro-sensor-container {
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.page-title {
-  font-size: 2.2rem;
-  font-weight: bold;
-  color: #3fb578; /* Color azul de Material Design */
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.search-field {
-  width: 100%;
-  max-width: 400px;
-}
-
-.loading-indicator,
-.error-message,
-.no-results {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  padding: 30px;
-  text-align: center;
-  color: #666;
+  align-items: flex-start;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  background-color: #f0f2f5;
 }
 
-.error-message {
-  background-color: #ffebee;
-  color: #d32f2f;
-  border-radius: 8px;
-  margin-top: 20px;
-}
-
-.error-message mat-icon {
-  margin-bottom: 10px;
-}
-
-.no-results mat-icon {
-  font-size: 48px;
-  color: #9e9e9e;
-  margin-bottom: 15px;
-}
-
-.content-wrapper {
+.register-card {
+  width: 95%;
+  max-width: 700px;
+  padding: 0;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   display: flex;
-  gap: 25px;
-  flex-wrap: wrap; /* Permite que las secciones se envuelvan en pantallas pequeñas */
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
-.left-section {
-  flex: 1; /* Permite que la lista de tarjetas crezca */
-  min-width: 300px; /* Ancho mínimo para la lista de tarjetas */
-  max-height: 700px; /* Altura máxima para la lista de tarjetas */
-  overflow-y: auto; /* Habilita el scroll si hay muchas tarjetas */
-  padding-right: 10px; /* Espacio para la barra de scroll */
+.card-header {
+  background-color: #0e6f1c;
+  color: white;
+  padding: 25px 20px;
+  border-radius: 12px 12px 0 0;
+  text-align: center;
 }
 
-.right-section {
-  flex: 2; /* Permite que el mapa crezca más que la lista */
-  min-width: 500px; /* Ancho mínimo para el mapa */
-  height: 600px; /* Altura fija para el mapa */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  overflow: hidden; /* Asegura que el mapa no se desborde del borde redondeado */
+.card-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 8px;
 }
 
-.sensor-cards-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Grid para tarjetas */
+.card-subtitle {
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.card-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section-divider {
+  margin: 20px 0;
+  border-color: #e0e0e0;
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: left;
+  border-bottom: 2px solid #0e6f1c;
+  padding-bottom: 5px;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
   gap: 15px;
 }
 
-.sensor-card {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  transition: transform 0.2s ease-in-out;
-  display: flex;
-  flex-direction: column;
-  height: 100%; /* Asegura que las tarjetas tengan la misma altura en el grid */
+.full-width {
+  width: 100%;
 }
 
-.sensor-card:hover {
-  transform: translateY(-5px);
+/* Estilos para campos de formulario */
+.mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #c0c0c0;
 }
 
-.sensor-card mat-card-header {
-  background-color: #e3f2fd; /* Azul claro para el encabezado de la tarjeta */
-  padding: 15px;
-  border-radius: 8px 8px 0 0;
-  display: flex;
-  flex-direction: column; /* Para que título y subtítulos se apilen */
-  align-items: flex-start;
-}
-
-.sensor-card .sensor-name {
-  font-size: 1.3rem; /* Título más grande y negrita */
-  font-weight: bold;
-  color: #41b53f;
-  margin-bottom: 5px;
-}
-
-.sensor-card mat-card-subtitle {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  font-size: 0.9rem;
+.mat-form-field-appearance-outline .mat-form-field-label {
   color: #666;
 }
 
-.sensor-card .subtitle-item {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-label {
+  color: #0e6f1c;
 }
 
-.sensor-card .subtitle-item mat-icon {
-  font-size: 18px;
-  color: #777;
+.mat-form-field-appearance-outline .mat-form-field-infix {
+  color: #333;
 }
 
-.sensor-card mat-card-content {
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: #0e6f1c;
+}
+
+.mat-form-field-appearance-outline .mat-icon {
+  color: #666;
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-icon {
+  color: #0e6f1c;
+}
+
+.mat-select-value {
+  color: #333 !important;
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-select-value {
+  color: #333 !important;
+}
+
+.mat-input-element::placeholder {
+  color: #999;
+}
+
+/* Estilos para el mapa */
+.map-section {
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
   padding: 15px;
-  flex-grow: 1; /* Permite que el contenido crezca y empuje las acciones hacia abajo */
+  margin-top: 15px;
 }
 
-.card-detail-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-  font-size: 0.95rem;
-  color: #555;
-}
-
-.card-detail-row mat-icon {
-  font-size: 20px;
-  color: #777;
-}
-
-.status-active {
-  color: #4caf50; /* Verde */
-}
-
-.status-inactive {
-  color: #f44336; /* Rojo */
-}
-
-.card-actions-bottom {
-  display: flex;
-  justify-content: flex-end;
-  padding: 10px 15px 15px 15px;
-  margin-top: auto; /* Empuja los botones al final de la tarjeta */
-}
-
-.card-actions-bottom button {
+.map-description, .map-instruction {
   font-size: 0.9rem;
-  padding: 8px 15px;
+  color: #555;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.cultivation-area-map-container,
+.sensor-location-map-container {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.cultivation-area-map-container {
+  position: relative;
+}
+
+.map-overlay-info {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 10;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.map-overlay-info h4 {
+  margin: 0 0 5px 0;
+  font-size: 1rem;
+  color: #0e6f1c;
+}
+
+app-maps-sensor {
+  display: block;
+  height: 350px;
+  width: 100%;
+}
+
+/* Nuevo estilo para el grupo de input de ubicación y botón */
+.location-input-group {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 10px; /* Espacio entre el campo y el botón */
+  width: 100%;
 }
 
-/* Media Queries para Responsividad */
-@media (max-width: 900px) {
-  .content-wrapper {
-    flex-direction: column; /* Apila las secciones en pantallas más pequeñas */
-  }
-
-  .left-section,
-  .right-section {
-    width: 100%; /* Ambas secciones ocupan todo el ancho */
-    min-width: unset; /* Elimina el min-width para mayor flexibilidad */
-    max-height: unset; /* Elimina la altura máxima para la lista */
-    height: auto; /* Altura automática para el mapa en móvil */
-  }
-
-  .right-section.map-container {
-    height: 400px; /* Altura del mapa en móvil */
-  }
-
-  .sensor-cards-list {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Ajusta el grid */
-  }
+.location-input-field {
+  flex-grow: 1; /* Permite que el campo de texto ocupe el espacio restante */
+  margin-bottom: 0 !important; /* Elimina el margen inferior del form-field */
 }
 
-@media (max-width: 500px) {
-  .sensor-cards-list {
-    grid-template-columns: 1fr; /* Una sola columna en pantallas muy pequeñas */
+.set-marker-button {
+  flex-shrink: 0; /* Evita que el botón se encoja */
+  height: 56px; /* Altura para que coincida con el input outline */
+  width: 56px;
+  min-width: 56px;
+  padding: 0;
+  border-radius: 8px; /* Bordes cuadrados para que coincida con el input */
+  background-color: #4285F4; /* Color azul de Material Design */
+  color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.set-marker-button:hover {
+  background-color: #3367D6;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* Contenedor de botones */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.register-button, .cancel-button {
+  flex: 1;
+  max-width: 180px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.register-button {
+  background-color: #0e6f1c;
+  color: #ffffff;
+}
+
+.register-button:hover {
+  background-color: #0a5a15;
+  box-shadow: 0 4px 10px rgba(14, 111, 28, 0.3);
+}
+
+.cancel-button {
+  background-color: #dc3545;
+  color: #ffffff;
+}
+
+.cancel-button:hover {
+  background-color: #c82333;
+  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+}
+
+/* Botón de retorno */
+.back-button {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 20;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  padding: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Media Queries para responsividad */
+@media (max-width: 600px) {
+  .registro-sensor-container {
+    padding: 20px 10px;
   }
-  .page-title {
-    font-size: 1.8rem;
+  .register-card {
+    width: 100%;
+    margin: 0;
+  }
+
+  .card-title {
+    font-size: 1.4rem;
+  }
+
+  .card-header {
+    padding: 20px 15px;
+  }
+
+  .card-content {
+    padding: 15px;
+  }
+
+  .button-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .register-button, .cancel-button {
+    max-width: 100%;
+  }
+
+  .back-button {
+    top: 10px;
+    left: 10px;
+    padding: 6px;
+  }
+  app-maps-sensor {
+    height: 250px;
+  }
+  .location-input-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+  .set-marker-button {
+    width: 100%;
+    height: 48px; /* Ajusta la altura para móviles */
+    min-width: unset;
   }
 }

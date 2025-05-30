@@ -15,9 +15,8 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Location } from '@angular/common';
-import { MapsSensorComponent } from '../maps-sensor/maps-sensor.component'; // Import MapsSensorComponent
-import { VerMapaComponent } from '../../finca/ver-mapa/ver-mapa.component';   // Import VerMapaComponent
-import { MatSnackBar } from '@angular/material/snack-bar'; // Import MatSnackBar
+import { MapsSensorComponent } from '../maps-sensor/maps-sensor.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
 
 // Define custom date formats
@@ -27,13 +26,13 @@ const MY_DATE_FORMATS = {
   },
   display: {
     dateInput: 'DD/MM/YYYY',
-    monthYearLabel: 'MMM YYYY', // Corrected format
+    monthYearLabel: 'MMM يَسِر', // Corrected format
     dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY', // Corrected format
+    monthYearA11yLabel: 'MMMM يَسِر', // Corrected format
   },
 };
 
-interface SensorData {
+interface SensorTypeData {
   NombreTipoSensor: string;
   Descripcion: string;
 }
@@ -41,13 +40,8 @@ interface SensorData {
 interface CultivationArea {
   nombre: string;
   ubicacion: string;
-  coordenadas: {
-    latitudInicial: number;
-    longitudInicial: number;
-    latitudFinal: number;
-    longitudFinal: number;
-  };
-  tamano: number; // in hectares
+  coordenadas: google.maps.LatLngLiteral[];
+  tamano: number;
 }
 
 @Component({
@@ -65,9 +59,8 @@ interface CultivationArea {
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    MapsSensorComponent, // Add MapsSensorComponent to imports
-    VerMapaComponent,    // Add VerMapaComponent to imports
-    MatDividerModule,
+    MapsSensorComponent,
+    MatDividerModule
   ],
   templateUrl: './registro-sensor.component.html',
   styleUrl: './registro-sensor.component.css',
@@ -80,23 +73,49 @@ export class RegistroSensorComponent implements OnInit, AfterViewInit {
   sensorForm: FormGroup;
   latitud: number | null = null;
   longitud: number | null = null;
-  cultivos: string[] = [];
-  cultivoSeleccionado: string = '';
-  sensorData: SensorData | null = null;
+  sensorTypeData: SensorTypeData | null = null;
   private API_MID_SENSORES = 'http://localhost:8082/v1/sensores';
+  isLocationValid: boolean = false; // Nuevo estado para la validación de la ubicación
 
-  // Burned-in data for cultivation area
-  cultivationArea: CultivationArea = {
-    nombre: 'Parcela de Tomate',
-    ubicacion: 'Finca La Esperanza, Sector Norte',
-    coordenadas: {
-      latitudInicial: 4.6500,
-      longitudInicial: -74.0950,
-      latitudFinal: 4.6530,
-      longitudFinal: -74.0920
+  // Datos quemados para las áreas de cultivo (deben coincidir con los de localizar-sensor)
+  cultivationAreas: CultivationArea[] = [
+    {
+      nombre: 'Tomate',
+      ubicacion: 'Finca La Esperanza, Sector Norte',
+      coordenadas: [
+        { lat: 4.6500, lng: -74.0950 },
+        { lat: 4.6500, lng: -74.0920 },
+        { lat: 4.6530, lng: -74.0920 },
+        { lat: 4.6530, lng: -74.0950 }
+      ],
+      tamano: 1.5
     },
-    tamano: 1.5 // hectares
-  };
+    {
+      nombre: 'Maíz',
+      ubicacion: 'Hacienda El Roble, Zona Sur',
+      coordenadas: [
+        { lat: 4.5800, lng: -74.1200 },
+        { lat: 4.5800, lng: -74.1100 },
+        { lat: 4.5850, lng: -74.1100 },
+        { lat: 4.5850, lng: -74.1200 }
+      ],
+      tamano: 2.3
+    },
+    {
+      nombre: 'Lechuga',
+      ubicacion: 'Granja Verde, Invernadero #3',
+      coordenadas: [
+        { lat: 4.6000, lng: -74.0800 },
+        { lat: 4.6000, lng: -74.0780 },
+        { lat: 4.6010, lng: -74.0780 },
+        { lat: 4.6010, lng: -74.0800 }
+      ],
+      tamano: 0.8
+    }
+  ];
+
+  selectedCultivationArea: CultivationArea | null = null;
+  showMap: boolean = false;
 
   @ViewChild(MapsSensorComponent) mapsSensorComponent!: MapsSensorComponent;
 
@@ -105,49 +124,73 @@ export class RegistroSensorComponent implements OnInit, AfterViewInit {
     private router: Router,
     private http: HttpClient,
     private location: Location,
-    private snackBar: MatSnackBar // Inject MatSnackBar
+    private snackBar: MatSnackBar
   ) {
+    console.log('RegistroSensorComponent constructor called.');
     this.sensorForm = this.fb.group({
       nombre: ['', Validators.required],
       ubicacion: ['', Validators.required], // This will store the Lat/Long string
-      cultivo: ['', Validators.required], // Made required as per common form practices
+      cultivo: ['', Validators.required],
       fecha: ['', Validators.required],
     });
   }
 
   ngOnInit(): void {
-    this.cultivos = ['Tomate', 'Maíz', 'Lechuga', 'Fresa', 'Pimentón']; // More realistic examples
-    this.sensorData = history.state.sensorData;
-    console.log('Este es el tipo de sensor a registrar:', this.sensorData);
+    console.log('RegistroSensorComponent ngOnInit called.');
+    this.sensorTypeData = history.state.sensorData;
+    console.log('Este es el tipo de sensor a registrar:', this.sensorTypeData);
 
-    if (!this.sensorData) {
+    if (!this.sensorTypeData) {
       console.error('No se recibieron datos del sensor.');
       this.snackBar.open('No se recibieron los datos del sensor. Por favor, vuelva a intentar el registro.', 'Cerrar', { duration: 3000 });
-      this.router.navigate(['/dashboard/sensor/register-sensor']); // Adjust this route as needed
+      this.router.navigate(['/dashboard/sensor/registro-t-sensor']);
     }
   }
 
   ngAfterViewInit(): void {
-    // Optionally set initial map center if needed, or let MapsSensorComponent handle its default
+    console.log('RegistroSensorComponent ngAfterViewInit called.');
+    // Asegurarse de que el mapa permita colocar marcadores por clic en esta vista
+    if (this.mapsSensorComponent) {
+      this.mapsSensorComponent.enableMapClickPlacement = true;
+      console.log('MapsSensorComponent enableMapClickPlacement set to:', this.mapsSensorComponent.enableMapClickPlacement);
+    } else {
+      console.error('MapsSensorComponent not found in @ViewChild for RegistroSensorComponent.');
+    }
   }
 
-  // This method will be called by MapsSensorComponent when a point is selected/dragged
+  // Este método será llamado por MapsSensorComponent cuando se seleccione/arrastre un punto
   onMapGeolocalizacionChange(geoPoint: { Latitud: string, Longitud: string }) {
+    console.log('onMapGeolocalizacionChange received:', geoPoint);
+    // Check if the signal for invalidity is present
+    const isInvalid = geoPoint.Longitud.endsWith('_INVALID');
+
+    if (isInvalid) {
+      this.snackBar.open('La ubicación seleccionada está fuera del área del cultivo. Por favor, selecciona un punto dentro del polígono.', 'Cerrar', {
+        duration: 5000,
+        panelClass: ['snackbar-warn']
+      });
+      this.isLocationValid = false; // Marcar la ubicación como inválida
+      // Remove the '_INVALID' suffix for display
+      geoPoint.Longitud = geoPoint.Longitud.replace('_INVALID', '');
+    } else {
+      this.isLocationValid = true; // Marcar la ubicación como válida
+    }
+
     this.latitud = parseFloat(geoPoint.Latitud);
     this.longitud = parseFloat(geoPoint.Longitud);
     this.sensorForm.patchValue({
       ubicacion: `Lat: ${this.latitud}, Long: ${this.longitud}`,
     });
+    console.log('Form ubicacion updated to:', this.sensorForm.get('ubicacion')?.value);
+    console.log('isLocationValid:', this.isLocationValid);
   }
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Algo salió mal; por favor, inténtalo de nuevo más tarde.';
     if (error.error instanceof ErrorEvent) {
-      // Client-side error
       console.error('Ocurrió un error:', error.error.message);
       errorMessage = `Error del cliente: ${error.error.message}`;
     } else {
-      // Backend error
       console.error(
         `Backend returned code ${error.status}, ` +
         `body was: ${JSON.stringify(error.error)}`);
@@ -158,11 +201,21 @@ export class RegistroSensorComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    if (this.sensorForm.valid && this.sensorData && this.latitud !== null && this.longitud !== null) {
+    console.log('onSubmit called. Form valid:', this.sensorForm.valid, 'isLocationValid:', this.isLocationValid);
+    // Asegurarse de que la ubicación sea válida antes de enviar
+    if (this.selectedCultivationArea && !this.isLocationValid) { // Solo validar si hay un cultivo seleccionado
+      this.snackBar.open('La ubicación seleccionada está fuera del área del cultivo. Por favor, selecciona un punto válido.', 'Cerrar', {
+        duration: 5000,
+        panelClass: ['snackbar-warn']
+      });
+      return; // Detener el envío del formulario
+    }
+
+    if (this.sensorForm.valid && this.sensorTypeData && this.latitud !== null && this.longitud !== null) {
       const formData = this.sensorForm.value;
       const dataToSend = {
-        NombreTipoSensor: this.sensorData.NombreTipoSensor,
-        Descripcion: this.sensorData.Descripcion,
+        NombreTipoSensor: this.sensorTypeData.NombreTipoSensor,
+        Descripcion: this.sensorTypeData.Descripcion,
         Nombre: formData.nombre,
         Ubicacion: formData.ubicacion, // This will be the Lat/Long string
         Cultivo: formData.cultivo,
@@ -197,14 +250,61 @@ export class RegistroSensorComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onCultivoChange(event: any) {
-    this.cultivoSeleccionado = event.value;
-    this.sensorForm.get('cultivo')?.setValue(event.value);
+  onCultivoSelectChange(event: any) {
+    console.log('Cultivo selected:', event.value);
+    const selectedCultivoNombre = event.value;
+    this.selectedCultivationArea = this.cultivationAreas.find(c => c.nombre === selectedCultivoNombre) || null;
+
+    if (this.selectedCultivationArea) {
+      this.showMap = true;
+      console.log('Map should be shown. Cultivation area coords:', this.selectedCultivationArea.coordenadas);
+      if (this.mapsSensorComponent) {
+        this.mapsSensorComponent.cultivationPolygonCoords = this.selectedCultivationArea.coordenadas || null;
+        this.mapsSensorComponent.clearAllMarkers();
+        this.mapsSensorComponent.map.googleMap!.setCenter(this.mapsSensorComponent.center);
+        this.mapsSensorComponent.map.googleMap!.setZoom(this.mapsSensorComponent.zoom);
+      }
+    } else {
+      this.showMap = false;
+      console.log('No cultivation area selected, map should be hidden.');
+      if (this.mapsSensorComponent) {
+        this.mapsSensorComponent.resetMap();
+        this.mapsSensorComponent.cultivationPolygonCoords = null;
+      }
+    }
+    this.sensorForm.get('ubicacion')?.setValue('');
+    this.latitud = null;
+    this.longitud = null;
+    this.isLocationValid = false;
+  }
+
+  setMarkerFromInput(): void {
+    console.log('setMarkerFromInput called.');
+    const ubicacionString = this.sensorForm.get('ubicacion')?.value;
+    if (!ubicacionString) {
+      this.snackBar.open('Por favor, ingresa las coordenadas en el campo de ubicación.', 'Cerrar', { duration: 3000 });
+      return;
+    }
+
+    const parts = ubicacionString.split(',').map((s: string) => s.trim());
+    if (parts.length === 2) {
+      const lat = parseFloat(parts[0].replace('Lat:', ''));
+      const lng = parseFloat(parts[1].replace('Long:', ''));
+
+      if (!isNaN(lat) && !isNaN(lng)) {
+        console.log('Attempting to set marker from input:', { lat, lng });
+        this.mapsSensorComponent.addSingleSensorMarker(lat, lng);
+      } else {
+        this.snackBar.open('Formato de coordenadas inválido. Usa "Lat: X.XXXXXX, Long: Y.YYYYYY".', 'Cerrar', { duration: 5000 });
+      }
+    } else {
+      this.snackBar.open('Formato de coordenadas inválido. Usa "Lat: X.XXXXXX, Long: Y.YYYYYY".', 'Cerrar', { duration: 5000 });
+    }
   }
 
   onExit() {
-    // Navega de regreso al componente anterior, pasando sensorData en el estado
-    // Asumiendo que el componente anterior es el que selecciona el tipo de sensor
-    this.location.back(); // Esto es más directo para volver al estado anterior
+    this.router.navigate(['/dashboard/sensor/registro-t-sensor'], {
+      state: { sensorData: this.sensorTypeData }
+    });
   }
 }

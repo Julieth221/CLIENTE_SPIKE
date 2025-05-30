@@ -23,6 +23,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CardSensorComponent } from '../card-sensor/card-sensor.component'; // Importa CardSensorComponent
 import { VersensorComponent } from '../versensor/versensor.component';
+import { AuthService } from '../../../../services/auth.service';
 
 interface SensorData {
   id: number;
@@ -79,6 +80,8 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
 
   // Control de vista
   vistaActual: 'tabla' | 'tarjeta' = 'tabla';
+  sensoresUsuarios: any [] = [];
+
   // Datos y filtrados
   sensores: SensorData[] = [
     { id: 1, nombre: 'Sensor PH Norte', ubicacion: 'Invernadero 1', latitud: 10.123, longitud: -75.456, cultivo: 'Tomate', fechaRegistro: '2024-05-01', TipoSensor: 'PH', Estado: 'Activo', FechaInstalacion: '2024-04-20', ID: 101 },
@@ -100,6 +103,8 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
 
   // Estado
   loading: boolean = false;
+  userId: number = 0;
+  errorMessage: string = '';
 
   // Columnas para mostrar
   displayedColumns: string[] = ['nombre', 'ubicacion', 'tipo sensor', 'fecha instalacion', 'Estado', 'acciones'];
@@ -107,7 +112,8 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
   constructor(
     private apiService: ApiService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private authService: AuthService,
   ) { }
 
   private isMobileView(): boolean {
@@ -128,6 +134,10 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
     this.vistaActual = this.isMobileView() ? 'tarjeta' : 'tabla';
     this.obtenerSensores(); // Aseguramos que se llama para inicializar el dataSource y el filtro
     this.obtenerTipoSensorOptions();
+
+        // Obtener ID del usuario autenticado desde el token
+    this.userId = this.authService.getIdFromToken();
+    console.log('ID del usuario autenticado:', this.userId);
   }
 
   obtenerTipoSensorOptions() {
@@ -197,6 +207,28 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
   onVerSensor(sensor: SensorData): void {
     this.verSensor(sensor); // Llama al método existente
   }
+
+    obtenerFincasUsuario() {
+      this.loading = true;
+      this.errorMessage = '';
+      
+      this.apiService.get(`${API_URLS.CRUD.API_CRUD_CULTIVO}/Cultivo?query=fk_cultivo:${this.userId}`).subscribe({
+        next: (response: any) => {
+          if (response && response.Data && Array.isArray(response.Data)) {
+            this.sensoresUsuarios = response.Data;
+            this.loading = false;
+          } else {
+            this.errorMessage = 'No se pudieron cargar los cultivos';
+            this.loading = false;
+          }
+        },
+        error: (error) => {
+          this.errorMessage = 'Error al cargar los cultivos';
+          console.error('Error:', error);
+          this.loading = false;
+        }
+      });
+    }
 
   onEditarSensor(sensor: SensorData): void {
     this.editarSensor(sensor); // Llama al método existente
