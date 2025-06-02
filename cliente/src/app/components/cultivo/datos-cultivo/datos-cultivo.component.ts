@@ -4,10 +4,10 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { RegisterTipoArrozComponent } from '../register-tipo-arroz/register-tipo-arroz.component';
-import { RegisterEstadoFenologicoComponent } from '../register-estado-fenologico/register-estado-fenologico.component';
-import { RegisterMetodoSiembraComponent } from '../register-metodo-siembra/register-metodo-siembra.component';
-import { RegisterCategoriaInsumoComponent } from '../register-categoria-insumo/register-categoria-insumo.component';
+import { RegisterTipoArrozComponent } from './register-tipo-arroz/register-tipo-arroz.component';
+import { RegisterEstadoFenologicoComponent } from './register-estado-fenologico/register-estado-fenologico.component';
+import { RegisterMetodoSiembraComponent } from './register-metodo-siembra/register-metodo-siembra.component';
+import { RegisterCategoriaInsumoComponent } from './register-categoria-insumo/register-categoria-insumo.component';
 
 @Component({
   selector: 'app-datos-cultivo',

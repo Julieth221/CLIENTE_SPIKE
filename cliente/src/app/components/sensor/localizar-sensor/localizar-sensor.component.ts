@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
-import { MapsSensorComponent } from '../maps-sensor/maps-sensor.component'; // Importa tu componente de mapa con el nombre correcto
+// import { MapsSensorComponent } from '../maps-sensor/maps-sensor.component'; // Importa tu componente de mapa con el nombre correcto
 import { MatTooltipModule } from '@angular/material/tooltip'; // Para tooltips en botones
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // Para spinner de carga
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar'; // Importa MatSnackBarModule y MatSnackBar
@@ -38,7 +38,7 @@ interface SensorData {
     MatInputModule,
     MatFormFieldModule,
     FormsModule,
-    MapsSensorComponent, // Asegúrate de importar el MapsSensorComponent
+    // MapsSensorComponent, // Asegúrate de importar el MapsSensorComponent
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatSnackBarModule // Añade MatSnackBarModule aquí
@@ -48,7 +48,7 @@ interface SensorData {
 })
 export class LocalizarSensorComponent implements OnInit, AfterViewInit {
 
-  @ViewChild(MapsSensorComponent) mapComponent!: MapsSensorComponent; // Referencia al componente de mapa
+  // @ViewChild(MapsSensorComponent) mapComponent!: MapsSensorComponent; // Referencia al componente de mapa
 
   sensores: SensorData[] = [];
   filteredSensors: SensorData[] = [];
@@ -101,14 +101,14 @@ export class LocalizarSensorComponent implements OnInit, AfterViewInit {
     }
   }
 
-  verMapa(sensor: SensorData): void {
-    if (this.mapComponent) {
-      this.mapComponent.setMarker(sensor.latitud, sensor.longitud);
-      // Opcional: centrar el mapa en el marcador
-      this.mapComponent.center = { lat: sensor.latitud, lng: sensor.longitud };
-      this.mapComponent.zoom = 15; // Un zoom más cercano para ver el detalle
-    } else {
-      this.snackBar.open('El componente de mapa no está disponible.', 'Cerrar', { duration: 3000 });
-    }
-  }
+  // verMapa(sensor: SensorData): void {
+  //   if (this.mapComponent) {
+  //     this.mapComponent.setMarker(sensor.latitud, sensor.longitud);
+  //     // Opcional: centrar el mapa en el marcador
+  //     this.mapComponent.center = { lat: sensor.latitud, lng: sensor.longitud };
+  //     this.mapComponent.zoom = 15; // Un zoom más cercano para ver el detalle
+  //   } else {
+  //     this.snackBar.open('El componente de mapa no está disponible.', 'Cerrar', { duration: 3000 });
+  //   }
+  // }
 }

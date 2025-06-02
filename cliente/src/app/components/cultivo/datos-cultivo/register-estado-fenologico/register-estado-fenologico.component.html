@@ -1,0 +1,69 @@
+<div class="container">
+    <div class="form-section" *ngIf="!loading">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ editing ? 'Editar Estado Fenológico' : 'Registrar Estado Fenológico' }}</mat-card-title>
+          <mat-card-subtitle>Administra los estados fenológicos que usarás en tus cultivos.</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="estadoFenologicoForm" (ngSubmit)="guardarEstadoFenologico()">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nombre del estado fenológico</mat-label>
+                <input matInput formControlName="nombre" placeholder="Ej: Germinación">
+                <mat-icon matSuffix>📅</mat-icon>
+                <mat-error *ngIf="estadoFenologicoForm.get('nombre')?.hasError('required')">
+                  El nombre es obligatorio
+                </mat-error>
+                <mat-error *ngIf="estadoFenologicoForm.get('nombre')?.hasError('minlength')">
+                  El nombre debe tener al menos 3 caracteres
+                </mat-error>
+              </mat-form-field>
+            </div>
+            
+            <div class="form-actions">
+              <button mat-raised-button color="primary" type="submit" [disabled]="loading">
+                <mat-icon>{{ editing ? 'save' : 'add' }}</mat-icon>
+                {{ editing ? 'Actualizar' : 'Registrar' }}
+              </button>
+              
+              <button mat-button type="button" *ngIf="editing" (click)="cancelarEdicion()">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="list-section">
+      <h2>Estados Fenológicos Registrados</h2>
+      
+      <div *ngIf="loading" class="loader-container">
+        <mat-spinner diameter="50"></mat-spinner>
+      </div>
+      
+      <div *ngIf="!loading && estadosFenologicos.length === 0" class="empty-state">
+        <mat-icon>📅</mat-icon>
+        <p>No hay estados fenológicos registrados</p>
+      </div>
+      
+      <div class="cards-grid" *ngIf="!loading && estadosFenologicos.length > 0">
+        <mat-card class="tipo-card" *ngFor="let estado of estadosFenologicos">
+          <div class="tipo-content">
+            <div class="tipo-chip">
+              <span>{{ estado.Nombre | titlecase }}</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button mat-icon-button color="primary" matTooltip="Editar" (click)="editarEstadoFenologico(estado)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" matTooltip="Eliminar" (click)="eliminarEstadoFenologico(estado)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>

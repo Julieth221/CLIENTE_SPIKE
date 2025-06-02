@@ -15,7 +15,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Location } from '@angular/common';
-import { MapsSensorComponent } from '../maps-sensor/maps-sensor.component'; // Import MapsSensorComponent
+// import { MapsSensorComponent } from '../maps-sensor/maps-sensor.component'; // Import MapsSensorComponent
 import { VerMapaComponent } from '../../finca/ver-mapa/ver-mapa.component';   // Import VerMapaComponent
 import { MatSnackBar } from '@angular/material/snack-bar'; // Import MatSnackBar
 import { MatDividerModule } from '@angular/material/divider';
@@ -52,7 +52,7 @@ interface CultivationArea {
 
 @Component({
   selector: 'app-registro-sensor',
-  standalone: true,
+  // standalone: true,
   imports: [
     MatButtonModule,
     MatCardModule,
@@ -65,7 +65,7 @@ interface CultivationArea {
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    MapsSensorComponent, // Add MapsSensorComponent to imports
+    // MapsSensorComponent, // Add MapsSensorComponent to imports
     VerMapaComponent,    // Add VerMapaComponent to imports
     MatDividerModule,
   ],
@@ -98,7 +98,7 @@ export class RegistroSensorComponent implements OnInit, AfterViewInit {
     tamano: 1.5 // hectares
   };
 
-  @ViewChild(MapsSensorComponent) mapsSensorComponent!: MapsSensorComponent;
+  // @ViewChild(MapsSensorComponent) mapsSensorComponent!: MapsSensorComponent;
 
   constructor(
     private fb: FormBuilder,

@@ -49,9 +49,9 @@
           </div>
         </mat-card-content>
         <mat-card-actions class="card-actions-bottom">
-          <button mat-raised-button color="primary" (click)="verMapa(sensor)">
+          <!-- <button mat-raised-button color="primary" (click)="verMapa(sensor)"> -->
             <mat-icon>map</mat-icon> Ver mapa
-          </button>
+          <!-- </button> -->
         </mat-card-actions>
       </mat-card>
       <div *ngIf="filteredSensors.length === 0 && searchText" class="no-results">
@@ -65,6 +65,6 @@
     </div>
 
     <div class="right-section map-container">
-      <app-maps-sensor></app-maps-sensor> </div>
+      <!-- <app-maps-sensor></app-maps-sensor> </div> -->
   </div>
 </div>

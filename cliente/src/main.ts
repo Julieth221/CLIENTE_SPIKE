@@ -32,7 +32,7 @@ import { EditAlertComponent } from './app/components/sensor/edit-alert/edit-aler
 import { VersensorComponent } from './app/components/sensor/versensor/versensor.component';
 import { GestionAlertComponent } from './app/components/sensor/gestion-alert/gestion-alert.component';
 import { EditarFincaComponent } from './app/components/finca/editar-finca/editar-finca.component';
-import { MapsSensorComponent } from './app/components/sensor/maps-sensor/maps-sensor.component';
+// import { MapsSensorComponent } from './app/components/sensor/maps-sensor/maps-sensor.component';
 import { HistorialAlertComponent } from './app/components/sensor/historial-alert/historial-alert.component';
 import { EditarArrendamientosComponent } from './app/components/finca/editar-arrendamientos/editar-arrendamientos.component';
 import { HistorialParcelaComponent } from './app/components/finca/historial-parcela/historial-parcela.component';
@@ -54,7 +54,7 @@ bootstrapApplication(AppComponent,{
             { path: 'pwdSuccess', component: PwdSuccessComponent },
             { path: 'register', component: RegisterComponent },
             { path: 'verArrendamiento', component: VerArrendamientosComponent},
-            { path: 'sensor/maps-sensor', component: MapsSensorComponent},
+            // { path: 'sensor/maps-sensor', component: MapsSensorComponent},
             {
               path: 'dashboard',
               component: DashboardComponent,
