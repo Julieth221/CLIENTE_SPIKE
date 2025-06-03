@@ -39,6 +39,7 @@ import { HistorialParcelaComponent } from './app/components/finca/historial-parc
 import { DatosCultivoComponent } from './app/components/cultivo/datos-cultivo/datos-cultivo.component';
 import { RegisterCultivoComponent } from './app/components/cultivo/register-cultivo/register-cultivo.component';
 import { FasesCultivoComponent } from './app/components/cultivo/fases-cultivo/fases-cultivo.component';
+import { RegisterInsumoCultivoComponent } from './app/components/cultivo/register-insumo-cultivo/register-insumo-cultivo.component';
 
 
 
@@ -87,7 +88,8 @@ bootstrapApplication(AppComponent,{
                   { path: 'finca/historialParcela', component: HistorialParcelaComponent},
                   { path: 'cultivo/datosCultivo', component: DatosCultivoComponent},
                   { path: 'cultivo/registrarCultivo', component: RegisterCultivoComponent},
-                  { path: 'cultivo/fasesCultivo', component: FasesCultivoComponent}
+                  { path: 'cultivo/fasesCultivo', component: FasesCultivoComponent},
+                  { path: 'cultivo/registrarInsumo', component: RegisterInsumoCultivoComponent}
               ],
             },
           ]),
