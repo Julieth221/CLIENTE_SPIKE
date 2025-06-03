@@ -37,6 +37,8 @@ import { HistorialAlertComponent } from './app/components/sensor/historial-alert
 import { EditarArrendamientosComponent } from './app/components/finca/editar-arrendamientos/editar-arrendamientos.component';
 import { HistorialParcelaComponent } from './app/components/finca/historial-parcela/historial-parcela.component';
 import { DatosCultivoComponent } from './app/components/cultivo/datos-cultivo/datos-cultivo.component';
+import { RegisterCultivoComponent } from './app/components/cultivo/register-cultivo/register-cultivo.component';
+import { FasesCultivoComponent } from './app/components/cultivo/fases-cultivo/fases-cultivo.component';
 
 
 
@@ -83,7 +85,9 @@ bootstrapApplication(AppComponent,{
                   { path: 'sensor/historial-alert', component: HistorialAlertComponent},
                   { path: 'finca/editararrendamiento', component: EditarArrendamientosComponent},
                   { path: 'finca/historialParcela', component: HistorialParcelaComponent},
-                  { path: 'cultivo/datosCultivo', component: DatosCultivoComponent}
+                  { path: 'cultivo/datosCultivo', component: DatosCultivoComponent},
+                  { path: 'cultivo/registrarCultivo', component: RegisterCultivoComponent},
+                  { path: 'cultivo/fasesCultivo', component: FasesCultivoComponent}
               ],
             },
           ]),
