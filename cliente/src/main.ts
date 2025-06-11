@@ -32,10 +32,15 @@ import { EditAlertComponent } from './app/components/sensor/edit-alert/edit-aler
 import { VersensorComponent } from './app/components/sensor/versensor/versensor.component';
 import { GestionAlertComponent } from './app/components/sensor/gestion-alert/gestion-alert.component';
 import { EditarFincaComponent } from './app/components/finca/editar-finca/editar-finca.component';
-import { MapsSensorComponent } from './app/components/sensor/maps-sensor/maps-sensor.component';
+// import { MapsSensorComponent } from './app/components/sensor/maps-sensor/maps-sensor.component';
 import { HistorialAlertComponent } from './app/components/sensor/historial-alert/historial-alert.component';
 import { EditarArrendamientosComponent } from './app/components/finca/editar-arrendamientos/editar-arrendamientos.component';
 import { HistorialParcelaComponent } from './app/components/finca/historial-parcela/historial-parcela.component';
+import { DatosCultivoComponent } from './app/components/cultivo/datos-cultivo/datos-cultivo.component';
+import { RegisterCultivoComponent } from './app/components/cultivo/register-cultivo/register-cultivo.component';
+import { FasesCultivoComponent } from './app/components/cultivo/fases-cultivo/fases-cultivo.component';
+import { RegisterInsumoCultivoComponent } from './app/components/cultivo/register-insumo-cultivo/register-insumo-cultivo.component';
+
 
 
 
@@ -52,7 +57,7 @@ bootstrapApplication(AppComponent,{
             { path: 'pwdSuccess', component: PwdSuccessComponent },
             { path: 'register', component: RegisterComponent },
             { path: 'verArrendamiento', component: VerArrendamientosComponent},
-            { path: 'sensor/maps-sensor', component: MapsSensorComponent},
+            // { path: 'sensor/maps-sensor', component: MapsSensorComponent},
             {
               path: 'dashboard',
               component: DashboardComponent,
@@ -80,7 +85,11 @@ bootstrapApplication(AppComponent,{
                 // { path: 'finca/verArrendamiento', component: VerArrendamientosComponent},
                   { path: 'sensor/historial-alert', component: HistorialAlertComponent},
                   { path: 'finca/editararrendamiento', component: EditarArrendamientosComponent},
-                  { path: 'finca/historialParcela', component: HistorialParcelaComponent}
+                  { path: 'finca/historialParcela', component: HistorialParcelaComponent},
+                  { path: 'cultivo/datosCultivo', component: DatosCultivoComponent},
+                  { path: 'cultivo/registrarCultivo', component: RegisterCultivoComponent},
+                  { path: 'cultivo/fasesCultivo', component: FasesCultivoComponent},
+                  { path: 'cultivo/registrarInsumo', component: RegisterInsumoCultivoComponent}
               ],
             },
           ]),

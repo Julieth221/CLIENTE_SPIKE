@@ -6,11 +6,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
-import { MapsSensorComponent } from '../maps-sensor/maps-sensor.component';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
-import { MatSelectModule } from '@angular/material/select'; // Import MatSelectModule
+import { MapsSensorComponent } from '../maps-sensor/maps-sensor.component'; // Importa tu componente de mapa con el nombre correcto
+import { MatTooltipModule } from '@angular/material/tooltip'; // Para tooltips en botones
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // Para spinner de carga
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar'; // Importa MatSnackBarModule y MatSnackBar
+import { MatSelectModule } from '@angular/material/select'; // Añadido MatSelectModule
+import { Location } from '@angular/common';
 
 interface SensorData {
   id: number;
@@ -44,18 +45,18 @@ interface CultivationArea {
     MatInputModule,
     MatFormFieldModule,
     FormsModule,
-    MapsSensorComponent,
+    MapsSensorComponent, // Asegúrate de importar el MapsSensorComponent
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatSelectModule // Add MatSelectModule here
+    MatSelectModule // Añadido MatSelectModule aquí
   ],
   templateUrl: './localizar-sensor.component.html',
   styleUrl: './localizar-sensor.component.css'
 })
 export class LocalizarSensorComponent implements OnInit, AfterViewInit {
 
-  @ViewChild(MapsSensorComponent) mapComponent!: MapsSensorComponent;
+  @ViewChild(MapsSensorComponent) mapComponent!: MapsSensorComponent; // Referencia al componente de mapa
 
   sensores: SensorData[] = [];
   filteredSensors: SensorData[] = [];
@@ -140,9 +141,12 @@ export class LocalizarSensorComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     // Asegurarse de que el mapa no permita colocar marcadores por clic en esta vista
-    if (this.mapComponent) {
-      this.mapComponent.enableMapClickPlacement = false;
-    }
+    // Usar setTimeout para asegurar que el ViewChild esté completamente inicializado
+    setTimeout(() => {
+      if (this.mapComponent) {
+        this.mapComponent.enableMapClickPlacement = false;
+      }
+    });
   }
 
   populateCultivoOptions(): void {
@@ -200,19 +204,19 @@ export class LocalizarSensorComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Muestra la ubicación de un sensor específico en el mapa, junto con el polígono de su cultivo.
-   * Si no se selecciona un sensor específico, muestra el polígono del cultivo seleccionado y todos sus sensores.
+   * Muestra la ubicación de los sensores filtrados en el mapa, junto con el polígono del cultivo seleccionado.
    */
   updateMapForSelectedCultivo(): void {
     if (!this.mapComponent) {
-      this.snackBar.open('El componente de mapa no está disponible.', 'Cerrar', { duration: 3000 });
+      // Usar setTimeout para esperar que el ViewChild esté disponible
+      setTimeout(() => this.updateMapForSelectedCultivo(), 100);
       return;
     }
 
     this.mapComponent.clearAllMarkers(); // Limpiar marcadores anteriores
     this.mapComponent.resetMap(); // Limpiar el polígono anterior también
 
-    let cultivationAreaToShow: CultivationArea | undefined = undefined; // Puede ser undefined
+    let cultivationAreaToShow: CultivationArea | undefined = undefined;
     let sensorsToDisplayOnMap: google.maps.LatLngLiteral[] = [];
 
     if (this.selectedCultivo && this.selectedCultivo !== 'Todos los Cultivos') {
@@ -224,23 +228,22 @@ export class LocalizarSensorComponent implements OnInit, AfterViewInit {
           .filter(s => s.cultivo === cultivationAreaToShow!.nombre)
           .map(s => ({ lat: s.latitud, lng: s.longitud }));
 
-        // Asignar las coordenadas del polígono (asegurando que no sea undefined)
-        this.mapComponent.cultivationPolygonCoords = cultivationAreaToShow.coordenadas || null;
+        // Asignar las coordenadas del polígono
+        this.mapComponent.cultivationPolygonCoords = cultivationAreaToShow.coordenadas;
         this.mapComponent.displaySensorMarkers(sensorsToDisplayOnMap);
 
       } else {
         this.snackBar.open(`No se encontró información de polígono para el cultivo: ${this.selectedCultivo}`, 'Cerrar', { duration: 3000 });
-        this.mapComponent.cultivationPolygonCoords = null; // Asegurar que es null
-        this.mapComponent.resetMap(); // Limpiar el mapa si no hay polígono
+        this.mapComponent.cultivationPolygonCoords = null;
+        this.mapComponent.resetMap();
       }
     } else {
       // Si "Todos los Cultivos" está seleccionado, no mostrar ningún polígono.
-      // Asegurar que cultivationPolygonCoords sea null.
       this.mapComponent.cultivationPolygonCoords = null;
       this.mapComponent.resetMap();
-      // Si quieres mostrar todos los sensores en el mapa cuando "Todos los Cultivos" está seleccionado:
-      // sensorsToDisplayOnMap = this.filteredSensors.map(s => ({ lat: s.latitud, lng: s.longitud }));
-      // this.mapComponent.displaySensorMarkers(sensorsToDisplayOnMap);
+      // Mostrar todos los sensores filtrados en el mapa (si quieres que se vean todos los sensores)
+      sensorsToDisplayOnMap = this.filteredSensors.map(s => ({ lat: s.latitud, lng: s.longitud }));
+      this.mapComponent.displaySensorMarkers(sensorsToDisplayOnMap);
     }
   }
 
@@ -249,24 +252,31 @@ export class LocalizarSensorComponent implements OnInit, AfterViewInit {
    * @param sensor Los datos del sensor a visualizar.
    */
   verMapa(sensor: SensorData): void {
-    if (this.mapComponent) {
-      // Encontrar el área de cultivo asociada a este sensor
-      const cultivationArea = this.cultivationAreas.find(c => c.nombre === sensor.cultivo);
+    if (!this.mapComponent) {
+      this.snackBar.open('El componente de mapa no está disponible.', 'Cerrar', { duration: 3000 });
+      return;
+    }
 
-      if (cultivationArea) {
-        this.mapComponent.cultivationPolygonCoords = cultivationArea.coordenadas || null; // Asegurar que es null
-        this.mapComponent.displaySensorMarkers([{ lat: sensor.latitud, lng: sensor.longitud }]); // Mostrar solo este sensor
-        // Centrar el mapa en el marcador del sensor y ajustar el zoom
-        this.mapComponent.map.googleMap!.setCenter({ lat: sensor.latitud, lng: sensor.longitud });
-        this.mapComponent.map.googleMap!.setZoom(15);
-      } else {
-        this.snackBar.open(`No se encontró polígono para el cultivo: ${sensor.cultivo}`, 'Cerrar', { duration: 3000 });
-        this.mapComponent.cultivationPolygonCoords = null; // Asegurar que es null
-        this.mapComponent.resetMap(); // Limpiar el mapa si no hay polígono
-        this.mapComponent.displaySensorMarkers([{ lat: sensor.latitud, lng: sensor.longitud }]); // Aún así mostrar el sensor si no hay polígono
+    // Limpiar marcadores y polígono anteriores antes de mostrar el nuevo
+    this.mapComponent.clearAllMarkers();
+    this.mapComponent.resetMap();
+
+    // Encontrar el área de cultivo asociada a este sensor
+    const cultivationArea = this.cultivationAreas.find(c => c.nombre === sensor.cultivo);
+
+    if (cultivationArea) {
+      this.mapComponent.cultivationPolygonCoords = cultivationArea.coordenadas;
+      this.mapComponent.displaySensorMarkers([{ lat: sensor.latitud, lng: sensor.longitud }]); // Mostrar solo este sensor
+      // Centrar el mapa en el marcador del sensor y ajustar el zoom
+      if (this.mapComponent.map && this.mapComponent.map.googleMap) {
+        this.mapComponent.map.googleMap.setCenter({ lat: sensor.latitud, lng: sensor.longitud });
+        this.mapComponent.map.googleMap.setZoom(15);
       }
     } else {
-      this.snackBar.open('El componente de mapa no está disponible.', 'Cerrar', { duration: 3000 });
+      this.snackBar.open(`No se encontró polígono para el cultivo: ${sensor.cultivo}`, 'Cerrar', { duration: 3000 });
+      this.mapComponent.cultivationPolygonCoords = null; // Asegurar que es null
+      this.mapComponent.resetMap(); // Limpiar el mapa si no hay polígono
+      this.mapComponent.displaySensorMarkers([{ lat: sensor.latitud, lng: sensor.longitud }]); // Aún así mostrar el sensor si no hay polígono
     }
   }
 }

@@ -58,15 +58,16 @@
             <p class="map-description">Seleccione la ubicación exacta del sensor haciendo clic en el mapa del área de cultivo. El punto seleccionado aparecerá en el campo de coordenadas.</p>
 
             <div class="sensor-location-map-container">
-              <div class="map-overlay-info" *ngIf="selectedCultivationArea">
-                  <h4>Área de Cultivo: {{ selectedCultivationArea.nombre }}</h4>
-                  <p>Ubicación: {{ selectedCultivationArea.ubicacion }}</p>
-                  <p>Tamaño: {{ selectedCultivationArea.tamano }} ha</p>
-              </div>
-              <app-maps-sensor
-                [cultivationPolygonCoords]="selectedCultivationArea?.coordenadas ?? null"
-                (onGeolocalizacionChange)="onMapGeolocalizacionChange($event)">
-              </app-maps-sensor>
+                <div class="map-overlay-info" *ngIf="selectedCultivationArea">
+                    <h4>Área de Cultivo: {{ selectedCultivationArea.nombre }}</h4>
+                    <p>Ubicación: {{ selectedCultivationArea.ubicacion }}</p>
+                    <p>Tamaño: {{ selectedCultivationArea.tamano }} ha</p>
+                </div>
+                <app-maps-sensor
+                  [cultivationPolygonCoords]="selectedCultivationArea?.coordenadas ?? null"
+                  [enableMapClickPlacement]="true"
+                  (onGeolocalizacionChange)="onMapGeolocalizacionChange($event)">
+                </app-maps-sensor>
             </div>
 
             <div class="location-input-group">
@@ -90,7 +91,7 @@
           <button mat-raised-button
             color="primary"
             type="submit"
-            [disabled]="sensorForm.invalid || latitud === null || longitud === null"
+            [disabled]="sensorForm.invalid || latitud === null || longitud === null || !isLocationValid"
             class="register-button">
             Registrar Sensor
           </button>

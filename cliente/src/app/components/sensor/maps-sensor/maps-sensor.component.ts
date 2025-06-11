@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Output, ViewChild, AfterViewInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { GoogleMap, GoogleMapsModule } from '@angular/google-maps';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon'; // Import MatIconModule for custom marker content
 
+// Definir la interfaz para el punto geográfico con estado de validez
 interface SingleGeoPoint {
   Latitud: string;
   Longitud: string;
+  isValid: boolean; // Añadido para indicar si la ubicación es válida dentro del polígono
 }
 
 @Component({
@@ -13,98 +14,99 @@ interface SingleGeoPoint {
   standalone: true,
   imports: [
     GoogleMapsModule,
-    CommonModule,
-    MatIconModule // Add MatIconModule here
+    CommonModule
   ],
   templateUrl: './maps-sensor.component.html',
   styleUrl: './maps-sensor.component.css'
 })
 export class MapsSensorComponent implements AfterViewInit, OnChanges {
 
-  @ViewChild('map', { static: false }) map!: GoogleMap;
+  @ViewChild('map', { static: false }) map!: GoogleMap; // ¡CRÍTICO! Añadido @ViewChild para acceder a la instancia del mapa
   @Output() onGeolocalizacionChange = new EventEmitter<SingleGeoPoint>();
 
   @Input() cultivationPolygonCoords: google.maps.LatLngLiteral[] | null = null;
-  @Input() sensorMarkers: google.maps.LatLngLiteral[] | null = null; // Ahora acepta un array de marcadores
-  @Input() enableMapClickPlacement: boolean = true; // Nuevo input para controlar si se puede hacer clic para colocar marcador
+  @Input() sensorMarkerCoords: google.maps.LatLngLiteral | null = null;
+  @Input() enableMapClickPlacement: boolean = true; // Nuevo input para controlar si se puede colocar el marcador con clic
 
   center = { lat: 4.570868, lng: -74.297333 }; // Centro predeterminado
   zoom = 12;
-  geo: SingleGeoPoint | null = null; // Coordenadas del último marcador colocado/arrastrado
+  geo: SingleGeoPoint | null = null; // Coordenadas del marcador del sensor
 
-  activeMarkers: any[] = []; // Array para almacenar los AdvancedMarkerElement
+  // Usamos 'any' para el marcador para ser compatible con AdvancedMarkerElement
+  // Ahora manejaremos múltiples marcadores
+  markers: any[] = []; // Array para almacenar múltiples marcadores
   polygon: google.maps.Polygon | null = null; // El polígono del cultivo
 
-  constructor() {
-    console.log('MapsSensorComponent constructor called.');
-  }
+  constructor() { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('MapsSensorComponent ngOnChanges:', changes);
     // Se asegura de que el mapa esté inicializado antes de intentar dibujar
     if (this.map && this.map.googleMap) {
       if (changes['cultivationPolygonCoords']) {
+        // Si las coordenadas del polígono del cultivo cambian, redibujar el polígono
         this.drawCultivationPolygon();
+        // Centrar el mapa en el polígono si hay coordenadas
         if (this.cultivationPolygonCoords && this.cultivationPolygonCoords.length > 0) {
           const bounds = new google.maps.LatLngBounds();
           this.cultivationPolygonCoords.forEach(coord => bounds.extend(coord));
           this.map.googleMap.fitBounds(bounds);
+          // Ajustar el zoom si es demasiado cercano después de fitBounds, para no ver solo una porción del polígono
           if (this.map.googleMap.getZoom() && this.map.googleMap.getZoom()! > 16) {
             this.map.googleMap.setZoom(16);
           }
         } else {
-          // Si no hay polígono, resetear el mapa a la vista general
-          this.map.googleMap.setCenter(this.center);
-          this.map.googleMap.setZoom(this.zoom);
+          // Si no hay coordenadas de polígono, limpiar el polígono existente
+          if (this.polygon) {
+            this.polygon.setMap(null);
+            this.polygon = null;
+          }
         }
       }
-      if (changes['sensorMarkers'] && this.sensorMarkers) {
-        this.displaySensorMarkers(this.sensorMarkers);
-      } else if (changes['sensorMarkers'] && !this.sensorMarkers) {
-        // Si sensorMarkers se vuelve null, limpiar los marcadores
-        this.clearAllMarkers();
+      if (changes['sensorMarkerCoords'] && this.sensorMarkerCoords) {
+        // Si se proporcionan coordenadas de un sensor existente, colocar el marcador
+        this.addSingleSensorMarker(this.sensorMarkerCoords.lat, this.sensorMarkerCoords.lng);
       }
-    } else {
-      console.warn('MapsSensorComponent: map or googleMap not yet available in ngOnChanges.');
     }
   }
 
   ngAfterViewInit() {
-    console.log('MapsSensorComponent ngAfterViewInit called. Map instance:', this.map);
-    if (!this.map || !this.map.googleMap) {
-      console.error('MapsSensorComponent: Google Map instance is not available after view init.');
-      return;
-    }
+    // Usar setTimeout para asegurar que el mapa esté completamente renderizado
+    setTimeout(() => {
+      if (this.map && this.map.googleMap) {
+        const mapInstance = this.map.googleMap!;
 
-    const mapInstance = this.map.googleMap!;
+        mapInstance.setOptions({
+          draggableCursor: 'grab',
+        });
 
-    mapInstance.setOptions({
-      draggableCursor: 'grab',
-    });
+        // Listener para el clic en el mapa para colocar el marcador del sensor
+        mapInstance.addListener('click', (event: google.maps.MapMouseEvent) => {
+          // Solo permitir colocar marcador si enableMapClickPlacement es true
+          if (this.enableMapClickPlacement && event.latLng) {
+            this.addSingleSensorMarker(event.latLng.lat(), event.latLng.lng());
+          }
+        });
 
-    // Listener para el clic en el mapa para colocar el marcador del sensor
-    mapInstance.addListener('click', (event: google.maps.MapMouseEvent) => {
-      console.log('Map clicked. enableMapClickPlacement:', this.enableMapClickPlacement, 'Event:', event);
-      // Solo permitir colocar marcador si enableMapClickPlacement es true
-      if (this.enableMapClickPlacement) {
-        this.addSingleSensorMarker(event.latLng!.lat(), event.latLng!.lng());
+        // Dibujar el polígono inicial y el marcador del sensor si ya hay datos al inicio
+        this.drawCultivationPolygon();
+        if (this.sensorMarkerCoords) {
+          this.addSingleSensorMarker(this.sensorMarkerCoords.lat, this.sensorMarkerCoords.lng);
+        }
       } else {
-        console.log('Map click ignored: enableMapClickPlacement is false.');
+        console.error('GoogleMap instance not available in ngAfterViewInit.');
       }
     });
-
-    // Dibujar el polígono inicial y los marcadores si ya hay datos al inicio
-    this.drawCultivationPolygon();
-    if (this.sensorMarkers && this.sensorMarkers.length > 0) {
-      this.displaySensorMarkers(this.sensorMarkers);
-    }
   }
 
   /**
    * Dibuja el polígono del área de cultivo.
    */
   drawCultivationPolygon() {
-    console.log('Drawing cultivation polygon. Coords:', this.cultivationPolygonCoords);
+    if (!this.map || !this.map.googleMap) {
+      console.warn('Map not initialized, cannot draw polygon.');
+      return;
+    }
+
     if (this.polygon) {
       this.polygon.setMap(null); // Limpiar polígono anterior
     }
@@ -123,44 +125,57 @@ export class MapsSensorComponent implements AfterViewInit, OnChanges {
   }
 
   /**
-   * Añade un único marcador de sensor al mapa (usado para la funcionalidad de registro).
-   * Solo permite un marcador a la vez.
+   * Crea y añade un único marcador para el sensor en el mapa.
+   * Si enableMapClickPlacement es true, este marcador será el único y arrastrable.
+   * Si enableMapClickPlacement es false, se añade a la lista de marcadores y no es arrastrable.
    * @param lat Latitud del punto.
    * @param lng Longitud del punto.
    */
   addSingleSensorMarker(lat: number, lng: number): void {
-    console.log('Attempting to add single sensor marker at:', { lat, lng });
+    if (!this.map || !this.map.googleMap) {
+      console.error('Map not initialized, cannot set marker.');
+      return;
+    }
     const mapInstance = this.map.googleMap!;
-    this.clearAllMarkers(); // Asegurarse de que solo haya un marcador
 
-    // Crear un elemento HTML para el contenido del marcador
+    // Si estamos en modo de colocación de un solo marcador (RegistroSensorComponent)
+    if (this.enableMapClickPlacement) {
+      // Limpiamos el marcador anterior si existe
+      if (this.markers.length > 0) {
+        this.markers[0].map = null;
+        this.markers = [];
+      }
+    }
+
+    // Crear un elemento HTML para el contenido del marcador (un círculo azul con un icono)
     const markerContent = document.createElement('div');
-    markerContent.className = 'sensor-marker-content';
+    markerContent.className = 'sensor-marker-content'; // Clase para estilos CSS
     markerContent.innerHTML = `
       <div class="marker-circle"></div>
       <mat-icon class="marker-icon">sensors</mat-icon>
     `;
 
+    let newMarker: any;
+
     if (google.maps.marker && google.maps.marker.AdvancedMarkerElement) {
-      const newMarker = new google.maps.marker.AdvancedMarkerElement({
+      newMarker = new google.maps.marker.AdvancedMarkerElement({
         position: { lat, lng },
         map: mapInstance,
         content: markerContent,
-        gmpDraggable: true,
+        gmpDraggable: this.enableMapClickPlacement, // Solo arrastrable si enableMapClickPlacement es true
       });
 
-      newMarker.addListener('gmp-dragend', () => {
-        console.log('Marker dragged. New position:', newMarker.position);
-        this.updateSensorCoordinates(newMarker);
-      });
-      this.activeMarkers.push(newMarker);
-      console.log('AdvancedMarkerElement added.');
+      if (this.enableMapClickPlacement) {
+        newMarker.addListener('gmp-dragend', () => {
+          this.updateSensorCoordinates(newMarker);
+        });
+      }
     } else {
-      console.warn('AdvancedMarkerElement no está disponible. Usando google.maps.Marker como fallback. Asegúrate de cargar &v=beta&libraries=marker.');
-      const newMarker = new google.maps.Marker({
+      console.warn('AdvancedMarkerElement no está disponible. Usando google.maps.Marker como fallback.');
+      newMarker = new google.maps.Marker({
         position: { lat, lng },
         map: mapInstance,
-        draggable: true,
+        draggable: this.enableMapClickPlacement, // Solo arrastrable si enableMapClickPlacement es true
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
           scale: 7,
@@ -170,69 +185,85 @@ export class MapsSensorComponent implements AfterViewInit, OnChanges {
           strokeColor: '#FFFFFF'
         }
       });
-      newMarker.addListener('dragend', () => {
-        console.log('Fallback Marker dragged. New position:', newMarker.getPosition());
-        this.updateSensorCoordinates(newMarker);
-      });
-      this.activeMarkers.push(newMarker);
-      console.log('Fallback Marker added.');
+      if (this.enableMapClickPlacement) {
+        newMarker.addListener('dragend', () => {
+          this.updateSensorCoordinates(newMarker);
+        });
+      }
     }
 
-    this.updateSensorCoordinates(this.activeMarkers[0]); // Actualizar coordenadas del único marcador
+    this.markers.push(newMarker);
+
+    // Si estamos en modo de colocación de un solo marcador, actualizamos las coordenadas y centramos
+    if (this.enableMapClickPlacement) {
+      mapInstance.setCenter({ lat, lng });
+      this.updateSensorCoordinates(newMarker);
+    }
   }
 
-
   /**
-   * Muestra múltiples marcadores de sensor en el mapa (usado para la funcionalidad de localización/visualización).
-   * @param markers Array de LatLngLiteral con las posiciones de los sensores.
+   * Actualiza las coordenadas del sensor y emite el evento de cambio.
+   * Incluye la validación de si el punto está dentro del polígono del cultivo.
+   * @param marker El marcador cuya posición se va a actualizar.
    */
-  displaySensorMarkers(markers: google.maps.LatLngLiteral[]): void {
-    console.log('Displaying multiple sensor markers:', markers);
-    const mapInstance = this.map.googleMap!;
-    this.clearAllMarkers(); // Limpiar marcadores existentes antes de añadir nuevos
-
-    if (!markers || markers.length === 0) {
+  updateSensorCoordinates(marker: any) {
+    if (!marker || !marker.position) {
+      this.geo = null;
+      this.onGeolocalizacionChange.emit({ Latitud: '', Longitud: '', isValid: false });
       return;
     }
 
-    markers.forEach(pos => {
-      const markerContent = document.createElement('div');
-      markerContent.className = 'sensor-marker-content';
-      markerContent.innerHTML = `
-        <div class="marker-circle"></div>
-        <mat-icon class="marker-icon">sensors</mat-icon>
-      `;
+    const position = marker.position;
+    const latLng = new google.maps.LatLng(position.lat, position.lng);
+    let isValidLocation = true;
 
-      if (google.maps.marker && google.maps.marker.AdvancedMarkerElement) {
-        const newMarker = new google.maps.marker.AdvancedMarkerElement({
-          position: pos,
-          map: mapInstance,
-          content: markerContent,
-          gmpDraggable: false, // Los marcadores de visualización no son arrastrables
-        });
-        this.activeMarkers.push(newMarker);
-      } else {
-        const newMarker = new google.maps.Marker({
-          position: pos,
-          map: mapInstance,
-          draggable: false,
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 7,
-            fillColor: '#4285F4',
-            fillOpacity: 1,
-            strokeWeight: 2,
-            strokeColor: '#FFFFFF'
-          }
-        });
-        this.activeMarkers.push(newMarker);
-      }
+    // Verificar si el punto está dentro del polígono del cultivo
+    if (this.polygon && this.polygon.getPaths().getLength() > 0) {
+      isValidLocation = google.maps.geometry.poly.containsLocation(latLng, this.polygon);
+    }
+
+    const geolocalizacion: SingleGeoPoint = {
+      Latitud: position.lat.toFixed(6),
+      Longitud: position.lng.toFixed(6),
+      isValid: isValidLocation
+    };
+
+    this.geo = geolocalizacion;
+    this.onGeolocalizacionChange.emit(geolocalizacion);
+  }
+
+  /**
+   * Elimina todos los marcadores del mapa.
+   */
+  clearAllMarkers() {
+    this.markers.forEach(marker => {
+      marker.map = null;
+    });
+    this.markers = [];
+    this.geo = null;
+    this.onGeolocalizacionChange.emit({ Latitud: '', Longitud: '', isValid: false });
+  }
+
+  /**
+   * Muestra múltiples marcadores de sensor en el mapa.
+   * @param sensorCoords Array de objetos LatLngLiteral con las coordenadas de los sensores.
+   */
+  displaySensorMarkers(sensorCoords: google.maps.LatLngLiteral[]): void {
+    this.clearAllMarkers(); // Limpiar marcadores existentes antes de añadir nuevos
+
+    if (!this.map || !this.map.googleMap) {
+      console.error('Map not initialized, cannot display markers.');
+      return;
+    }
+    const mapInstance = this.map.googleMap!;
+
+    const bounds = new google.maps.LatLngBounds();
+    sensorCoords.forEach(coord => {
+      this.addSingleSensorMarker(coord.lat, coord.lng); // Reutilizar addSingleSensorMarker
+      bounds.extend(coord);
     });
 
-    // Centrar el mapa para que muestre todos los marcadores si hay varios
-    if (markers.length > 0) {
-      const bounds = new google.maps.LatLngBounds();
-      markers.forEach(marker => bounds.extend(marker));
+    if (sensorCoords.length > 0) {
       mapInstance.fitBounds(bounds);
       // Ajustar el zoom si es demasiado cercano después de fitBounds
       if (mapInstance.getZoom() && mapInstance.getZoom()! > 16) {
@@ -241,84 +272,21 @@ export class MapsSensorComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  updateSensorCoordinates(marker: any) {
-    console.log('Updating sensor coordinates. Marker:', marker);
-    if (!marker || !marker.position) {
-      this.geo = null;
-      this.onGeolocalizacionChange.emit({ Latitud: '', Longitud: '' });
-      console.log('No marker position, emitting empty.');
-      return;
-    }
-
-    const position = marker.position;
-    // AdvancedMarkerElement's position is an object with lat/lng properties
-    // For google.maps.Marker, position is a LatLng object with lat() and lng() methods
-    const lat = typeof position.lat === 'function' ? position.lat() : position.lat;
-    const lng = typeof position.lng === 'function' ? position.lng() : position.lng;
-
-    const geolocalizacion: SingleGeoPoint = {
-      Latitud: lat.toFixed(6),
-      Longitud: lng.toFixed(6)
-    };
-
-    // Perform point-in-polygon check and emit 'INVALID' if outside
-    if (this.polygon && !this.isPointInPolygon(new google.maps.LatLng(lat, lng), this.polygon)) {
-      console.warn('El punto seleccionado está fuera del polígono del cultivo. Emitting with _INVALID suffix.');
-      // Emit the actual coordinates, but also signal invalidity
-      this.onGeolocalizacionChange.emit({ Latitud: geolocalizacion.Latitud, Longitud: geolocalizacion.Longitud + '_INVALID' });
-    } else {
-      console.log('Point is inside polygon or no polygon. Emitting valid coordinates.');
-      this.onGeolocalizacionChange.emit(geolocalizacion);
-    }
-
-    this.geo = geolocalizacion; // Always update geo for display
-    console.log('Updated this.geo:', this.geo);
-  }
-
   /**
-   * Limpia todos los marcadores activos del mapa.
-   */
-  clearAllMarkers(): void {
-    console.log('Clearing all markers.');
-    this.activeMarkers.forEach(marker => {
-      if (marker.map) { // AdvancedMarkerElement uses .map = null to remove
-        marker.map = null;
-      } else if (marker.setMap) { // Fallback for google.maps.Marker
-        marker.setMap(null);
-      }
-    });
-    this.activeMarkers = [];
-  }
-
-  /**
-   * Función para reiniciar el mapa, borrando todos los marcadores y el polígono del cultivo.
+   * Función para reiniciar el mapa, borrando el marcador del sensor y el polígono del cultivo.
    */
   resetMap() {
-    console.log('Resetting map.');
-    this.clearAllMarkers();
+    this.clearAllMarkers(); // Limpiar todos los marcadores
     if (this.polygon) {
       this.polygon.setMap(null);
       this.polygon = null;
     }
     this.geo = null; // Limpiar las coordenadas mostradas
-    this.onGeolocalizacionChange.emit({ Latitud: '', Longitud: '' }); // Emitir coordenadas vacías
+    this.onGeolocalizacionChange.emit({ Latitud: '', Longitud: '', isValid: false }); // Emitir coordenadas vacías
     // Opcional: Volver al centro y zoom iniciales
-    this.map.googleMap!.setCenter(this.center);
-    this.map.googleMap!.setZoom(this.zoom);
-  }
-
-  /**
-   * Verifica si un punto (LatLng) está dentro de un polígono (google.maps.Polygon).
-   * Requiere la librería 'geometry' de Google Maps API.
-   * @param point El punto a verificar.
-   * @param polygon El polígono.
-   * @returns True si el punto está dentro del polígono, false en caso contrario.
-   */
-  isPointInPolygon(point: google.maps.LatLng, polygon: google.maps.Polygon): boolean {
-    if (google.maps.geometry && google.maps.geometry.poly) {
-      return google.maps.geometry.poly.containsLocation(point, polygon);
+    if (this.map && this.map.googleMap) {
+      this.map.googleMap.setCenter(this.center);
+      this.map.googleMap.setZoom(this.zoom);
     }
-    console.warn("La librería 'geometry' de Google Maps API no está cargada. La validación de polígono no funcionará. Asegúrate de cargar &libraries=geometry.");
-    return true; // Asumir verdadero si la librería no está disponible para no bloquear
   }
 }

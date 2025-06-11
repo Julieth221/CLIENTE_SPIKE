@@ -1,0 +1,141 @@
+<div class="container">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon class="title-icon">agriculture</mat-icon>
+        Registro de Insumo Agrícola
+      </mat-card-title>
+      <mat-card-subtitle>Complete el formulario para registrar un nuevo insumo en su cultivo</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="insumoForm" (ngSubmit)="onSubmit()" class="form-container">
+        <!-- Selector de Cultivo -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Cultivo</mat-label>
+          <mat-select formControlName="cultivo" required>
+            <mat-option *ngFor="let cultivo of cultivos" [value]="cultivo.Id">
+              {{cultivo.Nombre}} - Siembra: {{cultivo.FechaSiembra | date}}
+            </mat-option>
+          </mat-select>
+          <mat-icon matSuffix>grass</mat-icon>
+          <mat-hint>Seleccione el cultivo donde aplicará el insumo</mat-hint>
+        </mat-form-field>
+
+        <!-- Detalles de la Aplicación -->
+        <div class="section-title">
+          <mat-icon>event</mat-icon>
+          <h3>Detalles de la Aplicación</h3>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha de Aplicación</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="fechaAplicacion" required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-hint>Seleccione la fecha de aplicación</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo de Insumo</mat-label>
+            <mat-select formControlName="tipoInsumo" required>
+              <mat-option *ngFor="let tipo of tiposInsumo" [value]="tipo.Id">
+                {{tipo.Nombre}}
+              </mat-option>
+              <mat-option value="otro">Otro</mat-option>
+            </mat-select>
+            <mat-icon matSuffix>category</mat-icon>
+            <mat-hint>Seleccione el tipo de insumo</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field *ngIf="insumoForm.get('tipoInsumo')?.value === 'otro'" appearance="outline" class="full-width">
+          <mat-label>Nuevo Tipo de Insumo</mat-label>
+          <input matInput formControlName="nuevoTipoInsumo" required>
+          <mat-icon matSuffix>add_circle</mat-icon>
+          <mat-hint>Ingrese el nuevo tipo de insumo</mat-hint>
+        </mat-form-field>
+
+        <!-- Detalles del Insumo -->
+        <div class="section-title">
+          <mat-icon>inventory_2</mat-icon>
+          <h3>Detalles del Insumo</h3>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre del Insumo</mat-label>
+            <input matInput formControlName="nombreInsumo" required>
+            <mat-icon matSuffix>label</mat-icon>
+            <mat-hint>Ingrese el nombre del insumo</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Categoría de Insumo</mat-label>
+            <mat-select formControlName="categoriaInsumo" required>
+              <mat-option *ngFor="let categoria of categoriasInsumo" [value]="categoria.Id">
+                {{categoria.Nombre}}
+              </mat-option>
+              <mat-option value="otra">Otra</mat-option>
+            </mat-select>
+            <mat-icon matSuffix>category</mat-icon>
+            <mat-hint>Seleccione la categoría del insumo</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field *ngIf="insumoForm.get('categoriaInsumo')?.value === 'otra'" appearance="outline" class="full-width">
+          <mat-label>Nueva Categoría de Insumo</mat-label>
+          <input matInput formControlName="nuevaCategoriaInsumo" required>
+          <mat-icon matSuffix>add_circle</mat-icon>
+          <mat-hint>Ingrese la nueva categoría de insumo</mat-hint>
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Cantidad Aplicada</mat-label>
+            <input matInput type="number" formControlName="cantidadAplicada" required>
+            <span matSuffix>kg</span>
+            <mat-icon matSuffix>scale</mat-icon>
+            <mat-hint>Ingrese la cantidad aplicada</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Método de Aplicación</mat-label>
+            <mat-select formControlName="metodoAplicacion" required>
+              <mat-option *ngFor="let metodo of metodosAplicacion" [value]="metodo.Id">
+                {{metodo.Nombre}}
+              </mat-option>
+              <mat-option value="otro">Otro</mat-option>
+            </mat-select>
+            <mat-icon matSuffix>precision_manufacturing</mat-icon>
+            <mat-hint>Seleccione el método de aplicación</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field *ngIf="insumoForm.get('metodoAplicacion')?.value === 'otro'" appearance="outline" class="full-width">
+          <mat-label>Nuevo Método de Aplicación</mat-label>
+          <input matInput formControlName="nuevoMetodoAplicacion" required>
+          <mat-icon matSuffix>add_circle</mat-icon>
+          <mat-hint>Ingrese el nuevo método de aplicación</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Observaciones</mat-label>
+          <textarea matInput formControlName="observaciones" rows="3"></textarea>
+          <mat-icon matSuffix>note</mat-icon>
+          <mat-hint>Ingrese observaciones adicionales (opcional)</mat-hint>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!insumoForm.valid || loading">
+            <mat-icon>save</mat-icon>
+            Registrar Insumo
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-progress-spinner *ngIf="loading" mode="indeterminate" diameter="50"></mat-progress-spinner>
+</div>

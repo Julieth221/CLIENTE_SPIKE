@@ -1,5 +1,5 @@
 <div class="container">
-  <h1>Historial de versiones y arrendamientos de parcelas arrendadas</h1>
+  <h1>Historial de versiones y arrendamientos de parcelas</h1>
 
   <!-- Spinner de carga global -->
   <!-- <div class="loading-overlay" *ngIf="loading">
@@ -17,9 +17,12 @@
   <div class="finca-selector">
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Seleccione una finca</mat-label>
-      <mat-select [(ngModel)]="fincaSeleccionada" (selectionChange)="onFincaChange($event.value)">
+      <mat-select
+        [(ngModel)]="fincaSeleccionada"
+        (selectionChange)="onFincaChange($event.value)"
+      >
         <mat-option *ngFor="let finca of fincas" [value]="finca.Id">
-          {{finca.Nombre}}
+          {{ finca.Nombre }}
         </mat-option>
       </mat-select>
       <mat-hint>Seleccione una finca para ver el historial</mat-hint>
@@ -30,9 +33,12 @@
   <div class="parcela-selector" *ngIf="fincaSeleccionada">
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Seleccione una parcela</mat-label>
-      <mat-select [(ngModel)]="parcelaSeleccionada" (selectionChange)="onParcelaChange($event.value)">
+      <mat-select
+        [(ngModel)]="parcelaSeleccionada"
+        (selectionChange)="onParcelaChange($event.value)"
+      >
         <mat-option *ngFor="let parcela of parcelas" [value]="parcela.Id">
-          {{parcela.Nombre}}
+          {{ parcela.Nombre }}
         </mat-option>
       </mat-select>
       <mat-hint>Seleccione una parcela para ver su historial</mat-hint>
@@ -50,23 +56,39 @@
     <!-- Buscador -->
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Buscar en el historial...</mat-label>
-      <input matInput [(ngModel)]="searchText" (input)="applyFilter()">
+      <input matInput [(ngModel)]="searchText" (input)="applyFilter()" />
       <mat-icon matSuffix class="search-icon">search</mat-icon>
     </mat-form-field>
 
     <!-- Filtro Fecha Inicio -->
     <mat-form-field appearance="outline" class="filter-field">
       <mat-label>Fecha de inicio</mat-label>
-      <input matInput [matDatepicker]="pickerInicio" [(ngModel)]="fechaInicio" (dateChange)="applyFilter()">
-      <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+      <input
+        matInput
+        [matDatepicker]="pickerInicio"
+        [(ngModel)]="fechaInicio"
+        (dateChange)="applyFilter()"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="pickerInicio"
+      ></mat-datepicker-toggle>
       <mat-datepicker #pickerInicio></mat-datepicker>
     </mat-form-field>
 
     <!-- Filtro Fecha Fin -->
     <mat-form-field appearance="outline" class="filter-field">
       <mat-label>Fecha de fin</mat-label>
-      <input matInput [matDatepicker]="pickerFin" [(ngModel)]="fechaFin" (dateChange)="applyFilter()">
-      <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
+      <input
+        matInput
+        [matDatepicker]="pickerFin"
+        [(ngModel)]="fechaFin"
+        (dateChange)="applyFilter()"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="pickerFin"
+      ></mat-datepicker-toggle>
       <mat-datepicker #pickerFin></mat-datepicker>
     </mat-form-field>
 
@@ -75,7 +97,9 @@
       <mat-label>Estado</mat-label>
       <mat-select [(ngModel)]="filterEstado" (selectionChange)="applyFilter()">
         <mat-option value="">Todos</mat-option>
-        <mat-option *ngFor="let estado of estadoOptions" [value]="estado">{{ estado }}</mat-option>
+        <mat-option *ngFor="let estado of estadoOptions" [value]="estado">{{
+          estado
+        }}</mat-option>
       </mat-select>
       <mat-icon matSuffix>filter_list</mat-icon>
     </mat-form-field>
@@ -86,7 +110,11 @@
         <mat-icon>table_chart</mat-icon>
         Exportar a Excel
       </button>
-      <button mat-raised-button class="btn-exportar-pdf" (click)="exportToPDF()">
+      <button
+        mat-raised-button
+        class="btn-exportar-pdf"
+        (click)="exportToPDF()"
+      >
         <mat-icon>picture_as_pdf</mat-icon>
         Exportar a PDF
       </button>
@@ -99,31 +127,39 @@
       <!-- Parcela -->
       <ng-container matColumnDef="parcela">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Parcela</th>
-        <td mat-cell *matCellDef="let element">{{element.parcelaVersion.split(' ')[0]}}</td>
+        <td mat-cell *matCellDef="let element">
+          {{ element.parcelaVersion.split(" ")[0] }}
+        </td>
       </ng-container>
 
       <!-- Versión -->
       <ng-container matColumnDef="version">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Versión</th>
-        <td mat-cell *matCellDef="let element">{{element.parcelaVersion.split('v')[1]}}</td>
+        <td mat-cell *matCellDef="let element">
+          {{ element.parcelaVersion.split("v")[1] }}
+        </td>
       </ng-container>
 
       <!-- Tamaño -->
       <ng-container matColumnDef="tamano">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Tamaño</th>
-        <td mat-cell *matCellDef="let element">{{element.tamano}} m2</td>
+        <td mat-cell *matCellDef="let element">{{ element.tamano }} m2</td>
       </ng-container>
 
       <!-- Motivo Cambio -->
       <ng-container matColumnDef="motivoCambio">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Motivo Cambio</th>
-        <td mat-cell *matCellDef="let element">{{element.motivoCambio}}</td>
+        <td mat-cell *matCellDef="let element">{{ element.motivoCambio }}</td>
       </ng-container>
 
       <!-- Fecha creación -->
       <ng-container matColumnDef="fechaCreacion">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha creación</th>
-        <td mat-cell *matCellDef="let element">{{formatDate(element.fechaCreacion)}}</td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Fecha creación
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ formatDate(element.fechaCreacion) }}
+        </td>
       </ng-container>
 
       <!-- Arrendamiento -->
@@ -135,38 +171,44 @@
       <!-- Arrendatario -->
       <ng-container matColumnDef="arrendatario">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Arrendatario</th>
-        <td mat-cell *matCellDef="let element">{{element.arrendatario}}</td>
+        <td mat-cell *matCellDef="let element">{{ element.arrendatario }}</td>
       </ng-container>
 
       <!-- Valor -->
       <ng-container matColumnDef="valor">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor</th>
-        <td mat-cell *matCellDef="let element">{{formatCurrency(element.valor)}}</td>
+        <td mat-cell *matCellDef="let element">
+          {{ formatCurrency(element.valor) }}
+        </td>
       </ng-container>
 
       <!-- Estado -->
       <ng-container matColumnDef="estado">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
         <td mat-cell *matCellDef="let element">
-          <div class="estado-chip" [ngClass]="{
-            'estado-activo': element.estado === 'Activo',
-            'estado-inactivo': element.estado === 'Inactivo',
-            'estado-sin-arrendamiento': element.estado === 'Sin arrendamiento'
-          }">
-            {{element.estado}}
+          <div
+            class="estado-chip"
+            [ngClass]="{
+              'estado-activo': element.estado === 'Activo',
+              'estado-inactivo': element.estado === 'Inactivo',
+              'estado-sin-arrendamiento': element.estado === 'Sin arrendamiento'
+            }"
+          >
+            {{ element.estado }}
           </div>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 
     <!-- Paginador -->
-    <mat-paginator 
-      [pageSizeOptions]="[5, 10, 25, 100]" 
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 25, 100]"
       showFirstLastButtons
-      aria-label="Seleccionar página de historial">
+      aria-label="Seleccionar página de historial"
+    >
     </mat-paginator>
   </div>
 
@@ -177,18 +219,29 @@
         <mat-icon mat-card-avatar>history</mat-icon>
         <mat-card-title>Historial de Arrendamientos</mat-card-title>
         <mat-card-subtitle>
-          Visualice la evolución de los arrendamientos de la parcela {{getNombreParcelaSeleccionada()}} a lo largo del tiempo
+          Visualice la evolución de los arrendamientos de la parcela
+          {{ getNombreParcelaSeleccionada() }} a lo largo del tiempo
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <div class="timeline-preview" *ngIf="!mostrarTimeline">
-          <p>Explore el historial completo de arrendamientos y sus cambios a lo largo del tiempo.</p>
-          <button mat-raised-button color="primary" (click)="toggleTimeline(true)">
+          <p>
+            Explore el historial completo de arrendamientos y sus cambios a lo
+            largo del tiempo.
+          </p>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="toggleTimeline(true)"
+          >
             <mat-icon>timeline</mat-icon>
             Ver Timeline de Arrendamientos
           </button>
         </div>
-        <app-timeline *ngIf="mostrarTimeline" [versiones]="transformarDatosParaTimeline(dataSource.data)"></app-timeline>
+        <app-timeline
+          *ngIf="mostrarTimeline"
+          [versiones]="transformarDatosParaTimeline(dataSource.data)"
+        ></app-timeline>
       </mat-card-content>
       <mat-card-actions *ngIf="mostrarTimeline">
         <button mat-button color="primary" (click)="toggleTimeline(false)">

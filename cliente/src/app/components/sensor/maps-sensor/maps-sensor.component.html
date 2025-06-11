@@ -1,19 +1,9 @@
-<div style="position: relative; height: 100%; width: 100%;">
-  <google-map #map
-    height="100%"
-    width="100%"
-    [center]="center"
-    [zoom]="zoom">
-  </google-map>
-
-  <button
-    (click)="resetMap()"
-    class="map-reset-button">
-    Borrar punto
-  </button>
-
-  <div class="coord-box" *ngIf="geo">
-    <p><strong>📍 Latitud:</strong> {{ geo.Latitud }}</p>
-    <p><strong>📍 Longitud:</strong> {{ geo.Longitud }}</p>
-  </div>
+<div class="map-container">
+    <google-map #map
+        height="100%"
+        width="100%"
+        [zoom]="zoom"
+        [center]="center"
+        [options]="{ mapTypeId: 'hybrid' }"> <!-- Puedes ajustar el mapTypeId según tu preferencia -->
+    </google-map>
 </div>

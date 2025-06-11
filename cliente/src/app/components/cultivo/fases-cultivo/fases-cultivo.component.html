@@ -1,0 +1,149 @@
+<div class="container">
+  <div *ngIf="loading" class="loader-container">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading" class="content-container">
+    <!-- Selector de Cultivo -->
+    <div class="cultivo-selector">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>🌾 Selecciona un Cultivo</mat-label>
+        <mat-select (selectionChange)="onCultivoSeleccionado($event.value)" [value]="cultivoSeleccionado?.Id">
+          <mat-option [value]="null" disabled>Selecciona un cultivo...</mat-option>
+          <mat-option *ngFor="let cultivo of cultivos" [value]="cultivo.Id">
+            {{ cultivo.Nombre }} - {{ cultivo.FechaSiembra | date:'dd/MM/yyyy' }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Visualización de Fases -->
+    <div *ngIf="cultivoSeleccionado" class="fases-container">
+      <!-- Fase Vegetativa -->
+      <div class="fase-grupo">
+        <h2>🌱 Fase Vegetativa</h2>
+        <div class="fases-grid">
+          <mat-card *ngFor="let etapa of etapasFenologicas.slice(0, 3)" 
+                    [ngClass]="getEstadoFase(etapa.nombre).estado">
+            <mat-card-header>
+              <mat-card-title>
+                {{ etapa.icono }} {{ etapa.nombre }}
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p *ngIf="getEstadoFase(etapa.nombre).estado === 'completado'">
+                Finalizado el: {{ getEstadoFase(etapa.nombre).fecha | date:'dd/MM/yyyy' }}
+              </p>
+              <p *ngIf="getEstadoFase(etapa.nombre).estado === 'en-progreso'">
+                Iniciado el: {{ getEstadoFase(etapa.nombre).fecha | date:'dd/MM/yyyy' }}
+              </p>
+              <p *ngIf="getEstadoFase(etapa.nombre).estado === 'no-iniciado'">
+                No iniciado
+              </p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button (click)="verDetalles(etapa)">
+                <mat-icon>info</mat-icon>
+                Ver Detalles
+              </button>
+              <button mat-button *ngIf="getEstadoFase(etapa.nombre).estado === 'no-iniciado'"
+                      (click)="registrarFase(etapa.nombre)">
+                <mat-icon>add</mat-icon>
+                Registrar Etapa
+              </button>
+              <button mat-button *ngIf="getEstadoFase(etapa.nombre).estado === 'en-progreso'"
+                      (click)="completarFase(getFaseId(etapa.nombre))">
+                <mat-icon>check</mat-icon>
+                Completar
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Fase Reproductiva -->
+      <div class="fase-grupo">
+        <h2>🌸 Fase Reproductiva</h2>
+        <div class="fases-grid">
+          <mat-card *ngFor="let etapa of etapasFenologicas.slice(3, 6)" 
+                    [ngClass]="getEstadoFase(etapa.nombre).estado">
+            <mat-card-header>
+              <mat-card-title>
+                {{ etapa.icono }} {{ etapa.nombre }}
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p *ngIf="getEstadoFase(etapa.nombre).estado === 'completado'">
+                Finalizado el: {{ getEstadoFase(etapa.nombre).fecha | date:'dd/MM/yyyy' }}
+              </p>
+              <p *ngIf="getEstadoFase(etapa.nombre).estado === 'en-progreso'">
+                Iniciado el: {{ getEstadoFase(etapa.nombre).fecha | date:'dd/MM/yyyy' }}
+              </p>
+              <p *ngIf="getEstadoFase(etapa.nombre).estado === 'no-iniciado'">
+                No iniciado
+              </p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button (click)="verDetalles(etapa)">
+                <mat-icon>info</mat-icon>
+                Ver Detalles
+              </button>
+              <button mat-button *ngIf="getEstadoFase(etapa.nombre).estado === 'no-iniciado'"
+                      (click)="registrarFase(etapa.nombre)">
+                <mat-icon>add</mat-icon>
+                Registrar Etapa
+              </button>
+              <button mat-button *ngIf="getEstadoFase(etapa.nombre).estado === 'en-progreso'"
+                      (click)="completarFase(getFaseId(etapa.nombre))">
+                <mat-icon>check</mat-icon>
+                Completar
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Fase de Maduración -->
+      <div class="fase-grupo">
+        <h2>🌾 Fase de Maduración</h2>
+        <div class="fases-grid">
+          <mat-card *ngFor="let etapa of etapasFenologicas.slice(6)" 
+                    [ngClass]="getEstadoFase(etapa.nombre).estado">
+            <mat-card-header>
+              <mat-card-title>
+                {{ etapa.icono }} {{ etapa.nombre }}
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p *ngIf="getEstadoFase(etapa.nombre).estado === 'completado'">
+                Finalizado el: {{ getEstadoFase(etapa.nombre).fecha | date:'dd/MM/yyyy' }}
+              </p>
+              <p *ngIf="getEstadoFase(etapa.nombre).estado === 'en-progreso'">
+                Iniciado el: {{ getEstadoFase(etapa.nombre).fecha | date:'dd/MM/yyyy' }}
+              </p>
+              <p *ngIf="getEstadoFase(etapa.nombre).estado === 'no-iniciado'">
+                No iniciado
+              </p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button (click)="verDetalles(etapa)">
+                <mat-icon>info</mat-icon>
+                Ver Detalles
+              </button>
+              <button mat-button *ngIf="getEstadoFase(etapa.nombre).estado === 'no-iniciado'"
+                      (click)="registrarFase(etapa.nombre)">
+                <mat-icon>add</mat-icon>
+                Registrar Etapa
+              </button>
+              <button mat-button *ngIf="getEstadoFase(etapa.nombre).estado === 'en-progreso'"
+                      (click)="completarFase(getFaseId(etapa.nombre))">
+                <mat-icon>check</mat-icon>
+                Completar
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

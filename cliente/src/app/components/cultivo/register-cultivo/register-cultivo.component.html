@@ -1,0 +1,214 @@
+<div class="container">
+  <div *ngIf="loading" class="loader-container">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading">
+    <mat-stepper [linear]="true" #stepper>
+      <!-- Paso 1: Información Básica -->
+      <mat-step>
+        <ng-template matStepLabel>Información Básica</ng-template>
+        <div class="step-content">
+          <h2>Información Básica del Cultivo</h2>
+          <p class="step-description">Ingrese los datos básicos de su cultivo de arroz.</p>
+
+          <form [formGroup]="cultivoForm">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nombre del Cultivo</mat-label>
+              <input matInput formControlName="nombreCultivo" placeholder="Ej: Cultivo de Arroz 2024">
+              <mat-icon matSuffix>grass</mat-icon>
+              <mat-error *ngIf="cultivoForm.get('nombreCultivo')?.hasError('required')">
+                El nombre del cultivo es obligatorio
+              </mat-error>
+              <mat-error *ngIf="cultivoForm.get('nombreCultivo')?.hasError('minlength')">
+                El nombre debe tener al menos 3 caracteres
+              </mat-error>
+            </mat-form-field>
+
+            <div class="step-actions">
+              <button mat-raised-button color="primary" matStepperNext [disabled]="!cultivoForm.get('nombreCultivo')?.valid">
+                Siguiente
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </form>
+        </div>
+      </mat-step>
+
+      <!-- Paso 2: Selección de Parcela -->
+      <mat-step>
+        <ng-template matStepLabel>Selección de Parcela</ng-template>
+        <div class="step-content">
+          <h2>Selección de Parcela</h2>
+          <p class="step-description">Seleccione la parcela donde se realizará el cultivo.</p>
+
+          <form [formGroup]="cultivoForm">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Parcela</mat-label>
+              <mat-select formControlName="idParcela">
+                <mat-option *ngIf="isArrendatario" [value]="null" disabled>
+                  Seleccione una parcela
+                </mat-option>
+                <ng-container *ngIf="isArrendatario">
+                  <mat-option *ngFor="let parcela of parcelasArrendadas" [value]="parcela">
+                    {{ parcela.nombre_parcela }} – Finca "{{ parcela.nombre_finca }}"
+                  </mat-option>
+                </ng-container>
+                <ng-container *ngIf="!isArrendatario">
+                  <mat-option *ngFor="let parcela of parcelas" [value]="parcela.Id">
+                    {{ parcela.NombreParcela }} – Finca "{{ parcela.FkFincaParcela.Nombre }}"
+                  </mat-option>
+                </ng-container>
+              </mat-select>
+              <mat-icon matSuffix>landscape</mat-icon>
+              <mat-error *ngIf="cultivoForm.get('idParcela')?.hasError('required')">
+                La selección de parcela es obligatoria
+              </mat-error>
+            </mat-form-field>
+
+            <div class="step-actions">
+              <button mat-button matStepperPrevious>
+                <mat-icon>arrow_back</mat-icon>
+                Anterior
+              </button>
+              <button mat-raised-button color="primary" matStepperNext [disabled]="!cultivoForm.get('idParcela')?.valid">
+                Siguiente
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </form>
+        </div>
+      </mat-step>
+
+      <!-- Paso 3: Características del Cultivo -->
+      <mat-step>
+        <ng-template matStepLabel>Características del Cultivo</ng-template>
+        <div class="step-content">
+          <h2>Características del Cultivo</h2>
+          <p class="step-description">Seleccione las características específicas de su cultivo.</p>
+
+          <form [formGroup]="cultivoForm">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Tipo de Arroz</mat-label>
+                <mat-select formControlName="fkTipoArroz">
+                  <mat-option *ngFor="let tipo of tiposArroz" [value]="tipo.Id">
+                    {{ tipo.Nombre }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matSuffix>category</mat-icon>
+                <mat-error *ngIf="cultivoForm.get('fkTipoArroz')?.hasError('required')">
+                  El tipo de arroz es obligatorio
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Método de Siembra</mat-label>
+                <mat-select formControlName="fkMetodoSiembra">
+                  <mat-option *ngFor="let metodo of metodosSiembra" [value]="metodo.Id">
+                    {{ metodo.Nombre }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matSuffix>agriculture</mat-icon>
+                <mat-error *ngIf="cultivoForm.get('fkMetodoSiembra')?.hasError('required')">
+                  El método de siembra es obligatorio
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Estado Fenológico</mat-label>
+                <mat-select formControlName="fkEstadoFenologicoCultivo">
+                  <mat-option *ngFor="let estado of estadosFenologicos" [value]="estado.Id">
+                    {{ estado.Nombre }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matSuffix>eco</mat-icon>
+                <mat-error *ngIf="cultivoForm.get('fkEstadoFenologicoCultivo')?.hasError('required')">
+                  El estado fenológico es obligatorio
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button matStepperPrevious>
+                <mat-icon>arrow_back</mat-icon>
+                Anterior
+              </button>
+              <button mat-raised-button color="primary" matStepperNext [disabled]="!cultivoForm.get('fkTipoArroz')?.valid || !cultivoForm.get('fkMetodoSiembra')?.valid || !cultivoForm.get('fkEstadoFenologicoCultivo')?.valid">
+                Siguiente
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </form>
+        </div>
+      </mat-step>
+
+      <!-- Paso 4: Detalles de Siembra -->
+      <mat-step>
+        <ng-template matStepLabel>Detalles de Siembra</ng-template>
+        <div class="step-content">
+          <h2>Detalles de Siembra</h2>
+          <p class="step-description">Ingrese los detalles específicos de la siembra.</p>
+
+          <form [formGroup]="cultivoForm">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Fecha de Siembra</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="fechaSiembra">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-icon matSuffix>calendar_today</mat-icon>
+                <mat-error *ngIf="cultivoForm.get('fechaSiembra')?.hasError('required')">
+                  La fecha de siembra es obligatoria
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Ciclo en Días</mat-label>
+                <input matInput type="number" formControlName="cicloDias" min="1">
+                <mat-icon matSuffix>schedule</mat-icon>
+                <mat-error *ngIf="cultivoForm.get('cicloDias')?.hasError('required')">
+                  El ciclo en días es obligatorio
+                </mat-error>
+                <mat-error *ngIf="cultivoForm.get('cicloDias')?.hasError('min')">
+                  El ciclo debe ser mayor a 0
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Área Sembrada (Hectáreas)</mat-label>
+                <input matInput type="number" formControlName="areaSembrada" min="0.01" step="0.01">
+                <mat-icon matSuffix>square_foot</mat-icon>
+                <mat-error *ngIf="cultivoForm.get('areaSembrada')?.hasError('required')">
+                  El área sembrada es obligatoria
+                </mat-error>
+                <mat-error *ngIf="cultivoForm.get('areaSembrada')?.hasError('min')">
+                  El área debe ser mayor a 0
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button matStepperPrevious>
+                <mat-icon>arrow_back</mat-icon>
+                Anterior
+              </button>
+              <button mat-raised-button color="primary" (click)="guardarCultivo()" [disabled]="cultivoForm.invalid">
+                Registrar Cultivo
+                <mat-icon>save</mat-icon>
+              </button>
+            </div>
+          </form>
+        </div>
+      </mat-step>
+    </mat-stepper>
+  </div>
+</div>

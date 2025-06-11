@@ -33,7 +33,7 @@
             <li><button type="button"  routerLink="/dashboard/finca/datosArrendamiento">
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Ver Arrendamientos</button></li>
             <li><button type="button"  routerLink="/dashboard/finca/historialParcela">
-              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Ver historial y evolución de la parcela</button></li>
+              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Ver historial de la parcela</button></li>
           </ul>
         </div>
       </li>
@@ -45,12 +45,14 @@
         </button>
         <div class="sub-menu" *ngIf="activeSubMenu === 'cultivo'">
           <ul>
-            <li><button type="button" >
-              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Gestión de Cultivos</button></li>
-            <li><button type="button" >
-              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Historial de Insumos</button></li>
-            <li><button type="button" >
+            <li><button type="button" routerLink="/dashboard/cultivo/datosCultivo">
+              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Datos Cultivo</button></li>
+            <li><button type="button" routerLink="/dashboard/cultivo/registrarCultivo" >
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Registrar Cultivo</button></li>
+            <li><button type="button" routerLink="/dashboard/cultivo/fasesCultivo" >
+              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Ver Fases del Cultivo</button></li>
+            <li><button type="button" routerLink="/dashboard/cultivo/registrarInsumo" >
+              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Registrar Insumo</button></li>
           </ul>
         </div>
       </li>
