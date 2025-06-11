@@ -1,0 +1,89 @@
+<div class="container">
+  <div class="profile-card">
+    <h1>Mi Perfil</h1>
+
+    <!-- Spinner de carga -->
+    <div class="loading-overlay" *ngIf="loading">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Cargando información...</p>
+    </div>
+
+    <form [formGroup]="perfilForm" (ngSubmit)="guardarCambios()" class="profile-form">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombres</mat-label>
+          <input matInput formControlName="nombres" placeholder="Ingrese sus nombres">
+          <mat-icon matSuffix>person</mat-icon>
+          <mat-error *ngIf="perfilForm.get('nombres')?.hasError('required')">
+            Los nombres son requeridos
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Apellidos</mat-label>
+          <input matInput formControlName="apellidos" placeholder="Ingrese sus apellidos">
+          <mat-icon matSuffix>person</mat-icon>
+          <mat-error *ngIf="perfilForm.get('apellidos')?.hasError('required')">
+            Los apellidos son requeridos
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Número de Contacto</mat-label>
+          <input matInput formControlName="contacto" placeholder="Ingrese su número de contacto">
+          <mat-icon matSuffix>phone</mat-icon>
+          <mat-error *ngIf="perfilForm.get('contacto')?.hasError('required')">
+            El número de contacto es requerido
+          </mat-error>
+          <mat-error *ngIf="perfilForm.get('contacto')?.hasError('minlength')">
+            El número debe tener al menos 7 dígitos
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Correo Electrónico</mat-label>
+          <input matInput formControlName="correo" placeholder="Ingrese su correo electrónico">
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="perfilForm.get('correo')?.hasError('required')">
+            El correo electrónico es requerido
+          </mat-error>
+          <mat-error *ngIf="perfilForm.get('correo')?.hasError('email')">
+            Ingrese un correo electrónico válido
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo de Documento</mat-label>
+          <input matInput formControlName="tipoDocumento" readonly>
+          <mat-icon matSuffix>badge</mat-icon>
+          <mat-hint matTooltip="Para modificar este dato, comunícate a spike@gmail.com">
+            <mat-icon class="info-icon">info</mat-icon>
+            Para modificar este dato, comunícate a spikegmail.com
+          </mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Número de Documento</mat-label>
+          <input matInput formControlName="numeroDocumento" readonly>
+          <mat-icon matSuffix>badge</mat-icon>
+          <mat-hint matTooltip="Para modificar este dato, comunícate a spike@gmail.com">
+            <mat-icon class="info-icon">info</mat-icon>
+            <p>Para modificar este dato, comunícate a spikegmail.com</p>
+          </mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit" 
+                [disabled]="!formChanged || perfilForm.invalid || loading">
+          <mat-icon>save</mat-icon>
+          Guardar Cambios
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

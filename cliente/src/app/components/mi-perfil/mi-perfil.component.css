@@ -1,0 +1,163 @@
+.container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: calc(100vh - 64px);
+}
+
+.profile-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+  padding: 32px;
+  position: relative;
+}
+
+h1 {
+  color: #2E7D32;
+  margin-bottom: 32px;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.profile-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+button[type="submit"] {
+  padding: 8px 32px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  background-color: #43A047;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+button[type="submit"]:disabled {
+  background-color: #E0E0E0;
+  cursor: not-allowed;
+}
+
+.info-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: #795548;
+  margin-right: 4px;
+}
+
+/* Loading overlay */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  border-radius: 12px;
+}
+
+.loading-overlay p {
+  margin-top: 16px;
+  color: #2E7D32;
+  font-weight: 500;
+}
+
+/* Estilos para los campos de formulario */
+:host ::ng-deep .mat-mdc-form-field-outline {
+  color: #D0D5DD !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field-outline-thick {
+  color: #4CAF50 !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+/* Estilos para los mensajes de error */
+:host ::ng-deep .mat-mdc-form-field-error {
+  color: #D32F2F;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Estilos para los tooltips */
+:host ::ng-deep .mat-mdc-tooltip {
+  background-color: #795548;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .profile-card {
+    padding: 24px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Estilos para los snackbars */
+:host ::ng-deep .success-snackbar {
+  background: #4CAF50;
+  color: white;
+}
+
+:host ::ng-deep .error-snackbar {
+  background: #D32F2F;
+  color: white;
+}
