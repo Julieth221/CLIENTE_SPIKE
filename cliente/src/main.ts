@@ -42,6 +42,8 @@ import { FasesCultivoComponent } from './app/components/cultivo/fases-cultivo/fa
 import { RegisterInsumoCultivoComponent } from './app/components/cultivo/register-insumo-cultivo/register-insumo-cultivo.component';
 import { DashboardCultivoComponent } from './app/components/cultivo/dashboard-cultivo/dashboard-cultivo.component';
 import { TablaCultivoComponent } from './app/components/cultivo/tabla-cultivo/tabla-cultivo.component';
+import { HistorialInsumoComponent } from './app/components/cultivo/historial-insumo/historial-insumo.component';
+import { MiPerfilComponent } from './app/components/mi-perfil/mi-perfil.component';
 
 
 
@@ -93,7 +95,9 @@ bootstrapApplication(AppComponent,{
                   { path: 'cultivo/fasesCultivo', component: FasesCultivoComponent},
                   { path: 'cultivo/registrarInsumo', component: RegisterInsumoCultivoComponent},
                   { path: 'cultivo/estadoCultivo', component: DashboardCultivoComponent},
-                  { path: 'cultivo/verCultivo', component: TablaCultivoComponent}
+                  { path: 'cultivo/verCultivo', component: TablaCultivoComponent},
+                  { path: 'cultivo/historirialInsumo', component: HistorialInsumoComponent},
+                  { path: 'MiPerfil', component: MiPerfilComponent}
               ],
             },
           ]),

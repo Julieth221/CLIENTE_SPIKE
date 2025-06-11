@@ -10,6 +10,27 @@
   position: relative;
 }
 
+/* Loading overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loading-overlay p {
+  margin-top: 16px;
+  color: #1976d2;
+  font-weight: 500;
+}
+
 /* Mensajes de error y no datos */
 .error-message,
 .no-data-message {
@@ -19,6 +40,7 @@
   padding: 16px;
   margin: 16px 0;
   border-radius: 8px;
+  background: #fff3e0;
 }
 
 .error-message {
@@ -76,7 +98,7 @@
 .no-data-message button {
   margin-top: 16px;
   padding: 10px 24px;
-  background-color: #4CAF50;
+  background-color: #4CAF50; 
   color: white;
   border: none;
   border-radius: 8px;
@@ -115,7 +137,7 @@ h1 {
   font-family: 'Roboto', sans-serif;
 }
 
-.parcela-selector {
+.cultivo-selector {
   margin-bottom: 20px;
   max-width: 400px;
 }
@@ -128,10 +150,9 @@ h1 {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   margin-bottom: 2rem;
   gap: 1rem;
-  margin-left: auto;
   flex-wrap: wrap;
 }
 
@@ -155,7 +176,7 @@ h1 {
   margin-bottom: 2rem;
 }
 
-.tabla-cultivos {
+.tabla-insumos {
   width: 100%;
   background-color: white;
   border-collapse: collapse;
@@ -176,32 +197,6 @@ h1 {
 
 .mat-mdc-row:hover {
   background-color: rgba(0, 0, 0, 0.02);
-}
-
-.estado-chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
-}
-
-.estado-activo {
-  background-color: #e3f2fd;
-  color: #2e7d32;
-}
-
-.estado-inactivo {
-  background-color: rgba(244, 67, 54, 0.1);
-  color: #F44336;
-}
-
-.acciones-container {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
 }
 
 .mat-paginator {
@@ -258,7 +253,7 @@ h1 {
 /* Estilos para impresión */
 @media print {
   .actions,
-  .parcela-selector {
+  .cultivo-selector {
     display: none;
   }
 
@@ -270,7 +265,7 @@ h1 {
     box-shadow: none;
   }
 
-  .tabla-cultivos {
+  .tabla-insumos {
     border-collapse: collapse;
   }
 

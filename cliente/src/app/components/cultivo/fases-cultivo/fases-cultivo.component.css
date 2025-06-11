@@ -4,118 +4,221 @@
   margin: 0 auto;
 }
 
-.loader-container {
+.info-card {
+  margin-bottom: 2rem;
+  background-color: #f8f9fa;
+  border-left: 4px solid #04b55c;
+}
+
+.info-card mat-card-header {
+  margin-bottom: 1rem;
+}
+
+.info-card mat-card-title {
   display: flex;
-  justify-content: center;
   align-items: center;
-  min-height: 200px;
+  gap: 8px;
+  color: #14532d;
+  font-size: 1.5rem;
 }
 
-.content-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.info-card mat-card-content p {
+  color: #4a5568;
+  line-height: 1.6;
+  margin: 0.5rem 0;
 }
 
+/* Selector de Cultivo */
 .cultivo-selector {
-  max-width: 500px;
+  max-width: 800px;
   margin: 0 auto;
+  padding: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.selector-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.selector-header h2 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+  
+}
+
+.selector-description {
+  color: #666;
+  line-height: 1.6;
+  font-size: 1rem;
 }
 
 .full-width {
   width: 100%;
 }
 
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-hint {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
 .fases-container {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 2rem;
 }
 
 .fase-grupo {
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .fase-grupo h2 {
-  color: #2c3e50;
-  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #14532d;
+  margin-bottom: 1.5rem;
   font-size: 1.5rem;
+  font-weight: 600;
   border-bottom: 2px solid #e9ecef;
-  padding-bottom: 10px;
+  padding-bottom: 0.5rem;
 }
 
 .fases-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  gap: 1.5rem;
 }
 
 mat-card {
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border-radius: 12px;
+  overflow: hidden;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 mat-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 mat-card.completado {
-  background-color: #d4edda;
-  border-left: 4px solid #28a745;
+  background-color: #f0fdf4;
+  border-left: 4px solid #22c55e;
 }
 
 mat-card.en-progreso {
-  background-color: #fff3cd;
-  border-left: 4px solid #ffc107;
+  background-color: #fefce8;
+  border-left: 4px solid #eab308;
 }
 
 mat-card.no-iniciado {
-  background-color: #e2e3e5;
-  border-left: 4px solid #6c757d;
+  background-color: #f8fafc;
+  border-left: 4px solid #94a3b8;
 }
 
 mat-card-header {
-  margin-bottom: 15px;
+  padding: 1.5rem 1.5rem 0;
 }
 
 mat-card-title {
   font-size: 1.2rem;
-  color: #2c3e50;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+mat-card-subtitle {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
 }
 
 mat-card-content {
-  margin-bottom: 15px;
+  padding: 1.5rem;
 }
 
-mat-card-content p {
-  margin: 5px 0;
-  color: #495057;
+.estado-fase {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.estado-fase.completado {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.estado-fase.en-progreso {
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+
+.estado-fase.no-iniciado {
+  background-color: #f1f5f9;
+  color: #475569;
 }
 
 mat-card-actions {
   display: flex;
-  gap: 10px;
-  padding: 8px;
+  gap: 8px;
+  padding: 0 1.5rem 1.5rem;
+  justify-content: flex-end;
 }
 
 button[mat-button] {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
+  font-weight: 500;
 }
 
-mat-icon {
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loading-overlay p {
+  margin-top: 1rem;
+  color: #4a5568;
+  font-size: 1.1rem;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {
-    padding: 10px;
+    padding: 1rem;
+  }
+
+  .cultivo-selector {
+    padding: 1.5rem;
   }
 
   .fases-grid {
@@ -123,7 +226,7 @@ mat-icon {
   }
 
   .fase-grupo {
-    padding: 15px;
+    padding: 1rem;
   }
 
   mat-card-actions {
@@ -133,5 +236,9 @@ mat-icon {
   button[mat-button] {
     width: 100%;
     justify-content: center;
+  }
+
+  .info-card mat-card-title {
+    font-size: 1.2rem;
   }
 }

@@ -57,6 +57,8 @@
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Registrar Insumo</button></li>
             <li><button type="button" routerLink="/dashboard/cultivo/estadoCultivo">
               <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Ver Estado del cutlvo</button></li>
+            <li><button type="button" routerLink="/dashboard/cultivo/historirialInsumo">
+              <mat-icon class="dot-icon">fiber_manual_record</mat-icon>Historial Insumo</button></li>
           </ul>
         </div>
       </li>
@@ -88,15 +90,9 @@
         </button>
       </li>
       <li>
-        <button type="button" (click)="activeSubMenu = 'miperfil'" [class.active]="activeSubMenu === 'miperfil'">
+        <button type="button" (click)="activeSubMenu = 'miperfil'" [class.active]="activeSubMenu === 'miperfil'" routerLink="/dashboard/MiPerfil">
           <i class="fas fa-user-circle"></i>
           <p>Mi perfil</p>
-        </button>
-      </li>
-      <li>
-        <button type="button" >
-          <i class="fas fa-cog"></i>
-          <p>Configuración</p>
         </button>
       </li>
     </ul>
