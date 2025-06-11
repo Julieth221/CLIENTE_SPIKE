@@ -40,6 +40,8 @@ import { DatosCultivoComponent } from './app/components/cultivo/datos-cultivo/da
 import { RegisterCultivoComponent } from './app/components/cultivo/register-cultivo/register-cultivo.component';
 import { FasesCultivoComponent } from './app/components/cultivo/fases-cultivo/fases-cultivo.component';
 import { RegisterInsumoCultivoComponent } from './app/components/cultivo/register-insumo-cultivo/register-insumo-cultivo.component';
+import { DashboardCultivoComponent } from './app/components/cultivo/dashboard-cultivo/dashboard-cultivo.component';
+import { TablaCultivoComponent } from './app/components/cultivo/tabla-cultivo/tabla-cultivo.component';
 
 
 
@@ -89,7 +91,9 @@ bootstrapApplication(AppComponent,{
                   { path: 'cultivo/datosCultivo', component: DatosCultivoComponent},
                   { path: 'cultivo/registrarCultivo', component: RegisterCultivoComponent},
                   { path: 'cultivo/fasesCultivo', component: FasesCultivoComponent},
-                  { path: 'cultivo/registrarInsumo', component: RegisterInsumoCultivoComponent}
+                  { path: 'cultivo/registrarInsumo', component: RegisterInsumoCultivoComponent},
+                  { path: 'cultivo/estadoCultivo', component: DashboardCultivoComponent},
+                  { path: 'cultivo/verCultivo', component: TablaCultivoComponent}
               ],
             },
           ]),
