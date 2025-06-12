@@ -32,10 +32,12 @@ const MY_DATE_FORMATS = {
     monthYearA11yLabel: 'MMMM YYYY', // Corregido el formato a uno estándar
   },
 };
+// Prueba
 
 interface SensorTypeData {
   NombreTipoSensor: string;
   Descripcion: string;
+
 }
 
 interface CultivationArea {
