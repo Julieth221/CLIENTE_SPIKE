@@ -73,7 +73,7 @@ export class RegisterComponent {
 
     this.apiService.post(`${API_URLS.MID.API_MID_SPIKE}/usuarios/`, body).subscribe({
       next: (response) => {
-        console.log("Usuario registrado correctamente:", response);
+        // console.log("Usuario registrado correctamente:", response);
         alert('usuario registrado exitosamente')
         this.router.navigate(['/login']);
       },
@@ -90,5 +90,3 @@ export class RegisterComponent {
   }
 
 }
-
-
