@@ -15,7 +15,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Location } from '@angular/common';
-import { MapsSensorComponent } from '../maps-sensor/maps-sensor.component'; // Import MapsSensorComponent
+// import { MapsSensorComponent } from '../maps-sensor/maps-sensor.component'; // Import MapsSensorComponent
 // import { VerMapaComponent } from '../../finca/ver-mapa/ver-mapa.component'; // Comentado, usaremos MapsSensorComponent
 import { MatSnackBar } from '@angular/material/snack-bar'; // Import MatSnackBar
 import { MatDividerModule } from '@angular/material/divider';
@@ -60,7 +60,7 @@ interface CultivationArea {
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    MapsSensorComponent, // Añadido MapsSensorComponent a los imports
+    // MapsSensorComponent, // Añadido MapsSensorComponent a los imports
     MatDividerModule,
   ],
   templateUrl: './registro-sensor.component.html',
@@ -79,7 +79,7 @@ export class RegistroSensorComponent implements OnInit, AfterViewInit {
   isLocationValid: boolean = false; // Nuevo estado para la validación de la ubicación
 
   // Referencia al componente del mapa hijo
-  @ViewChild(MapsSensorComponent) mapsSensorComponent!: MapsSensorComponent;
+  // @ViewChild(MapsSensorComponent) mapsSensorComponent!: MapsSensorComponent;
 
   // Datos quemados para las áreas de cultivo (deben coincidir con los de localizar-sensor)
   cultivationAreas: CultivationArea[] = [
@@ -150,9 +150,9 @@ export class RegistroSensorComponent implements OnInit, AfterViewInit {
     // Se activa solo si el mapa ya está visible
     // Se usa un setTimeout para asegurar que el ViewChild esté completamente inicializado
     setTimeout(() => {
-      if (this.mapsSensorComponent && this.showMap) {
-        this.mapsSensorComponent.enableMapClickPlacement = true;
-      }
+      // if (this.mapsSensorComponent && this.showMap) {
+      //   this.mapsSensorComponent.enableMapClickPlacement = true;
+      // }
     });
   }
 
@@ -243,26 +243,26 @@ export class RegistroSensorComponent implements OnInit, AfterViewInit {
       // Asegurarse de que mapsSensorComponent esté disponible antes de usarlo
       // Usar un setTimeout para asegurar que el ViewChild esté completamente inicializado
       setTimeout(() => {
-        if (this.mapsSensorComponent) {
-          this.mapsSensorComponent.cultivationPolygonCoords = this.selectedCultivationArea!.coordenadas; // ! para asegurar que no es null
-          this.mapsSensorComponent.clearAllMarkers();
-          // Centrar el mapa en el polígono del cultivo seleccionado
-          if (this.mapsSensorComponent.map && this.mapsSensorComponent.map.googleMap) {
-            const bounds = new google.maps.LatLngBounds();
-            this.selectedCultivationArea!.coordenadas.forEach(coord => bounds.extend(coord)); // ! para asegurar que no es null
-            this.mapsSensorComponent.map.googleMap.fitBounds(bounds);
-          }
-          this.mapsSensorComponent.enableMapClickPlacement = true; // Habilitar la colocación de marcadores al seleccionar cultivo
-        }
+        // if (this.mapsSensorComponent) {
+        //   this.mapsSensorComponent.cultivationPolygonCoords = this.selectedCultivationArea!.coordenadas; // ! para asegurar que no es null
+        //   this.mapsSensorComponent.clearAllMarkers();
+        //   // Centrar el mapa en el polígono del cultivo seleccionado
+        //   if (this.mapsSensorComponent.map && this.mapsSensorComponent.map.googleMap) {
+        //     const bounds = new google.maps.LatLngBounds();
+        //     this.selectedCultivationArea!.coordenadas.forEach(coord => bounds.extend(coord)); // ! para asegurar que no es null
+        //     this.mapsSensorComponent.map.googleMap.fitBounds(bounds);
+        //   }
+        //   this.mapsSensorComponent.enableMapClickPlacement = true; // Habilitar la colocación de marcadores al seleccionar cultivo
+        // }
       });
     } else {
       this.showMap = false;
       setTimeout(() => { // Usar setTimeout también para resetear
-        if (this.mapsSensorComponent) {
-          this.mapsSensorComponent.resetMap();
-          this.mapsSensorComponent.cultivationPolygonCoords = null;
-          this.mapsSensorComponent.enableMapClickPlacement = false; // Deshabilitar si no hay cultivo
-        }
+        // if (this.mapsSensorComponent) {
+        //   this.mapsSensorComponent.resetMap();
+        //   this.mapsSensorComponent.cultivationPolygonCoords = null;
+        //   this.mapsSensorComponent.enableMapClickPlacement = false; // Deshabilitar si no hay cultivo
+        // }
       });
     }
     this.sensorForm.get('ubicacion')?.setValue('');
@@ -284,11 +284,12 @@ export class RegistroSensorComponent implements OnInit, AfterViewInit {
       const lng = parseFloat(parts[1].replace('Long:', ''));
 
       if (!isNaN(lat) && !isNaN(lng)) {
-        if (this.mapsSensorComponent) {
-          this.mapsSensorComponent.addSingleSensorMarker(lat, lng);
-        } else {
-          this.snackBar.open('El componente del mapa no está disponible.', 'Cerrar', { duration: 3000 });
-        }
+        // if (this.mapsSensorComponent) {
+        //   this.mapsSensorComponent.addSingleSensorMarker(lat, lng);
+        // } 
+        // else {
+        //   this.snackBar.open('El componente del mapa no está disponible.', 'Cerrar', { duration: 3000 });
+        // }
       } else {
         this.snackBar.open('Formato de coordenadas inválido. Usa "Lat: X.XXXXXX, Long: Y.YYYYYY".', 'Cerrar', { duration: 5000 });
       }
