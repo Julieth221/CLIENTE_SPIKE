@@ -33,6 +33,46 @@
               </mat-error>
             </mat-form-field>
           </div>
+
+          <!-- Tipo de Documento -->
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Tipo de Documento</mat-label>
+              <mat-select formControlName="tipoDocumentoSeleccionado">
+                <mat-option *ngFor="let tipo of tiposDocumento" [value]="tipo">
+                  {{ tipo }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="arrendatarioForm.get('tipoDocumentoSeleccionado')?.hasError('required')">
+                El tipo de documento es obligatorio
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Otro Tipo de Documento -->
+          <div class="form-row" *ngIf="esOtroTipoDocumento">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Especifique el tipo de documento</mat-label>
+              <input matInput formControlName="otroTipoDocumento" placeholder="Ingrese el tipo de documento">
+              <mat-error *ngIf="arrendatarioForm.get('otroTipoDocumento')?.hasError('required')">
+                Debe especificar el tipo de documento
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Número de Documento -->
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Número de Documento</mat-label>
+              <input matInput formControlName="numeroDocumento" placeholder="Ingrese el número de documento">
+              <mat-error *ngIf="arrendatarioForm.get('numeroDocumento')?.hasError('required')">
+                El número de documento es obligatorio
+              </mat-error>
+              <mat-error *ngIf="arrendatarioForm.get('numeroDocumento')?.hasError('pattern')">
+                Ingrese un número de documento válido
+              </mat-error>
+            </mat-form-field>
+          </div>
           
           <div class="form-actions">
             <button mat-raised-button color="primary" type="submit" [disabled]="loading">
@@ -72,6 +112,10 @@
             <div class="arrendatario-contact">
               <mat-icon>phone</mat-icon>
               <span>{{ formatPhoneNumber(arrendatario.Contacto) }}</span>
+            </div>
+            <div class="arrendatario-document">
+              <mat-icon>badge</mat-icon>
+              <span>{{ arrendatario.descripcionTipoDocumento || 'Sin tipo de documento' }}: {{ arrendatario.NumeroDocumento || 'Sin número' }}</span>
             </div>
           </div>
         </div>

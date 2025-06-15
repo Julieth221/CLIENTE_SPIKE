@@ -15,10 +15,13 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Location } from '@angular/common';
-// import { MapsSensorComponent } from '../maps-sensor/maps-sensor.component'; // Import MapsSensorComponent
-import { VerMapaComponent } from '../../finca/ver-mapa/ver-mapa.component';   // Import VerMapaComponent
-import { MatSnackBar } from '@angular/material/snack-bar'; // Import MatSnackBar
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ApiService } from '../../../../services/api.service';
+import { API_URLS } from '../../../../config/api_config';
+import { AuthService } from '../../../../services/auth.service';
+import { MapaSensorComponent } from '../mapa-sensor/mapa-sensor.component';
 
 // Define custom date formats
 const MY_DATE_FORMATS = {
@@ -27,34 +30,26 @@ const MY_DATE_FORMATS = {
   },
   display: {
     dateInput: 'DD/MM/YYYY',
-    monthYearLabel: 'MMM YYYY', // Corrected format
+    monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY', // Corrected format
+    monthYearA11yLabel: 'MMMM YYYY',
   },
 };
-// Prueba
 
 interface SensorData {
   NombreTipoSensor: string;
   Descripcion: string;
-
 }
 
-interface CultivationArea {
-  nombre: string;
-  ubicacion: string;
-  coordenadas: {
-    latitudInicial: number;
-    longitudInicial: number;
-    latitudFinal: number;
-    longitudFinal: number;
-  };
-  tamano: number; // in hectares
+interface GeolocalizacionParcela {
+  lat_final: number;
+  lat_inicial: number;
+  lng_final: number;
+  lng_inicial: number;
 }
 
 @Component({
   selector: 'app-registro-sensor',
-  // standalone: true,
   imports: [
     MatButtonModule,
     MatCardModule,
@@ -67,146 +62,129 @@ interface CultivationArea {
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    // MapsSensorComponent, // Add MapsSensorComponent to imports
-    VerMapaComponent,    // Add VerMapaComponent to imports
     MatDividerModule,
+    MatProgressSpinnerModule,
+    MapaSensorComponent
   ],
   templateUrl: './registro-sensor.component.html',
   styleUrl: './registro-sensor.component.css',
   providers: [
-      { provide: DateAdapter, useClass: NativeDateAdapter },
-      { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
-    ]
+    { provide: DateAdapter, useClass: NativeDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+  ]
 })
 export class RegistroSensorComponent implements OnInit, AfterViewInit {
   sensorForm: FormGroup;
   latitud: number | null = null;
   longitud: number | null = null;
-  cultivos: string[] = [];
-  cultivoSeleccionado: string = '';
   sensorData: SensorData | null = null;
-  private API_MID_SENSORES = 'http://localhost:8082/v1/sensores';
-
-  // Burned-in data for cultivation area
-  cultivationArea: CultivationArea = {
-    nombre: 'Parcela de Tomate',
-    ubicacion: 'Finca La Esperanza, Sector Norte',
-    coordenadas: {
-      latitudInicial: 4.6500,
-      longitudInicial: -74.0950,
-      latitudFinal: 4.6530,
-      longitudFinal: -74.0920
-    },
-    tamano: 1.5 // hectares
-  };
-
-  // @ViewChild(MapsSensorComponent) mapsSensorComponent!: MapsSensorComponent;
+  cultivoId: number | null = null;
+  loading = false;
+  geolocalizacionParcela: GeolocalizacionParcela | null = null;
+  userId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient,
+    private apiService: ApiService,
     private location: Location,
-    private snackBar: MatSnackBar // Inject MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthService
   ) {
     this.sensorForm = this.fb.group({
-      nombre: ['', Validators.required],
-      ubicacion: ['', Validators.required], // This will store the Lat/Long string
-      cultivo: ['', Validators.required], // Made required as per common form practices
+      identificadorSensor: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
       fecha: ['', Validators.required],
     });
   }
 
   ngOnInit(): void {
-    this.cultivos = ['Tomate', 'Maíz', 'Lechuga', 'Fresa', 'Pimentón']; // More realistic examples
-    this.sensorData = history.state.sensorData;
-    console.log('Este es el tipo de sensor a registrar:', this.sensorData);
+    const state = history.state;
+    this.sensorData = state.sensorData;
+    this.cultivoId = state.cultivoId;
+    this.userId = this.authService.getUserId();
 
-    if (!this.sensorData) {
-      console.error('No se recibieron datos del sensor.');
-      this.snackBar.open('No se recibieron los datos del sensor. Por favor, vuelva a intentar el registro.', 'Cerrar', { duration: 3000 });
-      this.router.navigate(['/dashboard/sensor/register-sensor']); // Adjust this route as needed
+    if (!this.sensorData || !this.cultivoId) {
+      this.snackBar.open('No se recibieron los datos necesarios. Por favor, vuelva a intentar el registro.', 'Cerrar', { duration: 3000 });
+      this.router.navigate(['/dashboard/sensor/register-sensor']);
+      return;
     }
+
+    this.cargarGeolocalizacionParcela();
   }
 
   ngAfterViewInit(): void {
-    // Optionally set initial map center if needed, or let MapsSensorComponent handle its default
+    // Inicialización adicional si es necesaria
   }
 
-  // This method will be called by MapsSensorComponent when a point is selected/dragged
-  onMapGeolocalizacionChange(geoPoint: { Latitud: string, Longitud: string }) {
-    this.latitud = parseFloat(geoPoint.Latitud);
-    this.longitud = parseFloat(geoPoint.Longitud);
-    this.sensorForm.patchValue({
-      ubicacion: `Lat: ${this.latitud}, Long: ${this.longitud}`,
+  cargarGeolocalizacionParcela(): void {
+    this.loading = true;
+    this.apiService.get<any>(`${API_URLS.MID.API_MID_SPIKE}/sensores/geolocalizacionParcela/${this.cultivoId}`).subscribe({
+      next: (response: any) => {
+        this.geolocalizacionParcela = response.geolocalizacionParcela;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar geolocalización:', error);
+        this.snackBar.open('Error al cargar la geolocalización de la parcela.', 'Cerrar', { duration: 3000 });
+        this.loading = false;
+      }
     });
   }
 
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Algo salió mal; por favor, inténtalo de nuevo más tarde.';
-    if (error.error instanceof ErrorEvent) {
-      // Client-side error
-      console.error('Ocurrió un error:', error.error.message);
-      errorMessage = `Error del cliente: ${error.error.message}`;
+  onUbicacionSeleccionada(coords: { lat: number, lng: number }): void {
+    console.log('Ubicación seleccionada en registro-sensor:', coords);
+    
+    if (coords && typeof coords.lat === 'number' && typeof coords.lng === 'number') {
+      this.latitud = coords.lat;
+      this.longitud = coords.lng;
+      console.log('Coordenadas actualizadas en registro-sensor:', { latitud: this.latitud, longitud: this.longitud });
     } else {
-      // Backend error
-      console.error(
-        `Backend returned code ${error.status}, ` +
-        `body was: ${JSON.stringify(error.error)}`);
-      errorMessage = `Error del servidor (${error.status}): ${JSON.stringify(error.error)}`;
+      console.error('Coordenadas inválidas recibidas:', coords);
+      this.latitud = null;
+      this.longitud = null;
     }
-    this.snackBar.open(errorMessage, 'Cerrar', { duration: 5000 });
-    return throwError(() => new Error(errorMessage));
   }
 
-  onSubmit() {
-    if (this.sensorForm.valid && this.sensorData && this.latitud !== null && this.longitud !== null) {
+  onSubmit(): void {
+    if (this.sensorForm.valid && this.latitud !== null && this.longitud !== null && this.sensorData && this.cultivoId && this.userId) {
       const formData = this.sensorForm.value;
+      
+      // Formatear la fecha al formato requerido
+      const fechaInstalacion = new Date(formData.fecha);
+      const fechaFormateada = fechaInstalacion.toISOString();
+
+      // Convertir el nombre del tipo de sensor a minúsculas
+      const nombreTipoSensor = this.sensorData.NombreTipoSensor.toLowerCase();
+
       const dataToSend = {
-        NombreTipoSensor: this.sensorData.NombreTipoSensor,
-        Descripcion: this.sensorData.Descripcion,
-        Nombre: formData.nombre,
-        Ubicacion: formData.ubicacion, // This will be the Lat/Long string
-        Cultivo: formData.cultivo,
-        FechaInstalacion: formData.fecha,
+        NombreTipoSensor: nombreTipoSensor,
+        FechaInstalacion: fechaFormateada,
         Latitud: this.latitud,
         Longitud: this.longitud,
+        FkCultivo: this.cultivoId,
+        FkUsuario: this.userId,
+        IdentificadorSensor: formData.identificadorSensor
       };
+      console.log("Datos a enviar: ", dataToSend);
 
-      console.log('Datos a enviar al API MID:', dataToSend);
-
-      const headers = new HttpHeaders({
-        'Content-Type': 'application/json'
+      this.loading = true;
+      this.apiService.post(`${API_URLS.MID.API_MID_SPIKE}/sensores/`, dataToSend).subscribe({
+        next: (response) => {
+          this.snackBar.open('Sensor registrado exitosamente.', 'Cerrar', { duration: 3000 });
+          this.router.navigate(['/dashboard/sensor/gestion-sensores']);
+        },
+        error: (error) => {
+          console.error('Error al registrar sensor:', error);
+          this.snackBar.open('Error al registrar el sensor. Por favor, intente nuevamente.', 'Cerrar', { duration: 3000 });
+          this.loading = false;
+        }
       });
-
-      this.http.post<any>(this.API_MID_SENSORES, dataToSend, { headers: headers })
-        .pipe(
-          catchError(this.handleError)
-        )
-        .subscribe({
-          next: (response: any) => {
-            console.log('Respuesta del API MID:', response);
-            this.router.navigate(['/dashboard/sensor/gestion-sensores']);
-            this.snackBar.open('Sensor registrado exitosamente.', 'Cerrar', { duration: 3000 });
-          },
-          error: (error: any) => {
-            console.error('Error al enviar datos al API MID:', error);
-            this.snackBar.open('Error al registrar el sensor. Por favor, inténtalo de nuevo.', 'Cerrar', { duration: 5000 });
-          },
-        });
     } else {
-      this.snackBar.open('Por favor, completa todos los campos del formulario correctamente y selecciona una ubicación en el mapa.', 'Cerrar', { duration: 5000 });
+      this.snackBar.open('Por favor, complete todos los campos correctamente y seleccione una ubicación válida.', 'Cerrar', { duration: 3000 });
     }
   }
 
-  onCultivoChange(event: any) {
-    this.cultivoSeleccionado = event.value;
-    this.sensorForm.get('cultivo')?.setValue(event.value);
-  }
-
-  onExit() {
-    // Navega de regreso al componente anterior, pasando sensorData en el estado
-    // Asumiendo que el componente anterior es el que selecciona el tipo de sensor
-    this.location.back(); // Esto es más directo para volver al estado anterior
+  onExit(): void {
+    this.location.back();
   }
 }

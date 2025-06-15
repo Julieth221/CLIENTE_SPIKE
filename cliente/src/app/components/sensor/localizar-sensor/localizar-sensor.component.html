@@ -1,6 +1,21 @@
 <div class="main-container">
-  <div class="header-section">
+  <!-- Selector de Cultivo -->
+  <div class="cultivo-selector">
     <h2 class="page-title">Localizar Sensores <mat-icon>location_on</mat-icon></h2>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Selecciona un Cultivo</mat-label>
+      <mat-select [(ngModel)]="cultivoSeleccionado" (selectionChange)="onCultivoSeleccionado($event.value)">
+        <mat-option [value]="null" disabled>Selecciona un cultivo...</mat-option>
+        <mat-option *ngFor="let cultivo of cultivos" [value]="cultivo.Id">
+          {{ cultivo.Nombre }} - {{ cultivo.FechaSiembra | date:'dd/MM/yyyy' }}
+        </mat-option>
+      </mat-select>
+      <mat-icon matSuffix>grass</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <!-- Buscador de Sensores (solo visible cuando hay cultivo seleccionado) -->
+  <div *ngIf="cultivoSeleccionado" class="header-section">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Buscar sensores...</mat-label>
       <input matInput [(ngModel)]="searchText" (input)="applyFilter()">
@@ -22,36 +37,32 @@
     <div class="left-section sensor-cards-list">
       <mat-card *ngFor="let sensor of filteredSensors" class="sensor-card">
         <mat-card-header>
-          <mat-card-title class="sensor-name">{{ sensor.nombre }}</mat-card-title>
+          <mat-card-title class="sensor-name">{{ sensor.identificadorSensor }}</mat-card-title>
           <mat-card-subtitle>
             <div class="subtitle-item">
-              <mat-icon>grass</mat-icon> {{ sensor.nombreCultivo }}
+              <mat-icon>grass</mat-icon> {{ nombreParcela }}
             </div>
             <div class="subtitle-item">
-              <mat-icon>sensors</mat-icon> {{ sensor.TipoSensor }}
+              <mat-icon>sensors</mat-icon> {{ sensor.tipo_sensor }}
             </div>
           </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <div class="card-detail-row">
             <mat-icon>place</mat-icon>
-            <span>Ubicación: {{ sensor.ubicacion }}</span>
+            <span>Ubicación: {{ sensor.ubicacionSensor.lat | number:'1.6-6' }}, {{ sensor.ubicacionSensor.lng | number:'1.6-6' }}</span>
           </div>
           <div class="card-detail-row">
-            <mat-icon>calendar_today</mat-icon>
-            <span>Instalación: {{ sensor.FechaInstalacion }}</span>
-          </div>
-          <div class="card-detail-row">
-            <mat-icon [ngClass]="{'status-active': sensor.Estado === 'Activo', 'status-inactive': sensor.Estado === 'Inactivo'}">
-              {{ sensor.Estado === 'Activo' ? 'check_circle' : 'cancel' }}
+            <mat-icon [ngClass]="{'status-active': sensor.estado === 'activo', 'status-inactive': sensor.estado === 'inactivo'}">
+              {{ sensor.estado === 'activo' ? 'check_circle' : 'cancel' }}
             </mat-icon>
-            <span>Estado: {{ sensor.Estado }}</span>
+            <span>Estado: {{ sensor.estado | titlecase }}</span>
           </div>
         </mat-card-content>
         <mat-card-actions class="card-actions-bottom">
-          <!-- <button mat-raised-button color="primary" (click)="verMapa(sensor)"> -->
+          <button mat-raised-button color="primary" (click)="verMapa(sensor)">
             <mat-icon>map</mat-icon> Ver mapa
-          <!-- </button> -->
+          </button>
         </mat-card-actions>
       </mat-card>
       <div *ngIf="filteredSensors.length === 0 && searchText" class="no-results">
@@ -63,8 +74,4 @@
         <p>No hay sensores registrados.</p>
       </div>
     </div>
-
-    <div class="right-section map-container">
-      <!-- <app-maps-sensor></app-maps-sensor> </div> -->
-  </div>
 </div>

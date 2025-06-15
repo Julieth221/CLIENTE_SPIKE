@@ -14,7 +14,7 @@ import { API_URLS } from '../../../../config/api_config';
 
 // Interfaces para manejar la estructura de datos (ajustadas para Sensor)
 interface Sensor {
-  Id: number;
+  id: number;
   nombre: string;
   ubicacion: string;
   TipoSensor: string;
@@ -53,12 +53,12 @@ export class VersensorComponent implements OnInit {
 
   // Datos quemados de sensores (de tu componente GestionSensores)
   sensoresQuemados: Sensor[] = [
-    { Id: 101, nombre: 'Sensor PH Norte', ubicacion: 'Invernadero 1', TipoSensor: 'PH', FechaInstalacion: '2024-04-20' },
-    { Id: 102, nombre: 'Sensor Humedad Sur', ubicacion: 'Campo Abierto A', TipoSensor: 'Humedad', FechaInstalacion: '2024-04-25' },
-    { Id: 103, nombre: 'Sensor Temp Este', ubicacion: 'Invernadero 2', TipoSensor: 'Temperatura', FechaInstalacion: '2024-05-01' },
-    { Id: 104, nombre: 'Sensor PH Oeste', ubicacion: 'Campo Abierto B', TipoSensor: 'PH', FechaInstalacion: '2024-05-05' },
-    { Id: 105, nombre: 'Sensor Luz Central', ubicacion: 'Invernadero 1', TipoSensor: 'Luz', FechaInstalacion: '2024-05-10' },
-    { Id: 106, nombre: 'Sensor Humedad Norte', ubicacion: 'Campo Abierto A', TipoSensor: 'Humedad', FechaInstalacion: '2024-05-15' },
+    { id: 101, nombre: 'Sensor PH Norte', ubicacion: 'Invernadero 1', TipoSensor: 'PH', FechaInstalacion: '2024-04-20' },
+    { id: 102, nombre: 'Sensor Humedad Sur', ubicacion: 'Campo Abierto A', TipoSensor: 'Humedad', FechaInstalacion: '2024-04-25' },
+    { id: 103, nombre: 'Sensor Temp Este', ubicacion: 'Invernadero 2', TipoSensor: 'Temperatura', FechaInstalacion: '2024-05-01' },
+    { id: 104, nombre: 'Sensor PH Oeste', ubicacion: 'Campo Abierto B', TipoSensor: 'PH', FechaInstalacion: '2024-05-05' },
+    { id: 105, nombre: 'Sensor Luz Central', ubicacion: 'Invernadero 1', TipoSensor: 'Luz', FechaInstalacion: '2024-05-10' },
+    { id: 106, nombre: 'Sensor Humedad Norte', ubicacion: 'Campo Abierto A', TipoSensor: 'Humedad', FechaInstalacion: '2024-05-15' },
   ];
 
   constructor(
@@ -83,7 +83,7 @@ export class VersensorComponent implements OnInit {
 
   cargarDatosSensorQuemado(): void {
     this.loading = true;
-    this.sensor = this.sensoresQuemados.find(sensor => sensor.Id === this.data.sensorId);
+    this.sensor = this.sensoresQuemados.find(sensor => sensor.id === this.data.sensorId);
 
     if (this.sensor) {
       this.loading = false;

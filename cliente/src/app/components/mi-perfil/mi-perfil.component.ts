@@ -35,6 +35,8 @@ export class MiPerfilComponent implements OnInit {
   originalFormValues: any;
   userId: number = 0;
   fkCredencial: number | null = null;
+  idTipoDocumento: number | null = null;
+  numDocumento: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -69,13 +71,15 @@ export class MiPerfilComponent implements OnInit {
         if (response && response.Data) {
           const usuario = response.Data;
           this.fkCredencial = usuario.FkCredencial?.Id || null;
+          this.idTipoDocumento = usuario.TipoDocumento?.Id || null;
+          this.numDocumento = usuario.NumeroDocumento
           this.perfilForm.patchValue({
             nombres: usuario.Nombre,
             apellidos: usuario.Apellido,
             contacto: usuario.Contacto,
             correo: usuario.CorreoElectronico,
-            tipoDocumento: usuario.TipoDeDocumento,
-            numeroDocumento: usuario.NumeroDeDocumento
+            tipoDocumento: usuario.TipoDocumento?.Descripcion,
+            numeroDocumento: usuario.NumeroDocumento
           });
           this.originalFormValues = this.perfilForm.value;
           this.formChanged = false;
@@ -103,9 +107,12 @@ export class MiPerfilComponent implements OnInit {
       Apellido: this.perfilForm.get('apellidos')?.value,
       Contacto: this.perfilForm.get('contacto')?.value,
       CorreoElectronico: this.perfilForm.get('correo')?.value,
+      TipoDocumento: this.idTipoDocumento ? {Id: this.idTipoDocumento}: null,
+      NumeroDocumento: this.numDocumento,
       Activo: true,
       FkCredencial: this.fkCredencial ? { Id: this.fkCredencial } : null
     };
+
     console.log("este es el body para actualizar ", datosActualizados);
 
     this.apiService.put(`${API_URLS.CRUD.API_CRUD_USUARIO}/Usuario/${this.userId}`, datosActualizados).subscribe({

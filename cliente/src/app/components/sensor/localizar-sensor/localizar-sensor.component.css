@@ -4,6 +4,23 @@ main-container {
   margin: 0 auto;
 }
 
+/* Selector de Cultivo */
+.cultivo-selector {
+  display: flex;
+  flex-direction: column;      /* mantiene el título sobre el formulario */
+  align-items: center;         /* centra horizontalmente hijos */
+  justify-content: center;     /* centra verticalmente si tuvieras altura fija */
+  width: 100%;                 /* ocupa todo el ancho del padre */
+  margin-bottom: 20px;         /* separación inferior, opcional */
+}
+
+/* Opcional: Limita el ancho del form-field para que no se estire a todo el contenedor */
+.cultivo-selector .full-width {
+  max-width: 400px;
+  width: 100%;
+}
+
+
 .header-section {
   display: flex;
   flex-direction: column;
@@ -16,7 +33,7 @@ main-container {
   font-weight: bold;
   color: #3fb578; /* Color azul de Material Design */
   margin-bottom: 15px;
-  display: flex;
+  /* display: flex; */
   align-items: center;
   gap: 10px;
 }

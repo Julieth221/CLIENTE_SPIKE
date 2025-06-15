@@ -450,3 +450,17 @@
   .toggle-vista mat-icon {
     margin-right: 6px;
   }
+
+  /* Estilos para el selector de cultivos */
+  .cultivo-selector {
+    max-width: 800px;
+    margin: 0 auto 2rem auto;
+    padding: 20px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .full-width {
+    width: 100%;
+  }

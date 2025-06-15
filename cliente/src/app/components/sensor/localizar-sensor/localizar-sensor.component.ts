@@ -6,25 +6,48 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
-// import { MapsSensorComponent } from '../maps-sensor/maps-sensor.component'; // Importa tu componente de mapa con el nombre correcto
-import { MatTooltipModule } from '@angular/material/tooltip'; // Para tooltips en botones
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // Para spinner de carga
-import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar'; // Importa MatSnackBarModule y MatSnackBar
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Location } from '@angular/common';
+import { ApiService } from '../../../../services/api.service';
+import { AuthService } from '../../../../services/auth.service';
+import { API_URLS } from '../../../../config/api_config';
+import { ModalMapaSensorComponent } from '../modal-mapa-sensor/modal-mapa-sensor.component';
+
+
+interface RegistroCultivo {
+  Id: number;
+  Nombre: string;
+  FechaSiembra: string;
+  AreaSembrada: number;
+  Activo: boolean;
+}
 
 interface SensorData {
-  id: number;
-  nombre: string;
-  ubicacion: string;
-  latitud: number;
-  longitud: number;
-  cultivo: string;
-  fechaRegistro: string;
-  TipoSensor: string; // pH, Temperatura, Humedad, Luz, etc.
-  Estado: string;
-  FechaInstalacion: string;
-  ID: number;
-  nombreCultivo: string; // Nombre del cultivo asociado
+  idSensor: number;
+  identificadorSensor: string;
+  tipo_sensor: string;
+  estado: string;
+  ubicacionSensor: {
+    lat: number;
+    lng: number;
+  };
+}
+
+interface GeolocalizacionParcela {
+  lat_final: number;
+  lat_inicial: number;
+  lng_final: number;
+  lng_inicial: number;
+}
+
+interface RespuestaSensores {
+  geolocalizacionParcela: GeolocalizacionParcela;
+  nombreParcela: string;
+  sensors: SensorData[];
 }
 
 @Component({
@@ -38,53 +61,89 @@ interface SensorData {
     MatInputModule,
     MatFormFieldModule,
     FormsModule,
-    // MapsSensorComponent, // Asegúrate de importar el MapsSensorComponent
     MatTooltipModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule // Añade MatSnackBarModule aquí
+    MatSnackBarModule,
+    MatSelectModule,
+    MatDialogModule
   ],
   templateUrl: './localizar-sensor.component.html',
   styleUrl: './localizar-sensor.component.css'
 })
-export class LocalizarSensorComponent implements OnInit, AfterViewInit {
-
-  // @ViewChild(MapsSensorComponent) mapComponent!: MapsSensorComponent; // Referencia al componente de mapa
-
+export class LocalizarSensorComponent implements OnInit {
+  cultivos: RegistroCultivo[] = [];
+  cultivoSeleccionado: number | null = null;
   sensores: SensorData[] = [];
   filteredSensors: SensorData[] = [];
   searchText: string = '';
-  loading: boolean = true;
+  loading: boolean = false;
   errorMessage: string = '';
+  nombreParcela: string = '';
+  geolocalizacionParcela: GeolocalizacionParcela | null = null;
+  user_id: number | null = null;
 
   constructor(
     private snackBar: MatSnackBar,
-    private location: Location
-  ) { } // Inyecta MatSnackBar
+    private location: Location,
+    private apiService: ApiService,
+    private authService: AuthService,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
-    this.cargarSensores();
+    this.user_id = this.authService.getUserId();
+    if (this.user_id) {
+      this.cargarCultivos();
+    }
   }
 
-  ngAfterViewInit(): void {
-    // No es necesario hacer nada aquí si el mapa se inicializa sin marcador
-    // y solo se actualiza al hacer clic en un sensor.
-  }
-
-  cargarSensores(): void {
+  cargarCultivos(): void {
     this.loading = true;
-    // Datos quemados de ejemplo para los sensores
-    setTimeout(() => {
-      this.sensores = [
-        { id: 1, nombre: 'Sensor PH Invernadero 1', ubicacion: 'Invernadero 1, Sección A', latitud: 4.6513, longitud: -74.0939, cultivo: 'Tomate', fechaRegistro: '2024-05-01', TipoSensor: 'PH', Estado: 'Activo', FechaInstalacion: '2024-04-20', ID: 101, nombreCultivo: 'Tomate Cherry' },
-        { id: 2, nombre: 'Sensor Humedad Campo 2', ubicacion: 'Campo Abierto 2, Parcela B', latitud: 4.6000, longitud: -74.0700, cultivo: 'Maíz', fechaRegistro: '2024-05-05', TipoSensor: 'Humedad', Estado: 'Inactivo', FechaInstalacion: '2024-04-25', ID: 102, nombreCultivo: 'Maíz Dulce' },
-        { id: 3, nombre: 'Sensor Temp Almacén', ubicacion: 'Almacén Principal', latitud: 4.6800, longitud: -74.1000, cultivo: 'Ninguno', fechaRegistro: '2024-05-10', TipoSensor: 'Temperatura', Estado: 'Activo', FechaInstalacion: '2024-05-01', ID: 103, nombreCultivo: 'Almacén' },
-        { id: 4, nombre: 'Sensor PH Hidroponía', ubicacion: 'Nave Hidropónica 3', latitud: 4.6300, longitud: -74.0850, cultivo: 'Lechuga', fechaRegistro: '2024-05-15', TipoSensor: 'PH', Estado: 'Activo', FechaInstalacion: '2024-05-05', ID: 104, nombreCultivo: 'Lechuga Romana' },
-        { id: 5, nombre: 'Sensor Humedad Cultivo 1', ubicacion: 'Cultivo 1, Zona Este', latitud: 4.5900, longitud: -74.0600, cultivo: 'Fresa', fechaRegistro: '2024-05-20', TipoSensor: 'Humedad', Estado: 'Activo', FechaInstalacion: '2024-05-10', ID: 105, nombreCultivo: 'Fresas' },
-        { id: 6, nombre: 'Sensor Temp Invernadero 2', ubicacion: 'Invernadero 2, Sección C', latitud: 4.6700, longitud: -74.0900, cultivo: 'Pimentón', fechaRegistro: '2024-05-25', TipoSensor: 'Temperatura', Estado: 'Inactivo', FechaInstalacion: '2024-05-15', ID: 106, nombreCultivo: 'Pimentón' },
-      ];
-      this.applyFilter(); // Aplicar filtro inicial para mostrar todos los sensores
-      this.loading = false;
-    }, 500);
+    this.apiService.get<RegistroCultivo[]>(`${API_URLS.CRUD.API_CRUD_CULTIVO}/Registro_Cultivo?query=Id_Usuario:${this.user_id}`).subscribe({
+      next: (response: any) => {
+        this.cultivos = response.Data.filter((cultivo: RegistroCultivo) => cultivo.Activo);
+        this.loading = false;
+        if (this.cultivos.length === 0) {
+          this.errorMessage = 'No hay cultivos disponibles';
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar cultivos:', error);
+        this.loading = false;
+        this.errorMessage = 'Error al cargar los cultivos';
+      }
+    });
+  }
+
+  onCultivoSeleccionado(cultivoId: number): void {
+    this.cultivoSeleccionado = cultivoId;
+    this.cargarSensoresPorCultivo(cultivoId);
+  }
+
+  cargarSensoresPorCultivo(cultivoId: number): void {
+    this.loading = true;
+    this.errorMessage = '';
+    this.sensores = [];
+    this.filteredSensors = [];
+
+    this.apiService.get<RespuestaSensores>(`${API_URLS.MID.API_MID_SPIKE}/sensores/geolocalizacionParcela/${cultivoId}`).subscribe({
+      next: (response: any) => {
+        if (response.sensors && response.sensors.length > 0) {
+          this.sensores = response.sensors;
+          this.filteredSensors = [...this.sensores];
+          this.nombreParcela = response.nombreParcela;
+          this.geolocalizacionParcela = response.geolocalizacionParcela;
+        } else {
+          this.errorMessage = 'Este cultivo no tiene sensores registrados';
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar sensores:', error);
+        this.loading = false;
+        this.errorMessage = 'Error al cargar datos de geolocalización';
+      }
+    });
   }
 
   applyFilter(): void {
@@ -93,22 +152,29 @@ export class LocalizarSensorComponent implements OnInit, AfterViewInit {
     } else {
       const lowerCaseSearchText = this.searchText.toLowerCase();
       this.filteredSensors = this.sensores.filter(sensor =>
-        sensor.nombre.toLowerCase().includes(lowerCaseSearchText) ||
-        sensor.nombreCultivo.toLowerCase().includes(lowerCaseSearchText) ||
-        sensor.TipoSensor.toLowerCase().includes(lowerCaseSearchText) ||
-        sensor.ubicacion.toLowerCase().includes(lowerCaseSearchText)
+        sensor.identificadorSensor.toLowerCase().includes(lowerCaseSearchText) ||
+        sensor.tipo_sensor.toLowerCase().includes(lowerCaseSearchText) ||
+        this.nombreParcela.toLowerCase().includes(lowerCaseSearchText)
       );
     }
   }
 
-  // verMapa(sensor: SensorData): void {
-  //   if (this.mapComponent) {
-  //     this.mapComponent.setMarker(sensor.latitud, sensor.longitud);
-  //     // Opcional: centrar el mapa en el marcador
-  //     this.mapComponent.center = { lat: sensor.latitud, lng: sensor.longitud };
-  //     this.mapComponent.zoom = 15; // Un zoom más cercano para ver el detalle
-  //   } else {
-  //     this.snackBar.open('El componente de mapa no está disponible.', 'Cerrar', { duration: 3000 });
-  //   }
-  // }
+  verMapa(sensor: SensorData): void {
+    if (!this.geolocalizacionParcela) {
+      this.snackBar.open('No hay datos de geolocalización disponibles', 'Cerrar', { duration: 3000 });
+      return;
+    }
+
+    this.dialog.open(ModalMapaSensorComponent, {
+      data: {
+        geolocalizacionParcela: this.geolocalizacionParcela,
+        ubicacionSensor: sensor.ubicacionSensor,
+        identificadorSensor: sensor.identificadorSensor,
+        nombreParcela: this.nombreParcela
+      },
+      width: '80%',
+      maxWidth: '1200px',
+      height: '80vh'
+    });
+  }
 }

@@ -6,17 +6,21 @@
   <mat-card class="cultivo-selection-card">
     <mat-card-title>Seleccionar Cultivo</mat-card-title>
     <mat-card-content>
-      <mat-form-field appearance="outline" class="full-width-field">
-        <mat-label>Cultivo</mat-label>
-        <mat-select [(ngModel)]="selectedCultivo">
-          <mat-option value="">Selecciona un cultivo</mat-option>
-          <mat-option *ngFor="let cultivo of cultivoOptions" [value]="cultivo">
-            {{ cultivo }}
-          </mat-option>
-        </mat-select>
-        <mat-icon matSuffix>grass</mat-icon>
-        <mat-hint *ngIf="!selectedCultivo" class="required-hint">Debes seleccionar un cultivo para registrar un sensor.</mat-hint>
-      </mat-form-field>
+      <form [formGroup]="cultivoForm">
+        <mat-form-field appearance="outline" class="full-width-field">
+          <mat-label>Cultivo</mat-label>
+          <mat-select formControlName="cultivo" [disabled]="loading">
+            <mat-option value="">Selecciona un cultivo</mat-option>
+            <mat-option *ngFor="let cultivo of cultivos" [value]="cultivo.Id">
+              {{ cultivo.Nombre }} - {{ cultivo.FechaSiembra | date:'dd/MM/yyyy' }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matSuffix>grass</mat-icon>
+          <mat-error *ngIf="cultivoForm.get('cultivo')?.hasError('required') && cultivoForm.get('cultivo')?.touched">
+            Debes seleccionar un cultivo para registrar un sensor.
+          </mat-error>
+        </mat-form-field>
+      </form>
     </mat-card-content>
   </mat-card>
 
@@ -34,7 +38,7 @@
           mat-raised-button
           (click)="goToComponent('temperatura')"
           class="sensor-button temperature-button"
-          [disabled]="!selectedCultivo"
+          [disabled]="!cultivoForm.valid || loading"
           matTooltip="Registrar sensor de temperatura."
         >
           <mat-icon>add</mat-icon> Registrar
@@ -55,7 +59,7 @@
           mat-raised-button
           (click)="goToComponent('humedad')"
           class="sensor-button humidity-button"
-          [disabled]="!selectedCultivo"
+          [disabled]="!cultivoForm.valid || loading"
           matTooltip="Registrar sensor de humedad."
         >
           <mat-icon>add</mat-icon> Registrar
@@ -76,12 +80,17 @@
           mat-raised-button
           (click)="goToComponent('ph')"
           class="sensor-button ph-button"
-          [disabled]="!selectedCultivo"
+          [disabled]="!cultivoForm.valid || loading"
           matTooltip="Registrar sensor de pH."
         >
           <mat-icon>add</mat-icon> Registrar
         </button>
       </mat-card-actions>
     </mat-card>
+  </div>
+
+  <!-- Spinner de carga -->
+  <div class="loading-overlay" *ngIf="loading">
+    <mat-spinner diameter="50"></mat-spinner>
   </div>
 </div>
