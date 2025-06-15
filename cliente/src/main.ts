@@ -32,7 +32,6 @@ import { EditAlertComponent } from './app/components/sensor/edit-alert/edit-aler
 import { VersensorComponent } from './app/components/sensor/versensor/versensor.component';
 import { GestionAlertComponent } from './app/components/sensor/gestion-alert/gestion-alert.component';
 import { EditarFincaComponent } from './app/components/finca/editar-finca/editar-finca.component';
-// import { MapsSensorComponent } from './app/components/sensor/maps-sensor/maps-sensor.component';
 import { HistorialAlertComponent } from './app/components/sensor/historial-alert/historial-alert.component';
 import { EditarArrendamientosComponent } from './app/components/finca/editar-arrendamientos/editar-arrendamientos.component';
 import { HistorialParcelaComponent } from './app/components/finca/historial-parcela/historial-parcela.component';
@@ -44,10 +43,10 @@ import { DashboardCultivoComponent } from './app/components/cultivo/dashboard-cu
 import { TablaCultivoComponent } from './app/components/cultivo/tabla-cultivo/tabla-cultivo.component';
 import { HistorialInsumoComponent } from './app/components/cultivo/historial-insumo/historial-insumo.component';
 import { MiPerfilComponent } from './app/components/mi-perfil/mi-perfil.component';
-
-
-
-
+import { NoAutorizadoComponent } from './app/components/no-autorizado/no-autorizado.component';
+import { AuthGuard } from './app/guards/auth.guard';
+import { AdminGuard, PropietarioGuard, ArrendatarioGuard } from './app/guards/role.guard';
+import { UsuariosComponent } from './app/components/admin/usuarios/usuarios.component';
 
 bootstrapApplication(AppComponent,{
     providers:[
@@ -60,48 +59,211 @@ bootstrapApplication(AppComponent,{
             { path: 'pwdRecovery', component: PwdRecoveryComponent },
             { path: 'pwdSuccess', component: PwdSuccessComponent },
             { path: 'register', component: RegisterComponent },
-            { path: 'verArrendamiento', component: VerArrendamientosComponent},
-            // { path: 'sensor/maps-sensor', component: MapsSensorComponent},
+            { path: 'no-autorizado', component: NoAutorizadoComponent },
             {
               path: 'dashboard',
               component: DashboardComponent,
+              canActivate: [AuthGuard],
               children: [
-                  { path: 'sensor/registro-t-sensor', component: RegistroTSensorComponent},
-                  { path: 'sensor/registro-sensor', component: RegistroSensorComponent},
-                  { path: 'finca/registrar', component: FincaRegisterComponent },
-                  { path: 'finca/arrendatario', component: ArrendatarioRegisterComponent },
-                  { path: 'finca/arrendamiento', component: ArrendamientoRegisterComponent },
-                  { path: 'finca/verFincas', component: TablaFincasComponent },
-                  { path: 'finca/verCardFincas', component: CardFincasComponent },
-                  { path: 'finca/datosFinca', component: RegisterTipoSueloComponent },
-                  { path: 'finca/datosArrendamiento', component: TablaArrendamientosComponent},
-                  { path: 'finca/arrendamientodetalle', component: VerArrendamientosComponent},
-                  { path: 'finca/editarFinca', component: EditarFincaComponent},
-                  { path: 'sensor/gestion-sensores', component: GestionSensoresComponent },
-                  { path: 'finca/verArrendamiento', component: VerArrendamientosComponent},
-                  { path: 'sensor/alertas-sensor', component: AlertasSensorComponent},
-                  { path: 'sensor/localizar-sensor', component: LocalizarSensorComponent},
-                  { path: 'sensor/probar-sensor', component: ProbarSensorComponent},
-                  { path: 'sensor/config-alert', component: ConfigAlertComponent},
-                  { path: 'sensor/edit-alert', component: EditAlertComponent},
-                  { path: 'sensor/verSensor', component: VersensorComponent},
-                  { path: 'sensor/gestion-alert', component: GestionAlertComponent},
-                // { path: 'finca/verArrendamiento', component: VerArrendamientosComponent},
-                  { path: 'sensor/historial-alert', component: HistorialAlertComponent},
-                  { path: 'finca/editararrendamiento', component: EditarArrendamientosComponent},
-                  { path: 'finca/historialParcela', component: HistorialParcelaComponent},
-                  { path: 'cultivo/datosCultivo', component: DatosCultivoComponent},
-                  { path: 'cultivo/registrarCultivo', component: RegisterCultivoComponent},
-                  { path: 'cultivo/fasesCultivo', component: FasesCultivoComponent},
-                  { path: 'cultivo/registrarInsumo', component: RegisterInsumoCultivoComponent},
-                  { path: 'cultivo/estadoCultivo', component: DashboardCultivoComponent},
-                  { path: 'cultivo/verCultivo', component: TablaCultivoComponent},
-                  { path: 'cultivo/historirialInsumo', component: HistorialInsumoComponent},
-                  { path: 'MiPerfil', component: MiPerfilComponent}
-              ],
+                  // Rutas de usuarios (solo ADMIN)
+                  { 
+                    path: 'usuarios', 
+                    component: UsuariosComponent,
+                    canActivate: [AdminGuard],
+                    data: { roles: ['ADMIN'] }
+                  },
+                  
+                  // Rutas de finca (ADMIN y PROPIETARIO)
+                  { 
+                    path: 'finca/registrar', 
+                    component: FincaRegisterComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO'] }
+                  },
+                  { 
+                    path: 'finca/arrendatario', 
+                    component: ArrendatarioRegisterComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO'] }
+                  },
+                  { 
+                    path: 'finca/arrendamiento', 
+                    component: ArrendamientoRegisterComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO'] }
+                  },
+                  { 
+                    path: 'finca/verFincas', 
+                    component: TablaFincasComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO'] }
+                  },
+                  { 
+                    path: 'finca/verCardFincas', 
+                    component: CardFincasComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO'] }
+                  },
+                  { 
+                    path: 'finca/datosFinca', 
+                    component: RegisterTipoSueloComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO'] }
+                  },
+                  { 
+                    path: 'finca/datosArrendamiento', 
+                    component: TablaArrendamientosComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO'] }
+                  },
+                  { 
+                    path: 'finca/arrendamientodetalle', 
+                    component: VerArrendamientosComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO'] }
+                  },
+                  { 
+                    path: 'finca/editarFinca', 
+                    component: EditarFincaComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO'] }
+                  },
+                  { 
+                    path: 'finca/editararrendamiento', 
+                    component: EditarArrendamientosComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO'] }
+                  },
+                  { 
+                    path: 'finca/historialParcela', 
+                    component: HistorialParcelaComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO'] }
+                  },
+                  
+                  // Rutas de cultivo (todos los roles)
+                  { 
+                    path: 'cultivo/datosCultivo', 
+                    component: DatosCultivoComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  { 
+                    path: 'cultivo/registrarCultivo', 
+                    component: RegisterCultivoComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  { 
+                    path: 'cultivo/fasesCultivo', 
+                    component: FasesCultivoComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  { 
+                    path: 'cultivo/registrarInsumo', 
+                    component: RegisterInsumoCultivoComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  { 
+                    path: 'cultivo/estadoCultivo', 
+                    component: DashboardCultivoComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  { 
+                    path: 'cultivo/verCultivo', 
+                    component: TablaCultivoComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  { 
+                    path: 'cultivo/historirialInsumo', 
+                    component: HistorialInsumoComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  
+                  // Rutas de sensores (todos los roles)
+                  { 
+                    path: 'sensor/gestion-sensores', 
+                    component: GestionSensoresComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  { 
+                    path: 'sensor/alertas-sensor', 
+                    component: AlertasSensorComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  { 
+                    path: 'sensor/localizar-sensor', 
+                    component: LocalizarSensorComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  { 
+                    path: 'sensor/probar-sensor', 
+                    component: ProbarSensorComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  { 
+                    path: 'sensor/registro-t-sensor', 
+                    component: RegistroTSensorComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  { 
+                    path: 'sensor/registro-sensor', 
+                    component: RegistroSensorComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  { 
+                    path: 'sensor/config-alert', 
+                    component: ConfigAlertComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  { 
+                    path: 'sensor/edit-alert', 
+                    component: EditAlertComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  { 
+                    path: 'sensor/verSensor', 
+                    component: VersensorComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  { 
+                    path: 'sensor/gestion-alert', 
+                    component: GestionAlertComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  { 
+                    path: 'sensor/historial-alert', 
+                    component: HistorialAlertComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  },
+                  
+                  // Ruta de perfil (todos los roles)
+                  { 
+                    path: 'MiPerfil', 
+                    component: MiPerfilComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
+                  }
+              ]
             },
+            { path: '**', redirectTo: 'no-autorizado' }
           ]),
-          
         provideAnimations(),
         provideHttpClient(),
         importProvidersFrom(MatDialogModule)

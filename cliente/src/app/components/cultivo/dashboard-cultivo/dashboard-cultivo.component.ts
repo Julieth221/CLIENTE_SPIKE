@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
@@ -10,6 +10,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ApiService } from '../../../../services/api.service';
 import { AuthService } from '../../../../services/auth.service';
@@ -102,6 +106,12 @@ interface CultivoFase {
   Activo: boolean;
 }
 
+interface FiltroFecha {
+  tipo: 'hoy' | 'ayer' | 'personalizado';
+  startDate?: Date;
+  endDate?: Date;
+}
+
 @Component({
   selector: 'app-dashboard-cultivo',
   standalone: true,
@@ -118,6 +128,10 @@ interface CultivoFase {
     MatProgressSpinnerModule,
     MatButtonModule,
     MatTooltipModule,
+    MatRadioModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatInputModule,
     NgxChartsModule
   ],
   templateUrl: './dashboard-cultivo.component.html',
@@ -167,10 +181,28 @@ export class DashboardCultivoComponent implements OnInit {
     default: { domain: ['#7e57c2', '#ab47bc', '#5c6bc0'] }
   };
 
+  filtroForm: FormGroup;
+  mostrarFiltroFecha: boolean = false;
+  mostrarDashboard: boolean = false;
+  mostrarSelectorFiltro: boolean = false;
+  noHayLecturas: boolean = false;
+
   constructor(
     private apiService: ApiService,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private fb: FormBuilder
+  ) {
+    this.filtroForm = this.fb.group({
+      tipoFiltro: ['hoy'],
+      startDate: [null],
+      endDate: [null]
+    });
+
+    // Suscribirse a cambios en el tipo de filtro
+    this.filtroForm.get('tipoFiltro')?.valueChanges.subscribe(tipo => {
+      this.actualizarFechasPorTipo(tipo);
+    });
+  }
 
   ngOnInit(): void {
     this.user_id = this.authService.getUserId();
@@ -195,23 +227,120 @@ export class DashboardCultivoComponent implements OnInit {
 
   onCultivoSeleccionado(cultivoId: number): void {
     this.cultivoSeleccionado = this.cultivos.find(c => c.Id === cultivoId) || null;
+    this.mostrarFiltroFecha = !!this.cultivoSeleccionado;
+    this.mostrarDashboard = false;
+    this.mostrarSelectorFiltro = false;
+    this.resetearDatos();
+    
     if (this.cultivoSeleccionado) {
-      this.cargarDatosCultivo();
+      this.cargarDatosIniciales();
     }
   }
 
-  cargarDatosCultivo(): void {
-    if (!this.cultivoSeleccionado) return;
+  resetearDatos(): void {
+    this.sensores = [];
+    this.alertas = [];
+    this.rendimientoEstimado = null;
+    this.faseActual = '';
+    this.progresoFase = 0;
+    this.graficasVariables = {};
+    this.tiposVariables = [];
+  }
 
+  cargarDatosIniciales(): void {
     this.loading = true;
     Promise.all([
       this.cargarInsumos(),
-      this.cargarSensores(),
-      this.cargarAlertas(),
       this.cargarRendimientoEstimado(),
       this.cargarFaseActual()
     ]).finally(() => {
       this.loading = false;
+    });
+  }
+
+  actualizarFechasPorTipo(tipo: string): void {
+    const hoy = new Date();
+    const ayer = new Date(hoy);
+    ayer.setDate(ayer.getDate() - 1);
+
+    switch (tipo) {
+      case 'hoy':
+        this.filtroForm.patchValue({
+          startDate: hoy,
+          endDate: hoy
+        });
+        break;
+      case 'ayer':
+        this.filtroForm.patchValue({
+          startDate: ayer,
+          endDate: ayer
+        });
+        break;
+      case 'personalizado':
+        // No actualizamos las fechas para permitir selección manual
+        break;
+    }
+  }
+
+  aplicarFiltroFecha(): void {
+    if (!this.cultivoSeleccionado) return;
+
+    const filtro = this.filtroForm.value;
+    let startDate: Date;
+    let endDate: Date;
+
+    switch (filtro.tipoFiltro) {
+      case 'hoy':
+        startDate = new Date();
+        startDate.setHours(0, 0, 0, 0);
+        endDate = new Date();
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      case 'ayer':
+        startDate = new Date();
+        startDate.setDate(startDate.getDate() - 1);
+        startDate.setHours(0, 0, 0, 0);
+        endDate = new Date();
+        endDate.setDate(endDate.getDate() - 1);
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      case 'personalizado':
+        if (!filtro.startDate || !filtro.endDate) return;
+        startDate = new Date(filtro.startDate);
+        startDate.setHours(0, 0, 0, 0);
+        endDate = new Date(filtro.endDate);
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      default:
+        return;
+    }
+
+    this.cargarDatosConFiltro(startDate, endDate);
+  }
+
+  cargarDatosConFiltro(startDate: Date, endDate: Date): void {
+    this.loading = true;
+    this.mostrarDashboard = false;
+    this.noHayLecturas = false;
+
+    const startDateStr = startDate.toISOString().split('T')[0];
+    const endDateStr = endDate.toISOString().split('T')[0];
+    console.log("startDate: ", startDateStr, "endDateStr: ", endDateStr)
+
+    this.apiService.get<Sensor[]>(
+      `${API_URLS.MID.API_MID_SPIKE}/monitoreo_cultivo_sensor/SensoresPorCultivo/${this.cultivoSeleccionado?.Id}?startDate=${startDateStr}&endDate=${endDateStr}`
+    ).subscribe({
+      next: (response: any) => {
+        this.sensores = response.Sensores;
+        this.noHayLecturas = !this.sensores.some(sensor => sensor.Lecturas && sensor.Lecturas.length > 0);
+        this.procesarDatosGraficas();
+        this.mostrarDashboard = true;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar datos de sensores:', error);
+        this.loading = false;
+      }
     });
   }
 
@@ -224,22 +353,6 @@ export class DashboardCultivoComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error al cargar insumos:', error);
-          reject(error);
-        }
-      });
-    });
-  }
-
-  cargarSensores(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.apiService.get<Sensor[]>(`${API_URLS.MID.API_MID_SPIKE}/monitoreo_cultivo_sensor/SensoresPorCultivo/${this.cultivoSeleccionado?.Id}`).subscribe({
-        next: (response: any) => {
-          this.sensores = response.Sensores;
-          this.procesarDatosGraficas();
-          resolve();
-        },
-        error: (error) => {
-          console.error('Error al cargar sensores:', error);
           reject(error);
         }
       });

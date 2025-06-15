@@ -6,11 +6,12 @@
   padding: 40px 20px; /* Añade padding para espacio alrededor de la tarjeta */
   box-sizing: border-box;
   background-color: #f0f2f5; /* Fondo suave */
+  position: relative;
 }
 
 .register-card {
   width: 95%;
-  max-width: 700px; /* Aumenta el ancho máximo para acomodar el mapa */
+  max-width: 800px; /* Aumenta el ancho máximo para acomodar el mapa */
   padding: 0; /* Elimina padding directo para controlarlo en las secciones */
   background: #ffffff; /* Fondo blanco para la tarjeta */
   border-radius: 12px;
@@ -122,49 +123,20 @@
   margin-top: 15px;
 }
 
-.map-description, .map-instruction {
+.map-description {
   font-size: 0.9rem;
   color: #555;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   line-height: 1.4;
 }
 
-.cultivation-area-map-container,
-.sensor-location-map-container {
-  margin-bottom: 20px;
+.map-container {
+  height: 400px;
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.cultivation-area-map-container {
-  position: relative; /* Para el overlay de información */
-}
-
-.map-overlay-info {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 8px 12px;
-  border-radius: 6px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  z-index: 10;
-  font-size: 0.85rem;
-  color: #333;
-}
-
-.map-overlay-info h4 {
-  margin: 0 0 5px 0;
-  font-size: 1rem;
-  color: #0e6f1c;
-}
-
-app-ver-mapa, app-maps-sensor {
-  display: block; /* Asegura que ocupen el espacio definido */
-  height: 250px; /* Altura para los mapas pequeños */
-  width: 100%;
+  margin-bottom: 20px;
 }
 
 /* Contenedor de botones */
@@ -222,6 +194,20 @@ app-ver-mapa, app-maps-sensor {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+/* Estilos para el overlay de carga */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
 /* Media Queries para responsividad */
 @media (max-width: 600px) {
   .register-card {
@@ -254,5 +240,9 @@ app-ver-mapa, app-maps-sensor {
     top: 10px;
     left: 10px;
     padding: 6px;
+  }
+
+  .map-container {
+    height: 300px;
   }
 }

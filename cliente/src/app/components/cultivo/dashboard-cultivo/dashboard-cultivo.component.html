@@ -4,7 +4,7 @@
   </div>
 
   <div *ngIf="!loading" class="content-container">
-    <!-- Selector de Cultivo con Guía -->
+    <!-- Selector de Cultivo -->
     <div class="cultivo-selector">
       <div class="selector-header">
         <h2>🌾 Dashboard de Cultivo</h2>
@@ -26,8 +26,58 @@
       </mat-form-field>
     </div>
 
+    <!-- Filtro de Fechas -->
+    <div *ngIf="mostrarFiltroFecha" class="filtro-fecha" [formGroup]="filtroForm">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>date_range</mat-icon>
+            Filtro de Fechas
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="filtro-opciones">
+            <mat-form-field appearance="outline" class="filtro-select">
+              <mat-label>Selecciona un período</mat-label>
+              <mat-select formControlName="tipoFiltro">
+                <mat-option value="hoy">Hoy</mat-option>
+                <mat-option value="ayer">Ayer</mat-option>
+                <mat-option value="personalizado">Personalizado</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <div *ngIf="filtroForm.get('tipoFiltro')?.value === 'personalizado'" class="filtro-personalizado">
+              <mat-form-field appearance="outline">
+                <mat-label>Fecha Inicio</mat-label>
+                <input matInput [matDatepicker]="startPicker" formControlName="startDate" required>
+                <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                <mat-datepicker #startPicker></mat-datepicker>
+                <mat-error *ngIf="filtroForm.get('startDate')?.hasError('required')">
+                  La fecha de inicio es requerida
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Fecha Fin</mat-label>
+                <input matInput [matDatepicker]="endPicker" formControlName="endDate" required>
+                <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                <mat-datepicker #endPicker></mat-datepicker>
+                <mat-error *ngIf="filtroForm.get('endDate')?.hasError('required')">
+                  La fecha de fin es requerida
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <button mat-raised-button color="primary" (click)="aplicarFiltroFecha()">
+              Aplicar Filtro
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
     <!-- Dashboard Principal -->
-    <div *ngIf="cultivoSeleccionado" class="dashboard-grid">
+    <div *ngIf="mostrarDashboard" class="dashboard-grid">
       <!-- Cards Principales -->
       <div class="main-cards">
         <!-- Card Rendimiento -->
@@ -77,7 +127,7 @@
             <mat-card-subtitle>Últimas lecturas reportadas por los sensores</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
-            <ng-container *ngIf="tiposVariables.length > 0 && (graficasVariables | keyvalue).length > 0; else noDatosSensores">
+            <ng-container *ngIf="!noHayLecturas && tiposVariables.length > 0 && (graficasVariables | keyvalue).length > 0; else noDatosSensores">
               <div *ngFor="let variable of tiposVariables">
                 <div *ngIf="graficasVariables && graficasVariables[variable] && graficasVariables[variable].length > 0" class="grafica-container">
                   <h3 class="grafica-title">{{ variable | titlecase }}</h3>
@@ -104,7 +154,7 @@
             <ng-template #noDatosSensores>
               <div class="no-data-message">
                 <mat-icon>info</mat-icon>
-                No hay datos de sensores disponibles para graficar.
+                No hay lecturas de sensores disponibles para el período seleccionado.
               </div>
             </ng-template>
           </mat-card-content>
@@ -142,7 +192,7 @@
               <ng-template #noLecturas>
                 <div class="sensor-no-data">
                   <mat-icon color="warn">warning</mat-icon>
-                  Sensor registrado, pero sin lecturas disponibles. Podría no estar funcionando o tener una mala conexión. Revisa su instalación y asegúrate de que esté en condiciones operativas.
+                  Sensor registrado, pero sin lecturas disponibles para el período seleccionado.
                 </div>
               </ng-template>
             </mat-card-content>

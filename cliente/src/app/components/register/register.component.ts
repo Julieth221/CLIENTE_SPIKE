@@ -13,7 +13,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ApiService } from '../../../services/api.service';
 import { API_URLS } from '../../../config/api_config';
 
-
 @Component({
   selector: 'app-register',
   imports: [
@@ -32,10 +31,10 @@ import { API_URLS } from '../../../config/api_config';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-
   registerForm: FormGroup;
   hidePassword = true;
   hideConfirmPassword = true;
+  mostrarOtroTipoDocumento = false;
 
   constructor(private fb: FormBuilder, private router: Router, private apiService: ApiService) {
     this.registerForm = this.fb.group({
@@ -44,22 +43,36 @@ export class RegisterComponent {
       telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       email: ['', [Validators.required, Validators.email]],
       rol: ['', Validators.required],
+      tipoDocumento: ['', Validators.required],
+      otroTipoDocumento: [''],
+      numeroDocumento: ['', [Validators.required, Validators.pattern(/^[0-9A-Za-z-]+$/)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
       terms: [false, Validators.requiredTrue]
     }, { validators: this.checkPasswords });
+
+    // Suscribirse a cambios en tipoDocumento
+    this.registerForm.get('tipoDocumento')?.valueChanges.subscribe(value => {
+      this.mostrarOtroTipoDocumento = value === 'Otro';
+      if (value !== 'Otro') {
+        this.registerForm.get('otroTipoDocumento')?.setValue('');
+      }
+    });
   }
 
   checkPasswords(group: FormGroup) {
-    // const password = group.get('password')?.value;
-    // const confirmPassword = group.get('confirmPassword')?.value;
-    // return password === confirmPassword ? null : { passwordMismatch: true };
+    const password = group.get('password')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
   onRegister() {
     if (this.registerForm.invalid) return;
 
     const formValue = this.registerForm.value;
+    const tipoDocumento = formValue.tipoDocumento === 'Otro' 
+      ? formValue.otroTipoDocumento 
+      : formValue.tipoDocumento;
 
     const body = {
       Nombre: formValue.nombre,
@@ -67,28 +80,26 @@ export class RegisterComponent {
       Contacto: formValue.telefono,
       CorreoElectronico: formValue.email,
       contraseña: formValue.password,
+      TipoDocumento: tipoDocumento,
+      NumeroDocumento: formValue.numeroDocumento,
       Rol: formValue.rol
     };
-    console.log('Enviando código:', body);
 
     this.apiService.post(`${API_URLS.MID.API_MID_SPIKE}/usuarios/`, body).subscribe({
       next: (response) => {
-        // console.log("Usuario registrado correctamente:", response);
-        alert('usuario registrado exitosamente')
+        alert('Usuario registrado exitosamente');
         this.router.navigate(['/login']);
       },
       error: (error) => {
         console.error("Error al registrar:", error);
-        alert('Error al registrarse')
+        alert('Error al registrarse');
       }
     });
   }
-  
 
-  goToLogin(){
-    this.router.navigate(['/login'])
+  goToLogin() {
+    this.router.navigate(['/login']);
   }
-
 }
 
 

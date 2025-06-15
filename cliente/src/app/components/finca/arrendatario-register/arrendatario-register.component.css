@@ -101,6 +101,18 @@ mat-card-subtitle{
     color: #28C76F;
   }
   
+  .arrendatario-document {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #667085;
+    font-size: 0.9rem;
+  }
+  
+  .arrendatario-document mat-icon {
+    color: #FF9F43;
+  }
+  
   .card-actions {
     display: flex;
     gap: 4px;
