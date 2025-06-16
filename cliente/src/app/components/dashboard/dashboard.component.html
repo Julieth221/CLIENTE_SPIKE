@@ -9,7 +9,7 @@
       </header>
     <ul>
       <li>
-        <button type="button" (click)="activeSubMenu = 'inicio'" [class.active]="activeSubMenu === 'inicio'">
+        <button type="button" routerLink="/dashboard/inicio" (click)="activeSubMenu = 'inicio'" [class.active]="activeSubMenu === 'inicio'">
           <i class="fas fa-home"></i>
           <p>Inicio</p>
         </button>

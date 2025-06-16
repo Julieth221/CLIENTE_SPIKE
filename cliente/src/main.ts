@@ -47,6 +47,15 @@ import { NoAutorizadoComponent } from './app/components/no-autorizado/no-autoriz
 import { AuthGuard } from './app/guards/auth.guard';
 import { AdminGuard, PropietarioGuard, ArrendatarioGuard } from './app/guards/role.guard';
 import { UsuariosComponent } from './app/components/admin/usuarios/usuarios.component';
+import { InicioDashboardComponent } from './app/components/inicio-dashboard/inicio-dashboard.component';
+import { customColorScheme } from './app/config/chart.config';
+
+// Configurar el esquema de colores global para ngx-charts
+import { Color, ScaleType } from '@swimlane/ngx-charts';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+
+registerLocaleData(localeEs);
 
 bootstrapApplication(AppComponent,{
     providers:[
@@ -71,6 +80,13 @@ bootstrapApplication(AppComponent,{
                     component: UsuariosComponent,
                     canActivate: [AdminGuard],
                     data: { roles: ['ADMIN'] }
+                  },
+
+                  { 
+                    path: 'inicio', 
+                    component: InicioDashboardComponent,
+                    canActivate: [PropietarioGuard],
+                    data: { roles: ['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'] }
                   },
                   
                   // Rutas de finca (ADMIN y PROPIETARIO)
@@ -266,6 +282,7 @@ bootstrapApplication(AppComponent,{
           ]),
         provideAnimations(),
         provideHttpClient(),
-        importProvidersFrom(MatDialogModule)
+        importProvidersFrom(MatDialogModule),
+        { provide: 'NGX_CHARTS_COLOR_SCHEME', useValue: customColorScheme }
     ]
 }).catch(err => console.error(err));

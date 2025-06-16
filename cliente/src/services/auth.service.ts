@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { jwtDecode }from 'jwt-decode';
-
+import { jwtDecode } from 'jwt-decode';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
+import { API_URLS } from '../config/api_config';
 
 interface TokenPayload {
   sub: string;
@@ -11,11 +13,18 @@ interface TokenPayload {
   // Otros campos que pueda tener tu token
 }
 
+interface UserInfo {
+  role: string;
+  numeroDocumento: string;
+  nombre: string;
+  apellido: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   getToken(): string | null {
     return localStorage.getItem('authToken');
@@ -60,6 +69,24 @@ export class AuthService {
       return decoded.exp > currentTime;
     } catch (error) {
       return false;
+    }
+  }
+
+  getUserInfo(): UserInfo | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return {
+        role: payload.role,
+        numeroDocumento: payload.numeroDocumento,
+        nombre: payload.nombre,
+        apellido: payload.apellido
+      };
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
     }
   }
 } 
