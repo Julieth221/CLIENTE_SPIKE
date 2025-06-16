@@ -31,9 +31,8 @@ const checkArrendatarioRole = (rolesPermitidos: string[]): boolean => {
 export const AdminGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const role = getUserRole();
-  const rolesPermitidos = route.data['roles'] as string[];
   
-  if (!role || !rolesPermitidos?.includes(role)) {
+  if (!role || role !== 'ADMIN') {
     router.navigate(['/no-autorizado']);
     return false;
   }

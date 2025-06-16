@@ -49,6 +49,7 @@ import { AdminGuard, PropietarioGuard, ArrendatarioGuard } from './app/guards/ro
 import { UsuariosComponent } from './app/components/admin/usuarios/usuarios.component';
 import { InicioDashboardComponent } from './app/components/inicio-dashboard/inicio-dashboard.component';
 import { customColorScheme } from './app/config/chart.config';
+import { RegisterAdminComponent } from './app/components/admin/register-admin/register-admin.component';
 
 // Configurar el esquema de colores global para ngx-charts
 import { Color, ScaleType } from '@swimlane/ngx-charts';
@@ -68,6 +69,12 @@ bootstrapApplication(AppComponent,{
             { path: 'pwdRecovery', component: PwdRecoveryComponent },
             { path: 'pwdSuccess', component: PwdSuccessComponent },
             { path: 'register', component: RegisterComponent },
+            { 
+              path: 'register-admin', 
+              component: RegisterAdminComponent,
+              // canActivate: [AuthGuard, AdminGuard],
+              // data: { roles: ['ADMIN'] }
+            },
             { path: 'no-autorizado', component: NoAutorizadoComponent },
             {
               path: 'dashboard',
