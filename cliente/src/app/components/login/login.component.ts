@@ -94,7 +94,7 @@ export class LoginComponent {
             localStorage.setItem('authToken', response.token);
   
             // Redirigir al dashboard
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/dashboard/inicio']);
           } else {
             this.loginError = 'Correo y/o contraseña incorrectos.';
           }

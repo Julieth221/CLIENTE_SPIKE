@@ -1,0 +1,152 @@
+<div class="dashboard-container">
+  <!-- Loading spinner -->
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+    <p>Cargando información...</p>
+  </div>
+
+  <!-- Error message -->
+  <div class="error-container" *ngIf="error">
+    <mat-icon class="error-icon">error_outline</mat-icon>
+    <p>{{error}}</p>
+  </div>
+
+  <!-- Dashboard content -->
+  <div class="dashboard-content" *ngIf="!loading && !error">
+    <div class="dashboard-header">
+      <h1 class="dashboard-title">Dashboard de Inicio</h1>
+      <p class="dashboard-subtitle">Bienvenido al sistema de monitoreo de cultivos</p>
+    </div>
+    
+    <!-- Admin view -->
+    <ng-container *ngIf="userRole === 'ADMIN'">
+      <div class="metrics-grid">
+        <app-dashboard-card
+          title="Total Fincas"
+          [count]="metrics.fincasCount"
+          icon="business"
+          color="#2E7D32">
+        </app-dashboard-card>
+        
+        <app-dashboard-card
+          title="Total Parcelas"
+          [count]="metrics.parcelasCount"
+          icon="grid_view"
+          color="#1976D2">
+        </app-dashboard-card>
+        
+        <app-dashboard-card
+          title="Arrendamientos Activos"
+          [count]="metrics.arrendamientosActivosCount"
+          icon="assignment"
+          color="#7B1FA2">
+        </app-dashboard-card>
+        
+        <app-dashboard-card
+          title="Cultivos Registrados"
+          [count]="metrics.cultivosCount"
+          icon="grass"
+          color="#388E3C">
+        </app-dashboard-card>
+        
+        <app-dashboard-card
+          title="Sensores Instalados"
+          [count]="metrics.sensoresCount"
+          icon="sensors"
+          color="#D32F2F">
+        </app-dashboard-card>
+      </div>
+
+      <div class="chart-section">
+        <app-dashboard-chart
+          [data]="chartData"
+          title="Resumen General del Sistema">
+        </app-dashboard-chart>
+      </div>
+    </ng-container>
+
+    <!-- Propietario view -->
+    <ng-container *ngIf="userRole === 'PROPIETARIO'">
+      <div class="metrics-grid">
+        <app-dashboard-card
+          title="Mis Fincas"
+          [count]="metrics.fincasCount"
+          icon="business"
+          color="#2E7D32">
+        </app-dashboard-card>
+        
+        <app-dashboard-card
+          title="Mis Parcelas"
+          [count]="metrics.parcelasCount"
+          icon="grid_view"
+          color="#1976D2">
+        </app-dashboard-card>
+        
+        <app-dashboard-card
+          title="Arrendamientos Activos"
+          [count]="metrics.arrendamientosActivosCount"
+          icon="assignment"
+          color="#7B1FA2">
+        </app-dashboard-card>
+        
+        <app-dashboard-card
+          *ngIf="metrics.cultivosCount > 0"
+          title="Mis Cultivos"
+          [count]="metrics.cultivosCount"
+          icon="grass"
+          color="#388E3C">
+        </app-dashboard-card>
+        
+        <app-dashboard-card
+          *ngIf="metrics.sensoresCount > 0"
+          title="Mis Sensores"
+          [count]="metrics.sensoresCount"
+          icon="sensors"
+          color="#D32F2F">
+        </app-dashboard-card>
+      </div>
+
+      <div class="chart-section">
+        <app-dashboard-chart
+          [data]="chartData"
+          title="Resumen de Gestión">
+        </app-dashboard-chart>
+      </div>
+    </ng-container>
+
+    <!-- Arrendatario view -->
+    <ng-container *ngIf="userRole === 'ARRENDATARIO'">
+      <div class="metrics-grid">
+        <app-dashboard-card
+          title="Mis Arrendamientos"
+          [count]="metrics.arrendamientosActivosCount"
+          icon="assignment"
+          color="#7B1FA2">
+        </app-dashboard-card>
+        
+        <app-dashboard-card
+          *ngIf="metrics.cultivosCount > 0"
+          title="Mis Cultivos"
+          [count]="metrics.cultivosCount"
+          icon="grass"
+          color="#388E3C">
+        </app-dashboard-card>
+        
+        <app-dashboard-card
+          *ngIf="metrics.sensoresCount > 0"
+          title="Mis Sensores"
+          [count]="metrics.sensoresCount"
+          icon="sensors"
+          color="#D32F2F">
+        </app-dashboard-card>
+      </div>
+
+      <div class="chart-section">
+        <app-dashboard-chart
+          [data]="chartData"
+          title="Resumen de Actividades">
+        </app-dashboard-chart>
+      </div>
+    </ng-container>
+  </div>
+</div>
