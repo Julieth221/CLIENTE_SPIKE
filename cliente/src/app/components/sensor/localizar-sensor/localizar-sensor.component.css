@@ -1,6 +1,54 @@
-.registro-sensor-container {
-  min-height: 100vh;
+main-container {
+  padding: 20px;
+  max-width: 1400px; /* Ancho máximo para el contenedor principal */
+  margin: 0 auto;
+}
+
+/* Selector de Cultivo */
+.cultivo-selector {
   display: flex;
+  flex-direction: column;      /* mantiene el título sobre el formulario */
+  align-items: center;         /* centra horizontalmente hijos */
+  justify-content: center;     /* centra verticalmente si tuvieras altura fija */
+  width: 100%;                 /* ocupa todo el ancho del padre */
+  margin-bottom: 20px;         /* separación inferior, opcional */
+}
+
+/* Opcional: Limita el ancho del form-field para que no se estire a todo el contenedor */
+.cultivo-selector .full-width {
+  max-width: 400px;
+  width: 100%;
+}
+
+
+.header-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #3fb578; /* Color azul de Material Design */
+  margin-bottom: 15px;
+  /* display: flex; */
+  align-items: center;
+  gap: 10px;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 400px;
+}
+
+.loading-indicator,
+.error-message,
+.no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   align-items: flex-start;
   padding: 40px 20px;

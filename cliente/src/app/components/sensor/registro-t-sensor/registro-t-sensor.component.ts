@@ -11,11 +11,10 @@ import { Location } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { AuthService } from '../../../../services/auth.service'; // Importa tu AuthService
-import { API_URLS } from '../../../../config/api_config';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { API_URLS } from '../../../../config/api_config';
 
 interface SensorData {
   NombreTipoSensor: string;
@@ -23,30 +22,11 @@ interface SensorData {
   CultivoAsociado: string;
 }
 
-// Define la interfaz para el modelo RegistroCultivo, asumiendo un campo 'Nombre'
-interface RegistroCultivo {
-  Id: number; // O el tipo de ID que uses para el cultivo
-  Nombre: string; // Asumiendo que este es el campo que contiene el nombre del cultivo
-  // ... otros campos de RegistroCultivo si son relevantes
-}
-
-// Define la interfaz para el modelo Usuario, asumiendo un campo 'Id'
-interface Usuario {
-  Id: number; // Cambiado a number, ya que getIdFromToken devuelve number
-  // ... otros campos de Usuario si son relevantes
-}
-
-// Define la interfaz para la estructura de los datos de los sensores que esperas de la API
-interface SensorApiResponse {
-  Data: Array<{
-    pk_id_sensor: number;
-    NombreTipoSensor: string;
-    Descripcion: string;
-    FkCultivo: RegistroCultivo; // Ahora es un objeto RegistroCultivo
-    FkUsuario: Usuario; // Objeto Usuario
-    fk_cultivo: number; // Si el backend aún envía el ID directamente
-    // ... otros campos de tu sensor si existen
-  }>;
+interface Cultivo {
+  Id: number;
+  Nombre: string;
+  FechaSiembra: string;
+  Activo: boolean;
 }
 
 @Component({
@@ -63,17 +43,19 @@ interface SensorApiResponse {
     MatFormFieldModule,
     MatSelectModule,
     FormsModule,
+    ReactiveFormsModule,
     MatSnackBarModule,
-    MatProgressSpinnerModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './registro-t-sensor.component.html',
   styleUrl: './registro-t-sensor.component.css'
 })
 export class RegistroTSensorComponent implements OnInit {
   public showExitIcon = false;
-
-  cultivoOptions: string[] = [];
-  selectedCultivo: string | null = null;
+  cultivos: Cultivo[] = [];
+  selectedCultivo: number | null = null;
+  loading = false;
+  cultivoForm: FormGroup;
 
   sensorUsuario: any[] = [];
 
@@ -87,8 +69,12 @@ export class RegistroTSensorComponent implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
-    private authService: AuthService, // Inyecta tu AuthService
-  ) {}
+    private fb: FormBuilder
+  ) {
+    this.cultivoForm = this.fb.group({
+      cultivo: ['', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
     // Obtener el userId directamente del token usando tu AuthService
@@ -114,13 +100,42 @@ export class RegistroTSensorComponent implements OnInit {
 
         this.showExitIcon = previousUrl !== '/dashboard/register-sensor';
       });
+
+    this.cargarCultivos();
+  }
+
+  cargarCultivos(): void {
+    this.loading = true;
+    this.apiService.get<any>(`${API_URLS.CRUD.API_CRUD_CULTIVO}/Registro_Cultivo`).subscribe({
+      next: (response: any) => {
+        this.cultivos = response.Data.filter((cultivo: Cultivo) => cultivo.Activo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar cultivos:', error);
+        this.snackBar.open('No fue posible cargar los cultivos. Por favor, intente nuevamente.', 'Cerrar', {
+          duration: 5000,
+          panelClass: ['error-snackbar']
+        });
+        this.loading = false;
+      }
+    });
   }
 
   goToComponent(sensorType: string) {
-    if (!this.selectedCultivo) {
+    if (!this.cultivoForm.valid) {
       this.snackBar.open('Por favor, selecciona un cultivo primero.', 'Cerrar', {
         duration: 3000,
-        panelClass: ['snackbar-warn']
+        panelClass: ['warning-snackbar']
+      });
+      return;
+    }
+
+    const cultivoSeleccionado = this.cultivos.find(c => c.Id === this.cultivoForm.get('cultivo')?.value);
+    if (!cultivoSeleccionado) {
+      this.snackBar.open('Error al obtener el cultivo seleccionado.', 'Cerrar', {
+        duration: 3000,
+        panelClass: ['error-snackbar']
       });
       return;
     }
@@ -150,11 +165,14 @@ export class RegistroTSensorComponent implements OnInit {
     const data: SensorData = {
       NombreTipoSensor: sensorName,
       Descripcion: sensorDescription,
-      CultivoAsociado: this.selectedCultivo,
+      CultivoAsociado: cultivoSeleccionado.Nombre,
     };
 
     this.router.navigate(['/dashboard/sensor/registro-sensor'], {
-      state: { sensorData: data },
+      state: { 
+        sensorData: data,
+        cultivoId: cultivoSeleccionado.Id
+      },
     });
   }
 

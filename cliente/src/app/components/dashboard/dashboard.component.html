@@ -14,7 +14,7 @@
           <p>Inicio</p>
         </button>
       </li>
-      <li>
+      <li *ngIf="hasRole(['ADMIN', 'PROPIETARIO'])">
         <button type="button" (click)="toggleSubMenu('finca')" [class.active]="activeSubMenu === 'finca'">
           <i class="fas fa-tractor"></i>
           <p>Fincas</p>
@@ -37,7 +37,7 @@
           </ul>
         </div>
       </li>
-      <li>
+      <li *ngIf="hasRole(['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'])">
         <button type="button" (click)="toggleSubMenu('cultivo')" [class.active]="activeSubMenu === 'cultivo'">
           <i class="fas fa-seedling"></i>
           <p>Cultivo</p>
@@ -62,7 +62,7 @@
           </ul>
         </div>
       </li>
-      <li>
+      <li *ngIf="hasRole(['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'])">
         <button type="button" (click)="toggleSubMenu('sensores')" [class.active]="activeSubMenu === 'sensores'">
           <i class="fas fa-microchip"></i>
           <p>Sensores</p>
@@ -83,13 +83,13 @@
           </ul>
         </div>
       </li>
-      <li>
+      <li *ngIf="hasRole(['ADMIN'])">
         <button type="button" >
           <i class="bi bi-people-fill"></i>
           <p>Usuarios</p>
         </button>
       </li>
-      <li>
+      <li *ngIf="hasRole(['ADMIN', 'PROPIETARIO', 'ARRENDATARIO'])">
         <button type="button" (click)="activeSubMenu = 'miperfil'" [class.active]="activeSubMenu === 'miperfil'" routerLink="/dashboard/MiPerfil">
           <i class="fas fa-user-circle"></i>
           <p>Mi perfil</p>

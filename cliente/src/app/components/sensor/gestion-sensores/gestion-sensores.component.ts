@@ -21,22 +21,41 @@ import { MatRippleModule } from '@angular/material/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { CardSensorComponent } from '../card-sensor/card-sensor.component'; // Importa CardSensorComponent
+import { CardSensorComponent } from '../card-sensor/card-sensor.component';
 import { VersensorComponent } from '../versensor/versensor.component';
 import { AuthService } from '../../../../services/auth.service';
+<<<<<<< HEAD
+=======
+
+interface RegistroCultivo {
+  Id: number;
+  Nombre: string;
+  FechaSiembra: string;
+  AreaSembrada: number;
+  Activo: boolean;
+}
+>>>>>>> e007e02f22d070acd6ab3b7242a8e3b0c7f721aa
 
 interface SensorData {
   id: number;
+  ID: number;
   nombre: string;
   ubicacion: string;
   latitud: number;
   longitud: number;
   cultivo: string;
-  fechaRegistro: string;
   TipoSensor: string;
   Estado: string;
   FechaInstalacion: string;
-  ID: number;
+  nombre_sensor: string;
+  tipo_sensor: string;
+  estado: string;
+  fechaRegistro: string;
+  fecha_instalacion: string;
+  ubicacionSensor: {
+    lat: number;
+    lng: number;
+  };
 }
 
 @Component({
@@ -61,7 +80,7 @@ interface SensorData {
     MatRippleModule,
     MatButtonToggleModule,
     MatDialogModule,
-    CardSensorComponent, // Añade CardSensorComponent aquí
+    CardSensorComponent,
   ],
   templateUrl: './gestion-sensores.component.html',
   styleUrl: './gestion-sensores.component.css',
@@ -74,12 +93,11 @@ interface SensorData {
   ],
 })
 export class GestionSensoresComponent implements OnInit, AfterViewInit {
-  // Referencias para paginación y ordenamiento
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  // Control de vista
   vistaActual: 'tabla' | 'tarjeta' = 'tabla';
+<<<<<<< HEAD
   sensoresUsuarios: any [] = [];
 
   // Datos y filtrados
@@ -92,99 +110,135 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
     { id: 6, nombre: 'Sensor Humedad Norte', ubicacion: 'Campo Abierto A', latitud: 9.765, longitud: -76.012, cultivo: 'Maíz', fechaRegistro: '2024-05-25', TipoSensor: 'Humedad', Estado: 'Activo', FechaInstalacion: '2024-05-15', ID: 106 },
   ];
   dataSource = new MatTableDataSource<SensorData>(this.sensores);
+=======
+  sensores: SensorData[] = [];
+  dataSource = new MatTableDataSource<SensorData>([]);
+>>>>>>> e007e02f22d070acd6ab3b7242a8e3b0c7f721aa
   expandedElement: any | null = null;
-  // Filtros
+
   searchText: string = '';
   filterTSensor: string = '';
-
-
-  // Opciones para filtros
   tipoSensorOptions: string[] = [];
-
-  // Estado
   loading: boolean = false;
   userId: number = 0;
   errorMessage: string = '';
 
-  // Columnas para mostrar
-  displayedColumns: string[] = ['nombre', 'ubicacion', 'tipo sensor', 'fecha instalacion', 'Estado', 'acciones'];
+  displayedColumns: string[] = ['nombre', 'tipo sensor', 'fecha instalacion', 'Estado', 'acciones'];
+
+  // Nuevas propiedades para cultivos
+  cultivos: RegistroCultivo[] = [];
+  cultivoSeleccionado: number | null = null;
+  user_id: number | null = null;
 
   constructor(
     private apiService: ApiService,
     private router: Router,
     private dialog: MatDialog,
+<<<<<<< HEAD
     private authService: AuthService,
   ) { }
+=======
+    private authService: AuthService
+  ) {}
+>>>>>>> e007e02f22d070acd6ab3b7242a8e3b0c7f721aa
 
   private isMobileView(): boolean {
     return window.innerWidth <= 768;
   }
 
   @HostListener('window:resize', ['$event'])
-
   onResize() {
-    // Cambiar automáticamente a vista de tarjetas en móvil
     if (this.isMobileView()) {
       this.vistaActual = 'tarjeta';
     }
   }
 
   ngOnInit(): void {
-    // Establecer vista inicial basada en el tamaño de la pantalla
     this.vistaActual = this.isMobileView() ? 'tarjeta' : 'tabla';
+<<<<<<< HEAD
     this.obtenerSensores(); // Aseguramos que se llama para inicializar el dataSource y el filtro
     this.obtenerTipoSensorOptions();
 
         // Obtener ID del usuario autenticado desde el token
     this.userId = this.authService.getIdFromToken();
     console.log('ID del usuario autenticado:', this.userId);
+=======
+    this.user_id = this.authService.getUserId();
+    if (this.user_id) {
+      this.cargarCultivos();
+    }
+>>>>>>> e007e02f22d070acd6ab3b7242a8e3b0c7f721aa
   }
 
-  obtenerTipoSensorOptions() {
-    // Usamos los datos quemados para las opciones de tipo de sensor
-    this.tipoSensorOptions = [...new Set(this.sensores.map(f => f.TipoSensor))].sort();
+  cargarCultivos(): void {
+    this.loading = true;
+    this.apiService.get<RegistroCultivo[]>(`${API_URLS.CRUD.API_CRUD_CULTIVO}/Registro_Cultivo?query=Id_Usuario:${this.user_id}`).subscribe({
+      next: (response: any) => {
+        this.cultivos = response.Data.filter((cultivo: RegistroCultivo) => cultivo.Activo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar cultivos:', error);
+        this.loading = false;
+      }
+    });
+  }
+
+  onCultivoSeleccionado(cultivoId: number): void {
+    this.cultivoSeleccionado = cultivoId;
+    this.cargarSensoresPorCultivo(cultivoId);
+  }
+
+  cargarSensoresPorCultivo(cultivoId: number): void {
+    this.loading = true;
+    this.apiService.get(`${API_URLS.MID.API_MID_SPIKE}/sensores/sensoresPorCultivo/${cultivoId}`).subscribe({
+      next: (response: any) => {
+        // Mapear la respuesta del API al formato esperado por la tabla
+        this.sensores = response.data.map((sensor: any) => ({
+          id: sensor.id || sensor.ID,
+          ID: sensor.ID || sensor.id,
+          nombre: sensor.nombre_sensor || sensor.nombre,
+          ubicacion: sensor.ubicacion || '',
+          latitud: sensor.ubicacionSensor?.lat || 0,
+          longitud: sensor.ubicacionSensor?.lng || 0,
+          cultivo: sensor.cultivo || '',
+          TipoSensor: sensor.tipo_sensor || 'No especificado',
+          Estado: sensor.estado || 'No especificado',
+          FechaInstalacion: sensor.fecha_instalacion || '',
+          ubicacionSensor: {
+            lat: sensor.ubicacionSensor?.lat || 0,
+            lng: sensor.ubicacionSensor?.lng || 0
+          }
+        }));
+        
+        this.dataSource.data = this.sensores;
+        // Actualizar las opciones de tipo de sensor, excluyendo los vacíos
+        this.tipoSensorOptions = [...new Set(this.sensores
+          .map(s => s.TipoSensor)
+          .filter(tipo => tipo && tipo !== 'No especificado'))]
+          .sort();
+        
+        this.dataSource.filterPredicate = this.createFilterPredicate();
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar sensores:', error);
+        this.loading = false;
+      }
+    });
   }
 
   ngAfterViewInit() {
-    // Configurar paginación y ordenamiento después de que se inicialicen las vistas
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-  }
-
-  obtenerSensores() {
-    this.loading = true;
-    // this.apiService.get(`${API_URLS.MID.API_MID_SPIKE}/sensores/`).subscribe({
-    //  next: (response: any) => {
-    //  this.sensores = response;
-    //  this.dataSource.data = this.sensores;
-    //  // Obtener opciones únicas para los filtros
-    //  this.tipoSensorOptions = [...new Set(this.sensores.map(f => f.TipoSensor))].sort((a, b) => a - b)
-    //  // Configurar el filtro personalizado
-    //  this.dataSource.filterPredicate = this.createFilterPredicate();
-    //  this.loading = false;
-    //  },
-    //  error: (error: any) => {
-    //  console.error('Error al obtener los sensores:', error);
-    //  this.loading = false;
-    //  }
-    // });
-    // Usamos los datos quemados directamente
-    this.dataSource.data = this.sensores;
-    this.dataSource.filterPredicate = this.createFilterPredicate(); // Configura el predicado de filtro
-    this.loading = false;
-    this.applyFilter(); // Aplicar filtro inicial para asegurar que se muestren los datos correctamente
   }
 
   createFilterPredicate() {
     return (data: SensorData, filter: string) => {
       const searchTerms = JSON.parse(filter);
       const nombreMatch = data.nombre.toLowerCase().includes(searchTerms.searchText.toLowerCase());
-      const sensorMatch = !searchTerms.filterTSensor || data.TipoSensor === searchTerms.filterTSensor;
-      // También podemos añadir el filtro por ubicación y cultivo si es necesario
-      const ubicacionMatch = data.ubicacion.toLowerCase().includes(searchTerms.searchText.toLowerCase());
-      const cultivoMatch = data.cultivo.toLowerCase().includes(searchTerms.searchText.toLowerCase());
-
-      return (nombreMatch || ubicacionMatch || cultivoMatch) && sensorMatch;
+      const tipoMatch = !searchTerms.filterTSensor || data.TipoSensor === searchTerms.filterTSensor;
+      return nombreMatch && tipoMatch;
     };
   }
 
@@ -203,9 +257,26 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/dashboard/sensor/registro-t-sensor']);
   }
 
+  editarSensor(sensor: SensorData) {
+    this.router.navigate(['/sensor/editar', sensor.ID]);
+  }
+
+  eliminarSensor(sensor: SensorData) {
+    if (confirm(`¿Está seguro de eliminar el sensor "${sensor.nombre}"?`)) {
+      this.apiService.delete(`${API_URLS.MID.API_MID_SPIKE}/sensores/${sensor.ID}`).subscribe({
+        next: () => {
+          this.cargarSensoresPorCultivo(this.cultivoSeleccionado!);
+        },
+        error: (error) => {
+          console.error('Error al eliminar el sensor:', error);
+        }
+      });
+    }
+  }
+
   // Métodos para manejar eventos emitidos por CardSensorComponent
   onVerSensor(sensor: SensorData): void {
-    this.verSensor(sensor); // Llama al método existente
+    this.verSensor(sensor);
   }
 
     obtenerFincasUsuario() {
@@ -231,44 +302,24 @@ export class GestionSensoresComponent implements OnInit, AfterViewInit {
     }
 
   onEditarSensor(sensor: SensorData): void {
-    this.editarSensor(sensor); // Llama al método existente
+    this.editarSensor(sensor);
   }
 
   onEliminarSensor(sensor: SensorData): void {
-    this.eliminarSensor(sensor); // Llama al método existente
+    this.eliminarSensor(sensor);
   }
 
-  editarSensor(sensores: SensorData) {
-    this.router.navigate(['/sensor/editar', sensores.ID]);
-  }
-
-  verSensor(sensores: SensorData): void {
+  verSensor(sensor: SensorData): void {
     this.dialog.open(VersensorComponent, {
       data: {
-        sensorId: sensores.ID,
-        nombreSensor: sensores.nombre,
-        FechaInstalacion: sensores.FechaInstalacion
+        sensorId: sensor.id,
+        nombreSensor: sensor.nombre,
+        FechaInstalacion: sensor.FechaInstalacion
       },
       width: '50%',
       maxWidth: '1200px',
       disableClose: true
     }).afterClosed().subscribe(() => {
     });
-  }
-  eliminarSensor(sensores: SensorData) {
-    if (confirm(`¿Está seguro de eliminar el sensor "${sensores.nombre}"?`)) {
-      // this.apiService.delete(`${API_URLS.MID.API_MID_SPIKE}/sensores/${sensores.ID}`).subscribe({
-      //  next: (response) => { // Added response parameter
-      //  this.obtenerSensores();
-      //  },
-      //  error: (error) => {
-      //  console.error('Error al eliminar el sensor:', error);
-      //  }
-      // });
-      // Simulación de eliminación con datos quemados
-      this.sensores = this.sensores.filter(s => s.ID !== sensores.ID);
-      this.dataSource.data = this.sensores;
-      this.applyFilter(); // Vuelve a aplicar el filtro después de eliminar
-    }
   }
 }

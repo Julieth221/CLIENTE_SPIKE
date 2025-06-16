@@ -5,35 +5,28 @@
     </button>
 
     <mat-card-header class="card-header">
-      <mat-card-title class="card-title">REGISTRO DE SENSOR: {{ sensorTypeData?.NombreTipoSensor | uppercase }}</mat-card-title>
+      <mat-card-title class="card-title">REGISTRO DE SENSOR: {{ sensorData?.NombreTipoSensor | uppercase }}</mat-card-title>
       <mat-card-subtitle class="card-subtitle">Complete los detalles para registrar su nuevo sensor.</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content class="card-content">
       <form [formGroup]="sensorForm" (ngSubmit)="onSubmit()" class="sensor-form">
-
         <mat-divider class="section-divider"></mat-divider>
         <h3 class="section-title">Información General</h3>
         <div class="form-section">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Nombre del Sensor</mat-label>
+            <mat-label>Identificador del Sensor</mat-label>
             <input matInput
-              placeholder="Ej. Sensor Temp Invernadero 1"
-              formControlName="nombre">
-            <mat-error *ngIf="sensorForm.get('nombre')?.invalid && (sensorForm.get('nombre')?.dirty || sensorForm.get('nombre')?.touched)">
-              El nombre es requerido.
+              placeholder="Ej. SENSOR_TEMP_001"
+              formControlName="identificadorSensor">
+            <mat-error *ngIf="sensorForm.get('identificadorSensor')?.hasError('required')">
+              El identificador es requerido.
             </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Cultivo Asociado</mat-label>
-            <mat-select formControlName="cultivo" (selectionChange)="onCultivoSelectChange($event)">
-              <mat-option *ngFor="let cultivo of cultivationAreas" [value]="cultivo.nombre">
-                {{ cultivo.nombre }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="sensorForm.get('cultivo')?.invalid && (sensorForm.get('cultivo')?.dirty || sensorForm.get('cultivo')?.touched)">
-              El cultivo es requerido.
+            <mat-error *ngIf="sensorForm.get('identificadorSensor')?.hasError('minlength')">
+              El identificador debe tener al menos 3 caracteres.
+            </mat-error>
+            <mat-error *ngIf="sensorForm.get('identificadorSensor')?.hasError('maxlength')">
+              El identificador no puede exceder los 20 caracteres.
             </mat-error>
           </mat-form-field>
 
@@ -45,53 +38,53 @@
               placeholder="Seleccione la fecha">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
-            <mat-error *ngIf="sensorForm.get('fecha')?.invalid && (sensorForm.get('fecha')?.dirty || sensorForm.get('fecha')?.touched)">
+            <mat-error *ngIf="sensorForm.get('fecha')?.hasError('required')">
               La fecha de instalación es requerida.
             </mat-error>
           </mat-form-field>
         </div>
 
-        <ng-container *ngIf="showMap">
-          <mat-divider class="section-divider"></mat-divider>
-          <h3 class="section-title">Ubicación del Sensor</h3>
-          <div class="form-section map-section">
-            <p class="map-description">Seleccione la ubicación exacta del sensor haciendo clic en el mapa del área de cultivo. El punto seleccionado aparecerá en el campo de coordenadas.</p>
+        <mat-divider class="section-divider"></mat-divider>
+        <h3 class="section-title">Ubicación del Sensor</h3>
+        <div class="form-section map-section">
+          <p class="map-description">
+            Seleccione la ubicación exacta del sensor haciendo clic en el mapa del área de cultivo. 
+            El punto seleccionado debe estar dentro de los límites de la parcela.
+          </p>
 
-            <div class="sensor-location-map-container">
-                <div class="map-overlay-info" *ngIf="selectedCultivationArea">
-                    <h4>Área de Cultivo: {{ selectedCultivationArea.nombre }}</h4>
-                    <p>Ubicación: {{ selectedCultivationArea.ubicacion }}</p>
-                    <p>Tamaño: {{ selectedCultivationArea.tamano }} ha</p>
-                </div>
-                <!-- <app-maps-sensor
-                  [cultivationPolygonCoords]="selectedCultivationArea?.coordenadas ?? null"
-                  [enableMapClickPlacement]="true"
-                  (onGeolocalizacionChange)="onMapGeolocalizacionChange($event)">
-                </app-maps-sensor> -->
-            </div>
-
-            <div class="location-input-group">
-              <mat-form-field appearance="outline" class="full-width location-input-field">
-                <mat-label>Coordenadas del Sensor</mat-label>
-                <input matInput
-                  placeholder="Lat: X.XXXXXX, Long: Y.YYYYYY"
-                  formControlName="ubicacion"> <mat-icon matSuffix>location_on</mat-icon>
-                <mat-error *ngIf="sensorForm.get('ubicacion')?.invalid && (sensorForm.get('ubicacion')?.dirty || sensorForm.get('ubicacion')?.touched)">
-                  La ubicación del sensor es requerida (seleccione en el mapa o ingrese manualmente).
-                </mat-error>
-              </mat-form-field>
-              <button mat-raised-button color="accent" type="button" (click)="setMarkerFromInput()" class="set-marker-button" matTooltip="Establecer marcador desde las coordenadas ingresadas">
-                <mat-icon>place</mat-icon>
-              </button>
-            </div>
+          <div class="map-container" *ngIf="geolocalizacionParcela">
+            <app-mapa-sensor
+              [coordenadas]="{
+                latitudInicial: geolocalizacionParcela.lat_inicial,
+                longitudInicial: geolocalizacionParcela.lng_inicial,
+                latitudFinal: geolocalizacionParcela.lat_final,
+                longitudFinal: geolocalizacionParcela.lng_final
+              }"
+              [nombreParcela]="'Área de Cultivo'"
+              [tamanoParcela]="0"
+              [mostrarDetalles]="true"
+              (ubicacionSeleccionada)="onUbicacionSeleccionada($event)">
+            </app-mapa-sensor>
           </div>
-        </ng-container>
+
+          <!-- <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Coordenadas del Sensor</mat-label>
+            <input matInput
+              placeholder="Latitud, Longitud"
+              [value]="latitud && longitud ? `Lat: ${latitud}, Long: ${longitud}` : ''"
+              readonly>
+            <mat-icon matSuffix>location_on</mat-icon>
+            <mat-error *ngIf="!latitud || !longitud">
+              La ubicación del sensor es requerida (seleccione en el mapa).
+            </mat-error>
+          </mat-form-field> -->
+        </div>
 
         <div class="button-container">
           <button mat-raised-button
             color="primary"
             type="submit"
-            [disabled]="sensorForm.invalid || latitud === null || longitud === null || !isLocationValid"
+            [disabled]="sensorForm.invalid || latitud === null || longitud === null || loading"
             class="register-button">
             Registrar Sensor
           </button>
@@ -100,4 +93,9 @@
       </form>
     </mat-card-content>
   </mat-card>
+
+  <!-- Spinner de carga -->
+  <div class="loading-overlay" *ngIf="loading">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
 </div>

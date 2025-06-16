@@ -2,6 +2,20 @@
 
   <h2 class="title">SENSORES REGISTRADOS</h2>
 
+  <!-- Selector de Cultivo -->
+  <div class="cultivo-selector">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Selecciona un Cultivo</mat-label>
+      <mat-select [(ngModel)]="cultivoSeleccionado" (selectionChange)="onCultivoSeleccionado($event.value)">
+        <mat-option [value]="null" disabled>Selecciona un cultivo...</mat-option>
+        <mat-option *ngFor="let cultivo of cultivos" [value]="cultivo.Id">
+          {{ cultivo.Nombre }} - {{ cultivo.FechaSiembra | date:'dd/MM/yyyy' }}
+        </mat-option>
+      </mat-select>
+      <mat-icon matSuffix>grass</mat-icon>
+    </mat-form-field>
+  </div>
+
   <mat-button-toggle-group
     name="vistaToggle"
     [(ngModel)]="vistaActual"
@@ -79,7 +93,7 @@
 
       <ng-container matColumnDef="fecha instalacion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Instalación</th>
-        <td mat-cell *matCellDef="let sensor">{{ sensor.FechaInstalacion }}</td>
+        <td mat-cell *matCellDef="let sensor">{{ sensor.FechaInstalacion | date:'dd/MM/yyyy' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="Estado">
@@ -117,16 +131,20 @@
     <mat-paginator
       [pageSizeOptions]="[6, 10, 20]"
       showFirstLastButtons
-      aria-label="Seleccionar página de fincas">
+      aria-label="Seleccionar página de sensores">
     </mat-paginator>
   </div>
 
   <div *ngIf="!loading && dataSource.filteredData.length > 0 && vistaActual === 'tarjeta'" class="cards-view animate__animated animate__fadeIn">
     <app-card-sensor
       [sensores]="dataSource.filteredData"
-      (verSensor)="onVerSensor($event)"
-      (editarSensor)="onEditarSensor($event)"
-      (eliminarSensor)="onEliminarSensor($event)">
+      
+      
+      >
     </app-card-sensor>
   </div>
 </div>
+<!-- 
+(verSensor)="onVerSensor($event)"
+      (editarSensor)="onEditarSensor($event)"
+      (eliminarSensor)="onEliminarSensor($event)"  -->

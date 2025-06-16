@@ -143,4 +143,16 @@ export class DashboardComponent implements OnInit {
   toggleSidenav() {
     this.isSidenavOpened = !this.isSidenavOpened;
   }
+
+  hasRole(roles: string[]): boolean {
+    const token = localStorage.getItem('authToken');
+    if (!token) return false;
+    
+    try {
+      const decoded = JSON.parse(atob(token.split('.')[1]));
+      return roles.includes(decoded.role);
+    } catch {
+      return false;
+    }
+  }
 }
