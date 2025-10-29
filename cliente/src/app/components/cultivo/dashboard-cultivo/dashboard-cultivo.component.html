@@ -210,16 +210,26 @@
           </mat-card-header>
           <mat-card-content>
             <div class="alertas-list">
-              <div *ngFor="let alerta of alertas" class="alerta-item" [style.border-left-color]="getSeveridadColor(alerta.Severidad)">
-                <mat-icon [style.color]="getSeveridadColor(alerta.Severidad)">
-                  {{ getSeveridadIcon(alerta.Severidad) }}
-                </mat-icon>
+              <!-- Alerta 1 -->
+              <div class="alerta-item" style="border-left-color: #f44336">
+                <mat-icon style="color: #f44336">error</mat-icon>
                 <div class="alerta-info">
                   <div class="alerta-header">
-                    <span class="sensor-id">{{ alerta.FkSensor.IdentificadorSensor }}</span>
-                    <span class="fecha">{{ alerta.FechaAlerta | date:'dd/MM/yyyy HH:mm' }}</span>
+                    <span class="sensor-id">sensor-001</span>
+                    <span class="fecha">15/06/2025 14:30</span>
                   </div>
-                  <div class="alerta-mensaje">{{ alerta.Mensaje }}</div>
+                  <div class="alerta-mensaje">Temperatura fuera de rango</div>
+                </div>
+              </div>
+              <!-- Alerta 2 -->
+              <div class="alerta-item" style="border-left-color: #ff9800">
+                <mat-icon style="color: #ff9800">warning</mat-icon>
+                <div class="alerta-info">
+                  <div class="alerta-header">
+                    <span class="sensor-id">sensor-001</span>
+                    <span class="fecha">14/06/2025 09:15</span>
+                  </div>
+                  <div class="alerta-mensaje">Humedad baja</div>
                 </div>
               </div>
             </div>

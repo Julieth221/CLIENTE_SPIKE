@@ -31,6 +31,8 @@ interface Finca {
     Nombre: string;
     Id_Usuario: number;
     Activo: boolean;
+    FechaCreacion: string;
+    FechaModificacion: string;
   };
   Nombre: string;
   AreaTotal: number;
@@ -38,6 +40,8 @@ interface Finca {
   TamañoParcelas: number;
   Id_Usuario: number;
   Activo: boolean;
+  FechaCreacion: string;
+  FechaModificacion: string;
 }
 
 interface Parcela {
@@ -201,16 +205,44 @@ export class InicioDashboardComponent implements OnInit {
 
   private async loadFincasCount() {
     try {
-      const response = await this.apiService.get<ApiResponse<Finca[]>>(`${API_URLS.CRUD.API_CRUD_FINCA}/Finca`).toPromise();
-      if (response?.Data && Array.isArray(response.Data)) {
-        const fincas = response.Data as Finca[];
-        this.metrics.fincasCount = fincas.filter(finca => 
-          finca.Activo && 
-          (this.userRole === 'ADMIN' || finca.Id_Usuario === this.userId)
-        ).length;
+      console.log('Loading fincas count...');
+      const response = await this.apiService
+        .get<Finca[]>(`${API_URLS.MID.API_MID_SPIKE}/finca/`)
+        .toPromise();
+
+      if (response) {
+        console.log('Total fincas encontradas:', response.length);
+        console.log('User ID:', this.userId);
+        console.log('User Role:', this.userRole);
+
+        // Filtrar fincas según el rol
+        const filtered = response.filter((finca: Finca) => {
+          console.log('Checking finca:', {
+            fincaId: finca.Id,
+            fincaUsuarioId: finca.Id_Usuario,
+            usuarioActualId: this.userId,
+            esActiva: finca.Activo
+          });
+          
+          if (this.userRole === 'ADMIN') {
+            return finca.Activo;
+          } else if (this.userRole === 'PROPIETARIO') {
+            return finca.Activo && finca.Id_Usuario === this.userId;
+          }
+          return false;
+        });
+
+        console.log('Fincas filtradas:', filtered);
+        this.metrics.fincasCount = filtered.length;
+        console.log('Final fincasCount:', this.metrics.fincasCount);
+      } else {
+        console.warn('No fincas data returned');
+        this.metrics.fincasCount = 0;
       }
     } catch (error) {
       console.error('Error loading fincas count:', error);
+      this.metrics.fincasCount = 0;
+      this.error = 'Error al cargar el conteo de fincas';
     }
   }
 

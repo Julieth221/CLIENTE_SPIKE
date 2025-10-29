@@ -150,7 +150,7 @@ export class DashboardCultivoComponent implements OnInit {
   progresoFase: number = 0;
 
   // Configuración de gráficas
-  view: [number, number] = [700, 300];
+  view: [number, number] = [0, 0]; // Inicializamos en 0 para calcular dinámicamente
   showXAxis = true;
   showYAxis = true;
   gradient = true;
@@ -202,6 +202,11 @@ export class DashboardCultivoComponent implements OnInit {
     this.filtroForm.get('tipoFiltro')?.valueChanges.subscribe(tipo => {
       this.actualizarFechasPorTipo(tipo);
     });
+
+    // Calcular el tamaño inicial de la vista
+    this.calcularTamanioGrafica();
+    // Suscribirse a cambios en el tamaño de la ventana
+    window.addEventListener('resize', () => this.calcularTamanioGrafica());
   }
 
   ngOnInit(): void {
@@ -522,5 +527,17 @@ export class DashboardCultivoComponent implements OnInit {
 
   getColorScheme(variable: string) {
     return this.colorSchemes[variable.toLowerCase()] || this.colorSchemes['default'];
+  }
+
+  // Método para calcular el tamaño de la gráfica
+  private calcularTamanioGrafica(): void {
+    const ancho = window.innerWidth;
+    if (ancho < 768) { // Móvil
+      this.view = [ancho - 40, 250];
+    } else if (ancho < 1024) { // Tablet
+      this.view = [ancho - 80, 300];
+    } else { // Desktop
+      this.view = [ancho - 200, 400];
+    }
   }
 } 
